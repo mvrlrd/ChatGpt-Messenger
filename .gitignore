@@ -1,0 +1,42 @@
+*.iml
+.gradle
+/local.properties
+# Intellij IDEA
+.idea/
+*.iws
+*.ipr
+
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Log and debug output
+*.log
+**/lint/reports/
+**/lint/intermediates/
+
+# Temporary files
+.tmp/
+*.tmp
+*.temp
+*.swp
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+# MacOS specific files
+.DS_Store
+
+# Built application files
+*.apk
+*.ap_
+*.aab
