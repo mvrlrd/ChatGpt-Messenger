@@ -22,7 +22,7 @@ class KtorClient @Inject constructor(private val client: HttpClient): NetworkCli
        when (request){
            is RequestData -> {
                val response = client.post(URL) {
-                   var jsonString = Json.encodeToString<RequestData>(request)
+                   val jsonString = Json.encodeToString<RequestData>(request)
                    headers {
                        append("Authorization", "Api-Key $API_KEY")
                    }
