@@ -114,8 +114,8 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
             ) {
                 viewModel.sendRequest(
-                    "дай длинный ответ что такое счастье"
-//                    userInput.value.text
+//                    "дай длинный ответ что такое счастье"
+                    userInput.value.text
                 )
             }
         }
@@ -128,7 +128,7 @@ class MainActivity : ComponentActivity() {
         var visibleTextLength by remember { mutableStateOf(0) }
         LaunchedEffect(text) {
             for (i in text.indices) {
-                delay(1)
+                delay(50)
                 visibleTextLength = i + 1
             }
         }
@@ -136,11 +136,11 @@ class MainActivity : ComponentActivity() {
         BasicText(
             text = displayedText,
             style = TextStyle(
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize * 1.2f, // Увеличиваем размер шрифта на 20%
+                color = MaterialTheme.colorScheme.primary // Цвет текста противоположен основному цвету темы
             ),
             modifier = Modifier
                 .fillMaxWidth()
-//                .padding(16.dp)
                 .animateContentSize(
                     animationSpec = tween(
                         durationMillis = 300,
@@ -162,7 +162,7 @@ class MainActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-//                        .padding(16.dp)
+                    //                        .padding(16.dp)
                     ,
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -173,12 +173,12 @@ class MainActivity : ComponentActivity() {
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.Gray.copy(alpha = 0.2f))
                             .padding(horizontal = 16.dp, vertical = 8.dp),
-                        ) {
+                    ) {
                         BasicTextField(
                             value = textState.value,
                             onValueChange = { textState.value = it },
                             textStyle = LocalTextStyle.current.copy(
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.primary, // Цвет текста противоположен основному цвету темы
                                 fontSize = 16.sp
                             ),
                             modifier = Modifier
