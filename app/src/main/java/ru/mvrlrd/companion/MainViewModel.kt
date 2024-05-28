@@ -15,6 +15,9 @@ class MainViewModel(private val remoteRepository: RemoteRepository): ViewModel()
 
     fun sendRequest(query: String){
         viewModelScope.launch {
+            println("_______1_______")
+            println("_______2_______")
+            println("_______3_______")
             val answer = remoteRepository.getAnswer("", query)
             _responseAnswer.postValue(answer)
         }
