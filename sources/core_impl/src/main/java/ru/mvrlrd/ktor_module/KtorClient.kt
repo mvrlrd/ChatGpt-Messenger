@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 import ru.mvrlrd.core_api.network.NetworkClient
 import ru.mvrlrd.core_api.dto.Request
 import ru.mvrlrd.core_api.dto.RequestData
+import ru.mvrlrd.core_api.dto.ServerResponse
 import ru.mvrlrd.core_api.dto.TextResponse
 import javax.inject.Inject
 
@@ -19,21 +20,21 @@ class KtorClient @Inject constructor(private val client: HttpClient): NetworkCli
 
     override suspend fun doRequest(request: Request): Response {
        when (request){
-           is RequestData ->{
-               val response =  client.post(URL) {
+           is RequestData -> {
+               val response = client.post(URL) {
                    var jsonString = Json.encodeToString<RequestData>(request)
                    headers {
-                       append("Authorization",  "Api-Key $API_KEY")
+                       append("Authorization", "Api-Key $API_KEY")
                    }
                    setBody(jsonString)
                }
                if (response.status != HttpStatusCode.OK) {
                    throw RuntimeException("Invalid response received: code: ${response.status.value}, message: ${response.bodyAsText()}")
                }
-               return TextResponse(response.bodyAsText())
+               return Json.decodeFromString<ServerResponse>(response.bodyAsText())
            }
        }
-        return TextResponse("Fail")
+        return ServerResponse.getDefault()
     }
 }
 
