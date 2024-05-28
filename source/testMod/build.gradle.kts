@@ -1,13 +1,9 @@
 plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    kotlin("plugin.serialization") version "1.9.0"
     id("com.google.devtools.ksp")
 }
 apply<CommonDependenciesPlugin>()
-
-
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -15,5 +11,7 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+//        implementation("com.google.dagger:dagger:2.48")
+//    ksp("com.google.dagger:dagger-compiler:2.48")
+//    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.9.0-1.0.12")
 }

@@ -19,5 +19,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Companion"
 include(":app")
-include(":sources:ktor_module")
+include(":sources:core_impl")
 include(":sources:core_api")
+include(":sources:core")
+include(":source:testMod")

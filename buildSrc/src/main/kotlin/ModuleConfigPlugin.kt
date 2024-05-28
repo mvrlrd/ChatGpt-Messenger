@@ -56,7 +56,7 @@ class ModuleConfigPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.kotlin(): KotlinAndroidProjectExtension{
+    private fun Project.kotlin(): KotlinAndroidProjectExtension {
         return extensions.getByType(KotlinAndroidProjectExtension::class.java)
     }
 

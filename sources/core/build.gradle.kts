@@ -1,13 +1,9 @@
 plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    kotlin("plugin.serialization") version "1.9.0"
     id("com.google.devtools.ksp")
 }
 apply<CommonDependenciesPlugin>()
-
-
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -15,5 +11,6 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(projects.sources.coreApi)
+    implementation(projects.sources.coreImpl)
 }
