@@ -1,14 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
 }
-apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
-
+apply<ComposePlugin>()
 android {
-    namespace = "ru.mvrlrd.home"
+    namespace = "ru.mvrlrd.home2"
     buildFeatures {
         compose = true
     }
@@ -16,8 +13,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.0"
     }
 }
-dependencies {
-    implementation(projects.sources.coreApi)
-//    implementation(projects.sources.coreAndroid)
-}
 
+dependencies {
+
+}

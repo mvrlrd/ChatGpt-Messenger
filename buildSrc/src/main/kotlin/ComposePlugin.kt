@@ -18,6 +18,8 @@ class ComposePlugin : Plugin<Project> {
             add("androidTestImplementation", "androidx.compose.ui:ui-test-junit4:$uiTestJUnit4Version")
             add("debugImplementation", "androidx.compose.ui:ui-tooling")
             add("debugImplementation", "androidx.compose.ui:ui-test-manifest")
+            add("implementation", "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewmodelCompose")
+            add("implementation", "androidx.compose.runtime:runtime-livedata:$runtimeLivedata")
 
         }
     }
@@ -32,5 +34,7 @@ class ComposePlugin : Plugin<Project> {
         private  const val espressoCoreVersion = "3.5.1"
         private const val uiTestJUnit4Version = "1.1.5"
         private const val composeBom = "2023.03.00"
+        private const val lifecycleViewmodelCompose = "1.0.0-alpha07"
+        private const val runtimeLivedata = "1.2.0"
     }
 }
