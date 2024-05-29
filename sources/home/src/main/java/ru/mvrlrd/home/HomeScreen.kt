@@ -92,20 +92,23 @@ fun HomeScreen() {
 fun TypingAnimation(text: String, isLoading: Boolean) {
     var displayedText by remember { mutableStateOf("") }
     var visibleTextLength by remember { mutableStateOf(0) }
-    LaunchedEffect(text) {
-        for (i in text.indices) {
-            delay(50)
-            visibleTextLength = i + 1
-        }
-    }
-    displayedText = text.take(visibleTextLength)
+
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         if (isLoading) {
+            visibleTextLength =  0
             CircularProgressIndicator() // Круговой прогресс-бар
         } else {
+            LaunchedEffect(text) {
+                for (i in text.indices) {
+                    delay(50)
+                    visibleTextLength = i + 1
+                }
+            }
+            displayedText = text.take(visibleTextLength)
             BasicText(
                 text = displayedText,
                 style = TextStyle(
