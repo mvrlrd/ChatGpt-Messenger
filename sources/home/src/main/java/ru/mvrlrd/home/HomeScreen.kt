@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -54,9 +55,7 @@ fun HomeScreen() {
     val repo = remember {
         DaggerHomeComponent.builder().providersFacade(facade).build().getRepo()
     }
-
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.createHomeViewModelFactory(repo))
-
     val userInput = remember { mutableStateOf(TextFieldValue()) }
     var response by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -93,7 +92,6 @@ fun TypingAnimation(text: String, isLoading: Boolean) {
     var displayedText by remember { mutableStateOf("") }
     var visibleTextLength by remember { mutableStateOf(0) }
 
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -109,6 +107,7 @@ fun TypingAnimation(text: String, isLoading: Boolean) {
                 }
             }
             displayedText = text.take(visibleTextLength)
+
             BasicText(
                 text = displayedText,
                 style = TextStyle(
@@ -134,6 +133,16 @@ fun CustomTextField(
     textState: MutableState<TextFieldValue>,
     onSend: () -> Unit
 ) {
+    val debounceDuration: Long = 3000
+    var isClickable by remember { mutableStateOf(true) }
+    LaunchedEffect(isClickable) {
+        while (!isClickable) {
+            delay(debounceDuration)
+            isClickable = true
+        }
+    }
+
+
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -161,7 +170,13 @@ fun CustomTextField(
                             .padding(8.dp)
                     )
                     IconButton(
-                        onClick = onSend,
+                        onClick = {
+                            if (isClickable) {
+                                Log.d("TAG","clicked")
+                                isClickable = false
+                                onSend()
+                            }
+                        },
                         modifier = Modifier
                             .size(36.dp)
                             .clip(RoundedCornerShape(50))
