@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.network.RemoteRepository
 
@@ -16,13 +17,24 @@ class HomeViewModel(private val remoteRepository: RemoteRepository): ViewModel()
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    val channel = Channel<String>()
+
     fun sendRequest(query: String) {
-        if (isNotSameRequest(query)) {
+        if (query.isNotBlank() && isNotSameRequest(query)) {
             viewModelScope.launch {
                 _isLoading.postValue(true)
                 val answer = remoteRepository.getAnswer("", query)
                 _responseAnswer.postValue(answer)
                 _isLoading.postValue(false)
+            }
+        }else{
+            val message = if (query.isBlank()){
+                "пустой запрос"
+            }else {
+                "введите новый запрос"
+            }
+            viewModelScope.launch {
+                channel.send(message)
             }
         }
     }
