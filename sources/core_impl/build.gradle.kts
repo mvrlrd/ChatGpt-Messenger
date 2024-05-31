@@ -1,16 +1,19 @@
 plugins {
-    id("java-library")
-    id("org.jetbrains.kotlin.jvm")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.0"
     id("com.google.devtools.ksp")
+    id("androidx.room")
 }
 apply<CommonDependenciesPlugin>()
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+apply<ModuleConfigPlugin>()
+//apply<RoomDependenciesPlugin>()
+android {
+    namespace = "ru.mvrlrd.core_impl"
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
-
 
 
 dependencies {
@@ -26,12 +29,12 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
-//    implementation("com.google.dagger:dagger:2.48")
-//    ksp("com.google.dagger:dagger-compiler:2.48")
-//    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.9.0-1.0.12")
-
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
 
 }
-
-
-

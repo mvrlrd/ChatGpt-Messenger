@@ -55,11 +55,8 @@ android {
 
 dependencies {
     implementation(projects.sources.coreApi)
-    implementation(projects.sources.core)
-    implementation(projects.sources.coreImpl)
-    implementation(projects.sources.coreAndroid)
+    implementation(projects.sources.coreFactory)
     implementation(projects.sources.home)
-    implementation(projects.source.home2)
 
 //    implementation("androidx.core:core-ktx:1.13.1")
 //    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
