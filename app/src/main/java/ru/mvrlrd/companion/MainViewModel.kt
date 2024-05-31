@@ -8,28 +8,24 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.network.RemoteRepository
 
-class MainViewModel(private val remoteRepository: RemoteRepository): ViewModel() {
-    private var _responseAnswer = MutableLiveData<String>()
-    val responseAnswer: LiveData<String> = _responseAnswer
-
-
-    fun sendRequest(query: String){
-        viewModelScope.launch {
-            println("_______1_______")
-            println("_______2_______")
-            println("_______3_______")
-            val answer = remoteRepository.getAnswer("", query)
-            _responseAnswer.postValue(answer)
-        }
-    }
-
-    companion object {
-        fun createMainViewModelFactory(remoteRepository: RemoteRepository): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return MainViewModel(remoteRepository) as T
-                }
-            }
-    }
-
-}
+//class MainViewModel(private val remoteRepository: RemoteRepository): ViewModel() {
+//    private var _responseAnswer = MutableLiveData<String>()
+//    val responseAnswer: LiveData<String> = _responseAnswer
+//
+//
+//    fun sendRequest(query: String){
+//        viewModelScope.launch {
+//            val answer = remoteRepository.getAnswer("", query)
+//            _responseAnswer.postValue(answer)
+//        }
+//    }
+//
+//    companion object {
+//        fun createMainViewModelFactory(remoteRepository: RemoteRepository): ViewModelProvider.Factory =
+//            object : ViewModelProvider.Factory {
+//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//                    return MainViewModel(remoteRepository) as T
+//                }
+//            }
+//    }
+//}
