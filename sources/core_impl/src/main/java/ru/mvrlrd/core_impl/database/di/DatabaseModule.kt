@@ -1,4 +1,4 @@
-package ru.mvrlrd.core_impl.database
+package ru.mvrlrd.core_impl.database.di
 
 import android.content.Context
 import androidx.room.Room
@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.Reusable
 import ru.mvrlrd.core_api.database.AnswersDao
 import ru.mvrlrd.core_api.database.AnswersDatabaseContract
+import ru.mvrlrd.core_impl.database.AnswersDatabase
 import javax.inject.Singleton
 
 const val ANSWERS_DATABASE_NAME = "ANSWERS_DB"

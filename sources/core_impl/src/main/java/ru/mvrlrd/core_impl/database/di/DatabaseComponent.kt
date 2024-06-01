@@ -1,4 +1,4 @@
-package ru.mvrlrd.core_impl.database
+package ru.mvrlrd.core_impl.database.di
 
 import dagger.Component
 import ru.mvrlrd.core_api.database.DatabaseProvider

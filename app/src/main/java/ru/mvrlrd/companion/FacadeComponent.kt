@@ -10,6 +10,7 @@ import ru.mvrlrd.core_factory.CoreProvidersFactory
 
 @Component(dependencies = [NetworkClientProvider::class, DatabaseProvider::class, AppProvider::class])
 interface FacadeComponent: ProvidersFacade {
+
         companion object {
         fun init(application: Application): FacadeComponent =
             DaggerFacadeComponent.builder()
