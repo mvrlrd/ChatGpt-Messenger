@@ -18,6 +18,5 @@ android {
 }
 dependencies {
     implementation(projects.sources.coreApi)
-//    implementation(projects.sources.coreAndroid)
 }
 

@@ -1,21 +1,21 @@
 package ru.mvrlrd.companion
 
+import android.app.Application
 import dagger.Component
-import ru.mvrlrd.core.CoreProvidersFactory
-import ru.mvrlrd.core_api.mediators.NetworkClientProvider
+import ru.mvrlrd.core_api.database.DatabaseProvider
+import ru.mvrlrd.core_api.mediators.AppProvider
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
-import ru.mvrlrd.core_api.network.RemoteRepository
-import javax.inject.Singleton
+import ru.mvrlrd.core_api.network.NetworkClientProvider
+import ru.mvrlrd.core_factory.CoreProvidersFactory
 
-@Singleton
-@Component(dependencies = [NetworkClientProvider::class])
-interface FacadeComponent : ProvidersFacade {
+@Component(dependencies = [NetworkClientProvider::class, DatabaseProvider::class, AppProvider::class])
+interface FacadeComponent: ProvidersFacade {
 
-    fun getRepo(): RemoteRepository
-
-    companion object {
-        fun init(): FacadeComponent =
+        companion object {
+        fun init(application: Application): FacadeComponent =
             DaggerFacadeComponent.builder()
+                .appProvider(AppComponent.create(application))
+                .databaseProvider(CoreProvidersFactory.createDatabaseComponent(AppComponent.create(application)))
                 .networkClientProvider(CoreProvidersFactory.createNetworkClient())
                 .build()
     }

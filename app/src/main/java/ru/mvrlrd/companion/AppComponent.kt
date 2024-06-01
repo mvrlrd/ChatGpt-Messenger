@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
-import ru.mvrlrd.core_android.AppProvider
+import ru.mvrlrd.core_api.mediators.AppProvider
 import javax.inject.Singleton
 
 @Singleton

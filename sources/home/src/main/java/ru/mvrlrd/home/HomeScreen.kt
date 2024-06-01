@@ -67,7 +67,7 @@ fun ShowToast( flow: Flow<String>) {
 }
 @Composable
 fun HomeScreen() {
-    val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
+    val facade = (LocalContext.current.applicationContext as ru.mvrlrd.core_api.mediators.AppWithFacade).getFacade()
     val repo = remember {
         DaggerHomeComponent.builder().providersFacade(facade).build().getRepo()
     }
