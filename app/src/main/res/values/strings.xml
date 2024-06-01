@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Companion</string>
+    <string name="pull_to_refresh_complete_label">pull_to_refresh_complete_label</string>
+    <string name="pull_to_refresh_pull_label">pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_release_label">pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_refreshing_label">pull_to_refresh_refreshing_label</string>
 </resources>
