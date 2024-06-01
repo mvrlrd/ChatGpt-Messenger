@@ -7,9 +7,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import ru.mvrlrd.core_api.database.entity.Answer
 import ru.mvrlrd.core_api.network.RemoteRepository
+import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
+import ru.mvrlrd.home.domain.api.SaveAnswerUseCase
+import javax.inject.Inject
 
-class HomeViewModel(private val remoteRepository: RemoteRepository): ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val remoteRepository: RemoteRepository,
+    private val getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase,
+    private val saveAnswerUseCase: SaveAnswerUseCase
+) : ViewModel() {
     private var _responseAnswer = MutableLiveData<String>()
     val responseAnswer: LiveData<String> = _responseAnswer
     private var lastRequest: String = ""
@@ -17,15 +25,17 @@ class HomeViewModel(private val remoteRepository: RemoteRepository): ViewModel()
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    val channel = Channel<String>()
+    val oneShotEventChannel = Channel<String>()
 
     fun sendRequest(query: String) {
         if (query.isNotBlank() && isNotSameRequest(query)) {
             viewModelScope.launch {
                 _isLoading.postValue(true)
-                val answer = remoteRepository.getAnswer("", query)
-                _responseAnswer.postValue(answer)
+                val responseText = remoteRepository.getAnswer("", query)
+                _responseAnswer.postValue(responseText)
                 _isLoading.postValue(false)
+                val answer = Answer(0, query, responseText)
+                saveAnswer(answer)
             }
         }else{
             val message = if (query.isBlank()){
@@ -34,8 +44,19 @@ class HomeViewModel(private val remoteRepository: RemoteRepository): ViewModel()
                 "введите новый запрос"
             }
             viewModelScope.launch {
-                channel.send(message)
+                oneShotEventChannel.send(message)
             }
+        }
+    }
+
+    private suspend fun saveAnswer(answer: Answer){
+        viewModelScope.launch {
+            saveAnswerUseCase(answer)
+        }
+    }
+    private suspend fun getFavoriteAnswers(){
+        viewModelScope.launch {
+            getFavoritesAnswersUseCase()
         }
     }
 
@@ -46,10 +67,18 @@ class HomeViewModel(private val remoteRepository: RemoteRepository): ViewModel()
     }
 
     companion object {
-        fun createHomeViewModelFactory(remoteRepository: RemoteRepository): ViewModelProvider.Factory =
+        fun createHomeViewModelFactory(
+            remoteRepository: RemoteRepository,
+            getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase,
+            saveAnswerUseCase: SaveAnswerUseCase
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return HomeViewModel(remoteRepository) as T
+                    return HomeViewModel(
+                        remoteRepository,
+                        getFavoritesAnswersUseCase,
+                        saveAnswerUseCase
+                    ) as T
                 }
             }
     }

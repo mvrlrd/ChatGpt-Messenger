@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -53,6 +52,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.mediators.AppWithFacade
+import ru.mvrlrd.home.di.DaggerHomeComponent
 
 @Composable
 fun ShowToast( flow: Flow<String>) {
@@ -67,18 +67,31 @@ fun ShowToast( flow: Flow<String>) {
 }
 @Composable
 fun HomeScreen() {
-    val facade = (LocalContext.current.applicationContext as ru.mvrlrd.core_api.mediators.AppWithFacade).getFacade()
-    val repo = remember {
-        DaggerHomeComponent.builder().providersFacade(facade).build().getRepo()
+    val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
+    val homeComponent = remember {
+//        throw RuntimeException()
+        DaggerHomeComponent.builder().providersFacade(facade).build()
     }
-    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.createHomeViewModelFactory(repo))
+    val repo = remember {
+//        throw RuntimeException()
+        homeComponent.getRepo()
+    }
+    val saveUseCase = remember {
+//        throw RuntimeException()
+        homeComponent.getSaveUseCase()
+    }
+    val getFavsUseCase = remember {
+//        throw RuntimeException()
+        homeComponent.getGetFavsUseCase()
+    }
+    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.createHomeViewModelFactory(repo, getFavsUseCase, saveUseCase))
     val userInput = remember { mutableStateOf(TextFieldValue()) }
     var response by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     response = viewModel.responseAnswer.observeAsState("").value
     val isLoading by viewModel.isLoading.observeAsState(false) // наблюдаем за состоянием загрузки
 
-    val flow = viewModel.channel.receiveAsFlow()
+    val flow = viewModel.oneShotEventChannel.receiveAsFlow()
 
 
 
