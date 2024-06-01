@@ -37,6 +37,7 @@ import com.canlioya.pullrefreshcomposesample.pullrefresh.PullToRefreshLayout
 import com.canlioya.pullrefreshcomposesample.pullrefresh.rememberPullToRefreshState
 import ru.mvrlrd.companion.ui.theme.CompanionTheme
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
+import ru.mvrlrd.favorites.FavoritesScreen
 import ru.mvrlrd.home.HomeScreen
 
 
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                                     viewModel.refresh()
                                 },
                             ) {
-                                MyScrollableScreen()
+                                HomeScreen()
                             }
                         }
                     }
@@ -99,7 +100,7 @@ class MainActivity : ComponentActivity() {
 
                 is UiState.Success -> {
                     Log.d("TAG","___ Success")
-                    HomeScreen()
+                    FavoritesScreen()
                 }
             }
 

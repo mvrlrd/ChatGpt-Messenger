@@ -57,6 +57,7 @@ dependencies {
     implementation(projects.sources.coreApi)
     implementation(projects.sources.coreFactory)
     implementation(projects.sources.home)
+    implementation(projects.sources.favorites)
 
 //    implementation("androidx.core:core-ktx:1.13.1")
 //    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
@@ -74,10 +75,10 @@ dependencies {
 //    debugImplementation("androidx.compose.ui:ui-tooling")
 //    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation ("androidx.compose.material3:material3:1.2.1")
-    implementation ("androidx.compose.foundation:foundation:1.6.7")
-    implementation ("androidx.compose.runtime:runtime:1.6.7")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material")
+//    implementation ("androidx.compose.material3:material3:1.2.1")
+//    implementation ("androidx.compose.foundation:foundation:1.6.7")
+//    implementation ("androidx.compose.runtime:runtime:1.6.7")
+//    implementation("androidx.compose.material3:material3")
+//    implementation("androidx.compose.material:material")
 
 }
