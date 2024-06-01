@@ -1,5 +1,6 @@
 package ru.mvrlrd.companion
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -50,24 +51,32 @@ class MainViewModel @Inject constructor(
         },
     )
 
-    var isShowHome = false
+
 
     val scrollState = LazyListState()
 
     init {
-        fetchData(UiState.LoadingType.INITIAL_LOAD)
+//        fetchData(UiState.LoadingType.INITIAL_LOAD)
+        viewModelScope.launch {
+            _uiState.emit(UiState.Initial)
+        }
+
 
     }
 
     private fun fetchData(loadType: UiState.LoadingType) {
         viewModelScope.launch {
             colorItemDataSource.getColorList().map { result ->
+                Log.d("TAG", "fetchData     result= $result  loadType = $loadType")
                 when (result) {
+
                     Loading -> {
                         if (loadType == UiState.LoadingType.INITIAL_LOAD) {
                             UiState.Loading
                         } else {
+
                             _uiState.value
+                            UiState.Success
                         }
                     }
 
@@ -76,26 +85,24 @@ class MainViewModel @Inject constructor(
                         UiState.Error
                     }
                     is Success -> {
-                        if (!isShowHome) {
+                        Log.d("TAG","SUCCESSSSS")
                             if (loadType == UiState.LoadingType.PULL_REFRESH) {
                                 pullToRefreshState.updateRefreshState(RefreshIndicatorState.Default)
                                 scrollState.scrollToItem(0)
                             }
-                            isShowHome = true
-                            UiState.Success(result.data)
+                            UiState.Success
 
-                        }else{
-                            UiState.Home
-                        }
                     }
                 }
             }.collectLatest { result ->
+                Log.d("TAG","___ collectLatest =  $result")
                 _uiState.value = result
             }
         }
     }
 
     fun refresh() {
+        Log.d("TAG", "__refresh")
         fetchData(UiState.LoadingType.PULL_REFRESH)
     }
 

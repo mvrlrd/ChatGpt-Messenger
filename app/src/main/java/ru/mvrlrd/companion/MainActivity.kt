@@ -9,14 +9,20 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.canlioya.pullrefreshcomposesample.pullrefresh.PullToRefreshLayout
 import com.canlioya.pullrefreshcomposesample.pullrefresh.rememberPullToRefreshState
 import ru.mvrlrd.companion.ui.theme.CompanionTheme
@@ -52,25 +59,10 @@ class MainActivity : ComponentActivity() {
 
             val uiState by viewModel.uiState.collectAsState()
 
-
+            Log.d("TAG","uiState received = $uiState")
             when (uiState) {
-                is UiState.Error -> {
-                    // show error message
-                }
-
-                UiState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator(color = Color.Black)
-                    }
-                }
-                is UiState.Home -> {
-                    HomeScreen()
-                }
-
-                is UiState.Success -> {
+                is UiState.Initial->{
+                    Log.d("TAG","___ Initial")
                     CompanionTheme {
                         // A surface container using the 'background' color from the theme
                         Surface(
@@ -78,36 +70,36 @@ class MainActivity : ComponentActivity() {
                             color = Color.White,
                         ) {
 
-                                PullToRefreshLayout(
-                                    modifier = Modifier.fillMaxSize(),
-                                    pullRefreshLayoutState = pullToRefreshState,
-                                    onRefresh = {
-                                        viewModel.refresh()
-                                    },
-                                ) {
-                                    (uiState as? UiState.Success)?.data?.let { colors ->
-                                        LazyColumn(
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentPadding = PaddingValues(15.dp),
-                                            verticalArrangement = Arrangement.spacedBy(15.dp),
-                                            state = viewModel.scrollState,
-                                        ) {
-                                            items(items = colors, key = { it.toArgb() }) { color ->
-                                                Box(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .height(80.dp)
-                                                        .background(color)
-                                                        .animateItemPlacement(),
-                                                )
-                                            }
-                                        }
-
-                                }
+                            PullToRefreshLayout(
+                                modifier = Modifier.fillMaxSize(),
+                                pullRefreshLayoutState = pullToRefreshState,
+                                onRefresh = {
+                                    viewModel.refresh()
+                                },
+                            ) {
+                                MyScrollableScreen()
                             }
-
                         }
                     }
+                }
+                is UiState.Error -> {
+                    // show error message
+                }
+
+                UiState.Loading -> {
+                    Log.d("TAG","___ Loading")
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = Color.Black)
+                    }
+
+                }
+
+                is UiState.Success -> {
+                    Log.d("TAG","___ Success")
+                    HomeScreen()
                 }
             }
 
@@ -123,6 +115,39 @@ class MainActivity : ComponentActivity() {
 
         }
 
+    }
+}
+
+@Composable
+fun MyScrollableScreen() {
+    // Create a scroll state
+    val scrollState = rememberScrollState()
+
+    // Use Column with verticalScroll to create a scrollable background
+    Column(
+        modifier = Modifier
+            .fillMaxSize() // Fill the entire screen
+            .background(Color.Cyan) // Set the background color
+            .verticalScroll(scrollState), // Enable vertical scrolling
+        horizontalAlignment = Alignment.CenterHorizontally, // Center the content horizontally
+        verticalArrangement = Arrangement.Center // Center the content vertically
+    ) {
+        Text(
+            text = "Hello, Compose!",
+            color = Color.White,
+            fontSize = 24.sp,
+            modifier = Modifier.padding(16.dp) // Add padding to the text
+        )
+
+        // Add additional items to demonstrate scrolling
+        for (i in 1..20) {
+            Text(
+                text = "Item $i",
+                color = Color.White,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(16.dp) // Add padding to the text
+            )
+        }
     }
 }
 

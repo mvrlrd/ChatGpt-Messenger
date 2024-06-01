@@ -5,10 +5,9 @@ import androidx.compose.ui.graphics.Color
 sealed interface UiState {
     object Loading : UiState
 
-
-    object Home : UiState
+object Initial: UiState
     object Error : UiState
-    data class Success(val data: List<Color>) : UiState
+    object Success : UiState
 
     enum class LoadingType {
         INITIAL_LOAD, PULL_REFRESH,
