@@ -4,5 +4,5 @@ interface DatabaseProvider {
 
     fun provideDatabase(): AnswersDatabaseContract
 
-    fun habitsDao(): AnswersDao
+    fun answersDao(): AnswersDao
 }

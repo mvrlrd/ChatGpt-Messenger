@@ -1,5 +1,6 @@
 package ru.mvrlrd.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
                 val responseText = remoteRepository.getAnswer("", query)
                 _responseAnswer.postValue(responseText)
                 _isLoading.postValue(false)
-                val answer = Answer(0, query, responseText)
+                val answer = Answer(question =  query, answerText = responseText)
                 saveAnswer(answer)
             }
         }else{
@@ -51,7 +52,9 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun saveAnswer(answer: Answer){
         viewModelScope.launch {
-            saveAnswerUseCase(answer)
+            val id =  saveAnswerUseCase(answer)
+
+            Log.d("TAG", "viewModel_______ saved = $id")
         }
     }
     private suspend fun getFavoriteAnswers(){

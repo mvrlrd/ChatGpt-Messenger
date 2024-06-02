@@ -27,6 +27,8 @@ class DatabaseModule {
         return Room.databaseBuilder(
             context,
             AnswersDatabase::class.java, ANSWERS_DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

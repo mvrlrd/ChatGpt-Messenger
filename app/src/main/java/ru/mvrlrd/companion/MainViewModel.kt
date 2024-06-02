@@ -6,14 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canlioya.pullrefreshcomposesample.pullrefresh.PullToRefreshLayoutState
 import com.canlioya.pullrefreshcomposesample.pullrefresh.RefreshIndicatorState
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.mvrlrd.companion.pull.pullrefresh.ColorItemDataSource
 import javax.inject.Inject
 import ru.mvrlrd.companion.pull.pullrefresh.Result.*
+import ru.mvrlrd.core_api.database.entity.Answer
+import ru.mvrlrd.home.domain.GetFavoritesAnswersUseCaseImpl
+import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
 
 //class MainViewModel(private val remoteRepository: RemoteRepository): ViewModel() {
 //    private var _responseAnswer = MutableLiveData<String>()
@@ -37,8 +42,9 @@ import ru.mvrlrd.companion.pull.pullrefresh.Result.*
 //    }
 //}
 
-class MainViewModel @Inject constructor(
-) : ViewModel() {
+class MainViewModel @Inject constructor(private val getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase) :
+    ViewModel() {
+
 
     private val colorItemDataSource = ColorItemDataSource()
 
@@ -74,9 +80,8 @@ class MainViewModel @Inject constructor(
                         if (loadType == UiState.LoadingType.INITIAL_LOAD) {
                             UiState.Loading
                         } else {
-
                             _uiState.value
-                            UiState.Success
+                            UiState.Success(emptyList())
                         }
                     }
 
@@ -86,15 +91,15 @@ class MainViewModel @Inject constructor(
                     }
                     is Success -> {
                         Log.d("TAG","SUCCESSSSS")
-                            if (loadType == UiState.LoadingType.PULL_REFRESH) {
-                                pullToRefreshState.updateRefreshState(RefreshIndicatorState.Default)
-                                scrollState.scrollToItem(0)
-                            }
-                            UiState.Success
+//                            if (loadType == UiState.LoadingType.PULL_REFRESH) {
+//                                pullToRefreshState.updateRefreshState(RefreshIndicatorState.Default)
+//                                scrollState.scrollToItem(0)
+//                            }
 
+                            UiState.Success(getFavoritesAnswersUseCase())
                     }
                 }
-            }.collectLatest { result ->
+            }.collect() { result ->
                 Log.d("TAG","___ collectLatest =  $result")
                 _uiState.value = result
             }

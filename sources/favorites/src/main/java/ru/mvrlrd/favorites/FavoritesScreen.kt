@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,8 +20,8 @@ import ru.mvrlrd.core_api.database.entity.Answer
 
 
 @Composable
-fun FavoritesScreen(){
-    val answers: List<Answer> = mockAnswers()
+fun FavoritesScreen(answers: List<Answer>){
+    val answers = mutableStateOf(answers)
     LazyColumn(
         modifier = Modifier
             .fillMaxSize() // Fill the entire screen
@@ -27,7 +29,7 @@ fun FavoritesScreen(){
             .padding(16.dp), // Add padding to the entire column
         horizontalAlignment = Alignment.CenterHorizontally // Center the items horizontally
     ) {
-        items(answers) { answer ->
+        items(answers.value) { answer ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -36,7 +38,7 @@ fun FavoritesScreen(){
             ) {
                 Text(
                     text = answer.question,
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 24.sp
                 )
             }

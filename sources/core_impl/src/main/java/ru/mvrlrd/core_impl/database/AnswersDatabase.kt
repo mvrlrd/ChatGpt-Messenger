@@ -5,5 +5,5 @@ import androidx.room.RoomDatabase
 import ru.mvrlrd.core_api.database.AnswersDatabaseContract
 import ru.mvrlrd.core_api.database.entity.Answer
 
-@Database(entities = [Answer::class], version = 1)
+@Database(entities = [Answer::class], version = 2)
 abstract class AnswersDatabase : RoomDatabase(), AnswersDatabaseContract
