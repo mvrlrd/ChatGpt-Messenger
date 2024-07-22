@@ -1,4 +1,4 @@
-package ru.mvrlrd.companion.pull.pullrefresh
+package ru.mvrlrd.main.pullrefresh
 
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.delay

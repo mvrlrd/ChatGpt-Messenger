@@ -1,7 +1,8 @@
 package com.canlioya.pullrefreshcomposesample.pullrefresh
 
 import androidx.annotation.StringRes
-import ru.mvrlrd.companion.R
+
+import ru.mvrlrd.main.R
 
 enum class RefreshIndicatorState(@StringRes val messageRes: Int) {
     Default(R.string.pull_to_refresh_complete_label),

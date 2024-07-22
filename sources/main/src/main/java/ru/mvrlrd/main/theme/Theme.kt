@@ -1,4 +1,4 @@
-package ru.mvrlrd.companion.ui.theme
+package ru.mvrlrd.main.theme
 
 import android.app.Activity
 import android.os.Build

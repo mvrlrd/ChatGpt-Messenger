@@ -1,4 +1,4 @@
-package ru.mvrlrd.companion
+package ru.mvrlrd.main
 
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
@@ -6,43 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canlioya.pullrefreshcomposesample.pullrefresh.PullToRefreshLayoutState
 import com.canlioya.pullrefreshcomposesample.pullrefresh.RefreshIndicatorState
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.mvrlrd.companion.pull.pullrefresh.ColorItemDataSource
-import javax.inject.Inject
-import ru.mvrlrd.companion.pull.pullrefresh.Result.*
 import ru.mvrlrd.core_api.database.entity.Answer
-import ru.mvrlrd.home.domain.GetFavoritesAnswersUseCaseImpl
-import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
+import ru.mvrlrd.main.pullrefresh.ColorItemDataSource
+import ru.mvrlrd.main.pullrefresh.Result
+import javax.inject.Inject
 
-//class MainViewModel(private val remoteRepository: RemoteRepository): ViewModel() {
-//    private var _responseAnswer = MutableLiveData<String>()
-//    val responseAnswer: LiveData<String> = _responseAnswer
-//
-//
-//    fun sendRequest(query: String){
-//        viewModelScope.launch {
-//            val answer = remoteRepository.getAnswer("", query)
-//            _responseAnswer.postValue(answer)
-//        }
-//    }
-//
-//    companion object {
-//        fun createMainViewModelFactory(remoteRepository: RemoteRepository): ViewModelProvider.Factory =
-//            object : ViewModelProvider.Factory {
-//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                    return MainViewModel(remoteRepository) as T
-//                }
-//            }
-//    }
-//}
-
-class MainViewModel @Inject constructor(private val getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase) :
+class MainViewModel @Inject constructor() :
     ViewModel() {
 
 
@@ -76,7 +49,7 @@ class MainViewModel @Inject constructor(private val getFavoritesAnswersUseCase: 
                 Log.d("TAG", "fetchData     result= $result  loadType = $loadType")
                 when (result) {
 
-                    Loading -> {
+                    is Result.Loading -> {
                         if (loadType == UiState.LoadingType.INITIAL_LOAD) {
                             UiState.Loading
                         } else {
@@ -85,18 +58,18 @@ class MainViewModel @Inject constructor(private val getFavoritesAnswersUseCase: 
                         }
                     }
 
-                    is Error -> {
+                    is Result.Error -> {
                         pullToRefreshState.updateRefreshState(RefreshIndicatorState.Default)
                         UiState.Error
                     }
-                    is Success -> {
+                    is Result.Success -> {
                         Log.d("TAG","SUCCESSSSS")
 //                            if (loadType == UiState.LoadingType.PULL_REFRESH) {
 //                                pullToRefreshState.updateRefreshState(RefreshIndicatorState.Default)
 //                                scrollState.scrollToItem(0)
 //                            }
 
-                            UiState.Success(getFavoritesAnswersUseCase())
+                        UiState.Success(listOf(Answer(1L,"hello?","Lalalala"),Answer(2L,"question?","answer") ))
                     }
                 }
             }.collect() { result ->

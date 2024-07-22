@@ -1,4 +1,4 @@
-package ru.mvrlrd.companion.pull.pullrefresh
+package ru.mvrlrd.main.pullrefresh
 
 sealed class Result<out R> {
 

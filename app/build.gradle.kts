@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.sources.main)
     implementation(projects.sources.coreApi)
     implementation(projects.sources.coreFactory)
     implementation(projects.sources.home)
