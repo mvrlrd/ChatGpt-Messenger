@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -53,6 +55,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.home.di.DaggerHomeComponent
+import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
+import ru.mvrlrd.main.pullrefresh.rememberPullToRefreshState
 
 @Composable
 fun ShowToast( flow: Flow<String>) {
@@ -66,7 +70,7 @@ fun ShowToast( flow: Flow<String>) {
     }
 }
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val homeComponent = remember {
 //        throw RuntimeException()
@@ -93,32 +97,83 @@ fun HomeScreen() {
 
     val flow = viewModel.oneShotEventChannel.receiveAsFlow()
 
+    val uiState by viewModel.uiState.collectAsState()
+
+    val pullToRefreshState = rememberPullToRefreshState(
+        onTimeUpdated = { timeElapsed ->
+            viewModel.convertElapsedTimeIntoText(timeElapsed)
+        },
+    )
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(scrollState),
+    Log.d("TAG","uiState received = $uiState")
+    when (uiState) {
+        is UiState.Initial->{
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.White,
+            ) {
+                PullToRefreshLayout(
+                    modifier = Modifier.fillMaxSize(),
+                    pullRefreshLayoutState = pullToRefreshState,
+                    onRefresh = {
+                        navController.navigate("Favs")
+//                        viewModel.refresh()
+                    },
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                            .verticalScroll(scrollState),
 
-        verticalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(scrollState)
-        ) {
-            TypingAnimation(text = response, isLoading = isLoading)
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .verticalScroll(scrollState)
+                        ) {
+                            TypingAnimation(text = response, isLoading = isLoading)
+                        }
+                        ShowToast( flow = flow)
+                        CustomTextField(
+                            textState = userInput,
+                            modifier = Modifier
+                                .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
+                        ) {
+                            viewModel.sendRequest(userInput.value.text)
+                        }
+                    }
+                }
+            }
+
+
         }
-        ShowToast( flow = flow)
-        CustomTextField(
-            textState = userInput,
-            modifier = Modifier
-                .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
-        ) {
-            viewModel.sendRequest(userInput.value.text)
+        is UiState.Error -> {
+            // show error message
+        }
+
+        UiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                androidx.compose.material.CircularProgressIndicator(color = Color.Black)
+            }
+
+        }
+
+        is UiState.Success -> {
+            Log.d("TAG", "success")
+            navController.navigate("Favs")
+//                    FavoritesScreen((uiState as UiState.Success).list)
         }
     }
+
+
+
+
 }
 
 @Composable

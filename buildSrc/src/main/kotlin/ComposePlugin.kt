@@ -24,6 +24,9 @@ class ComposePlugin : Plugin<Project> {
             add("implementation", "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewmodelCompose")
             add("implementation", "androidx.compose.runtime:runtime-livedata:$runtimeLivedata")
 
+            add("implementation", "androidx.navigation:navigation-compose:$navComposeVersion")
+            add("implementation", "androidx.navigation:navigation-compose:2.8.0-beta05")
+
         }
     }
 
@@ -39,5 +42,6 @@ class ComposePlugin : Plugin<Project> {
         private const val composeBom = "2023.03.00"
         private const val lifecycleViewmodelCompose = "1.0.0-alpha07"
         private const val runtimeLivedata = "1.2.0"
+        private const val navComposeVersion = "2.6.0-alpha04"
     }
 }

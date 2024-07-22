@@ -1,4 +1,4 @@
-package com.canlioya.pullrefreshcomposesample.pullrefresh
+package ru.mvrlrd.main.pullrefresh
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ru.mvrlrd.home.R
+import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 import kotlin.math.roundToInt
 
 private const val maxHeight = 100
@@ -54,7 +56,7 @@ fun PullToRefreshIndicator(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                text = stringResource(indicatorState.messageRes),
+                text = indicatorState.messageRes,
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.Black,
             )
@@ -67,7 +69,7 @@ fun PullToRefreshIndicator(
                 )
             } else {
                 Text(
-                    text = "hello",
+                    text = "WOWOWOWOW",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.Black,
                 )

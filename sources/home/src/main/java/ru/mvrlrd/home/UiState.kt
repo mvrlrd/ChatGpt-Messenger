@@ -1,4 +1,4 @@
-package ru.mvrlrd.main
+package ru.mvrlrd.home
 
 import ru.mvrlrd.core_api.database.entity.Answer
 
