@@ -105,7 +105,6 @@ fun HomeScreen(navController: NavController) {
         },
     )
 
-
     Log.d("TAG","uiState received = $uiState")
     when (uiState) {
         is UiState.Initial->{

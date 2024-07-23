@@ -17,7 +17,7 @@ fun CompanionApp(onToggleTheme: () -> Unit, darkTheme: Boolean, context: Context
 
         NavHost(
             navController = navController,
-            startDestination = "Home"
+            startDestination = "Favs"
         ) {
             composable("Home") {
                 HomeScreen(navController)
