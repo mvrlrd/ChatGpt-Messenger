@@ -6,8 +6,10 @@ import ru.mvrlrd.favorites.data.ChatRepositoryImpl
 import ru.mvrlrd.favorites.domain.ChatRepository
 import ru.mvrlrd.favorites.domain.api.CreateChatUseCase
 import ru.mvrlrd.favorites.domain.api.GetAllChatsUseCase
+import ru.mvrlrd.favorites.domain.api.RemoveChatUseCase
 import ru.mvrlrd.favorites.domain.impl.CreateChatUseCaseImpl
 import ru.mvrlrd.favorites.domain.impl.GetAllChatsUseCaseImpl
+import ru.mvrlrd.favorites.domain.impl.RemoveChatUseCaseImpl
 
 @Module
 interface ChatRoomsModule {
@@ -20,4 +22,7 @@ interface ChatRoomsModule {
 
     @Binds
     fun bindsCreateChatUseCase(createChatUseCaseImpl: CreateChatUseCaseImpl): CreateChatUseCase
+
+    @Binds
+    fun bindsRemoveChatUseCase(removeChatUseCaseImpl: RemoveChatUseCaseImpl): RemoveChatUseCase
 }

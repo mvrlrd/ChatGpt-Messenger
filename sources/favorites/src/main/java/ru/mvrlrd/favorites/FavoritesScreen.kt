@@ -55,14 +55,16 @@ import ru.mvrlrd.favorites.domain.ChatEntity
 
 @Composable
 fun FavoritesScreen(providersFacade: ProvidersFacade) {
-val scope =   rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
     }
 
     val viewModel: ChatRoomsViewModel = viewModel(
         factory = ChatRoomsViewModel.MyViewModelFactory(
-            chatRoomsComponent.getAllChatsUseCase(), chatRoomsComponent.createChatUseCase(),
+            chatRoomsComponent.getAllChatsUseCase(),
+            chatRoomsComponent.createChatUseCase(),
+            chatRoomsComponent.removeChatUseCase()
         )
     )
     val itemList = remember { viewModel.items }
@@ -86,13 +88,15 @@ val scope =   rememberCoroutineScope()
             }
         },
         content = { paddingValues ->
-            CardList(cards = itemList, modifier = Modifier.padding(paddingValues))
+            CardList(cards = itemList, modifier = Modifier.padding(paddingValues)){id->
+                viewModel.removeChat(id)
+            }
         }
     )
 }
 
     @Composable
-    fun CardList(cards: SnapshotStateList<ChatEntity>, modifier: Modifier) {
+    fun CardList(cards: SnapshotStateList<ChatEntity>, modifier: Modifier, onDismiss: (id: Long)->Unit) {
         LazyColumn {
             itemsIndexed(
                 items = cards,
@@ -101,7 +105,8 @@ val scope =   rememberCoroutineScope()
                 }
             ){index, item ->  
                 SwipeToDismissCard(title = item.title) {
-                    cards.remove(item)
+                    onDismiss(item.chatId)
+//                    cards.remove(item)
                 }
             }
         }

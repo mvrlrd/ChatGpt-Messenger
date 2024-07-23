@@ -1,6 +1,7 @@
 package ru.mvrlrd.core_api.database.chat
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,4 +15,7 @@ interface ChatDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChat(chat: Chat): Long
+
+    @Query("DELETE FROM chat_rooms WHERE chatId=:id")
+    suspend fun removeChat(id: Long)
 }

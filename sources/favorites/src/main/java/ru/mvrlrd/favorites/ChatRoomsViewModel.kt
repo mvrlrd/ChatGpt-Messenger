@@ -18,11 +18,13 @@ import kotlinx.coroutines.launch
 import ru.mvrlrd.favorites.domain.ChatEntity
 import ru.mvrlrd.favorites.domain.api.CreateChatUseCase
 import ru.mvrlrd.favorites.domain.api.GetAllChatsUseCase
+import ru.mvrlrd.favorites.domain.api.RemoveChatUseCase
 import javax.inject.Inject
 
 class ChatRoomsViewModel@Inject constructor(
     private val getAllChatsUseCase: GetAllChatsUseCase,
-    private val createChatUseCase: CreateChatUseCase
+    private val createChatUseCase: CreateChatUseCase,
+    private val removeChatUseCase: RemoveChatUseCase
 ): ViewModel() {
 
 //    private var _chats = MutableStateFlow<List<ChatEntity>>(emptyList())
@@ -47,18 +49,22 @@ class ChatRoomsViewModel@Inject constructor(
                  items.addAll(it)
              }
          }
-
-
+    }
+    fun removeChat(id: Long){
+        viewModelScope.launch {
+            removeChatUseCase(id)
+        }
     }
 
     class MyViewModelFactory(
         private val getAllChatsUseCase: GetAllChatsUseCase,
-        private val createChatUseCase: CreateChatUseCase
+        private val createChatUseCase: CreateChatUseCase,
+        private val removeChatUseCase: RemoveChatUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ChatRoomsViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return ChatRoomsViewModel(getAllChatsUseCase, createChatUseCase) as T
+                return ChatRoomsViewModel(getAllChatsUseCase, createChatUseCase, removeChatUseCase) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
