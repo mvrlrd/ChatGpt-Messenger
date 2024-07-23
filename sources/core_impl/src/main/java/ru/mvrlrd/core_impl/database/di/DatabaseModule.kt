@@ -5,8 +5,8 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import ru.mvrlrd.core_api.database.AnswersDao
-import ru.mvrlrd.core_api.database.AnswersDatabaseContract
+import ru.mvrlrd.core_api.database.answer.AnswersDao
+import ru.mvrlrd.core_api.database.answer.AnswersDatabaseContract
 import ru.mvrlrd.core_impl.database.AnswersDatabase
 import javax.inject.Singleton
 

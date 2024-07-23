@@ -1,6 +1,6 @@
 package ru.mvrlrd.home
 
-import ru.mvrlrd.core_api.database.entity.Answer
+import ru.mvrlrd.core_api.database.answer.entity.Answer
 
 sealed interface UiState {
     object Loading : UiState

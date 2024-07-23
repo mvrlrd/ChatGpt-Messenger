@@ -1,4 +1,4 @@
-package ru.mvrlrd.core_api.database
+package ru.mvrlrd.core_api.database.answer
 
 interface DatabaseProvider {
 

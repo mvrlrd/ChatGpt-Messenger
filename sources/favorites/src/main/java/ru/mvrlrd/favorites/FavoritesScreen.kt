@@ -44,15 +44,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import ru.mvrlrd.core_api.mediators.ProvidersFacade
+import ru.mvrlrd.favorites.di.ChatRoomsComponent
+import ru.mvrlrd.favorites.di.DaggerChatRoomsComponent
+import ru.mvrlrd.favorites.domain.ChatEntity
 
 
 @Composable
-fun FavoritesScreen() {
+fun FavoritesScreen(providersFacade: ProvidersFacade) {
+    val coroutineScope = rememberCoroutineScope()
+    val chatRoomsComponent = remember{
+        ChatRoomsComponent.create(providersFacade)
+    }
+    val createChatUseCase = remember { chatRoomsComponent.createChatUseCase() }
+
     val cards = remember { mutableStateListOf<String>() }
     var counter = 0
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
+
+                coroutineScope.launch{
+                    createChatUseCase(ChatEntity(0, "hello one", "12"))
+                }
+
                 cards.add("${ counter++}")
             }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
@@ -77,12 +93,6 @@ fun FavoritesScreen() {
                     cards.remove(item)
                 }
             }
-//            items(cards) {
-//                SwipeToDismissCard(title = it, onDismiss = {
-//                    Log.d("TAG", "cards.size = ${cards.size}")
-//                    cards.remove(it)
-//                })
-//            }
         }
     }
 
@@ -97,13 +107,6 @@ fun FavoritesScreen() {
                 true
             }
         )
-
-//        LaunchedEffect(dismissState.currentValue) {
-//            Log.d("TAG", "${dismissState.currentValue}  ${DismissValue.DismissedToEnd}")
-//            if (dismissState.currentValue == DismissValue.DismissedToEnd){
-//                onDismiss()
-//            }
-//        }
 
         SwipeToDismiss(
             state = dismissState,
@@ -168,12 +171,3 @@ fun RoundedCard(title: String, onClick: () -> Unit) {
 fun PreviewCard() {
     RoundedCard(title = "Hello", {})
 }
-
-//private fun mockAnswers(): List<Answer>{
-//    val list = mutableListOf<Answer>()
-//    repeat(100){
-//        list.add(Answer(it.toLong(), "how much?", "lalalallalalallalalallalalallsdaldlasldlafnsdkjgbdjfhbvkjsbfckjwnkcndkjnvkshhfoiajsdlkjvnzkljbvkjznvm,c bkjajlefjaljksdnvlkjxnbkmvx "))
-//    }
-//    return list
-//}
-

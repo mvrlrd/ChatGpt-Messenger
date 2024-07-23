@@ -1,7 +1,7 @@
 package ru.mvrlrd.home.domain
 
-import ru.mvrlrd.core_api.database.AnswersDao
-import ru.mvrlrd.core_api.database.entity.Answer
+import ru.mvrlrd.core_api.database.answer.AnswersDao
+import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
 import javax.inject.Inject
 

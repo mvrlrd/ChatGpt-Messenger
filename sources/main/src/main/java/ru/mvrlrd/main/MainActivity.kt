@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import ru.mvrlrd.core_api.mediators.AppWithFacade
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +19,8 @@ class MainActivity : ComponentActivity() {
                     isLightTheme = !isLightTheme
                 },
                 darkTheme = !isLightTheme,
-                context = this
+                context = this,
+                providersFacade = (application as AppWithFacade).getFacade()
             )
         }
     }

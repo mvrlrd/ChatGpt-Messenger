@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.mvrlrd.core_api.database.entity.Answer
+import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
 import ru.mvrlrd.home.domain.api.SaveAnswerUseCase
@@ -148,7 +148,9 @@ class HomeViewModel @Inject constructor(
 //                                scrollState.scrollToItem(0)
 //                            }
 
-                        UiState.Success(listOf(Answer(1L,"hello?","Lalalala"),Answer(2L,"question?","answer") ))
+                        UiState.Success(listOf(
+                            Answer(1L,"hello?","Lalalala"),
+                            Answer(2L,"question?","answer") ))
                     }
                 }
             }.collect() { result ->
