@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
     suspend fun getAllChats(): Flow<List<ChatEntity>>
-    suspend fun createChat(chat: ChatEntity)
+    suspend fun createChat(entity: ChatEntity)
 }

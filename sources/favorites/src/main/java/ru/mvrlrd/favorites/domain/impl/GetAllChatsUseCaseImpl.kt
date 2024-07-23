@@ -7,7 +7,7 @@ import ru.mvrlrd.favorites.domain.api.GetAllChatsUseCase
 
 import javax.inject.Inject
 
-class GetAllChatsUseCaseImpl@Inject constructor(val repo: ChatRepository): GetAllChatsUseCase {
+class GetAllChatsUseCaseImpl@Inject constructor(private val repo: ChatRepository): GetAllChatsUseCase {
     override suspend fun invoke(): Flow<List<ChatEntity>> {
         return repo.getAllChats()
     }

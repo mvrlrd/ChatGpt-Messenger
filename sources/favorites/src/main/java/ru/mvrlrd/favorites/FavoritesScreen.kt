@@ -44,6 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.favorites.di.ChatRoomsComponent
@@ -53,43 +55,52 @@ import ru.mvrlrd.favorites.domain.ChatEntity
 
 @Composable
 fun FavoritesScreen(providersFacade: ProvidersFacade) {
-    val coroutineScope = rememberCoroutineScope()
-    val chatRoomsComponent = remember{
+val scope =   rememberCoroutineScope()
+    val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
     }
-    val createChatUseCase = remember { chatRoomsComponent.createChatUseCase() }
 
-    val cards = remember { mutableStateListOf<String>() }
+    val viewModel: ChatRoomsViewModel = viewModel(
+        factory = ChatRoomsViewModel.MyViewModelFactory(
+            chatRoomsComponent.getAllChatsUseCase(), chatRoomsComponent.createChatUseCase(),
+        )
+    )
+    val itemList = remember { viewModel.items }
+
+
+
+
+
+//    val cards = remember { mutableStateListOf<String>() }
     var counter = 0
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                viewModel.createChat(ChatEntity(0, "hello one", "12"))
+                    viewModel.getAllChats()
+//                cards.add("${ counter++}")
 
-                coroutineScope.launch{
-                    createChatUseCase(ChatEntity(0, "hello one", "12"))
-                }
 
-                cards.add("${ counter++}")
             }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
             }
         },
         content = { paddingValues ->
-            CardList(cards = cards, modifier = Modifier.padding(paddingValues))
+            CardList(cards = itemList, modifier = Modifier.padding(paddingValues))
         }
     )
 }
 
     @Composable
-    fun CardList(cards: SnapshotStateList<String>, modifier: Modifier) {
+    fun CardList(cards: SnapshotStateList<ChatEntity>, modifier: Modifier) {
         LazyColumn {
             itemsIndexed(
                 items = cards,
                 key = {index, item ->
-                    item.hashCode()
+                    item
                 }
             ){index, item ->  
-                SwipeToDismissCard(title = item) {
+                SwipeToDismissCard(title = item.title) {
                     cards.remove(item)
                 }
             }
