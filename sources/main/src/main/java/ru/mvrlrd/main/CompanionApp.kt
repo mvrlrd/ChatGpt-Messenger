@@ -20,11 +20,17 @@ fun CompanionApp(onToggleTheme: () -> Unit, darkTheme: Boolean, context: Context
             navController = navController,
             startDestination = "Favs"
         ) {
-            composable("Home") {
-                HomeScreen(navController)
-            }
+//            composable("Home") {
+//                HomeScreen(navController)
+//            }
             composable("Favs") {
-                FavoritesScreen(providersFacade)
+                FavoritesScreen(providersFacade = providersFacade,){
+                    navController.navigate("Home/$it")
+                }
+            }
+            composable("Home/{id}") { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()?:0L
+                HomeScreen(id = id, navController = navController)
             }
         }
     }

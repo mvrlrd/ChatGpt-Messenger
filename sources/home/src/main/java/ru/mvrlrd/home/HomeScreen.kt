@@ -70,7 +70,7 @@ fun ShowToast( flow: Flow<String>) {
     }
 }
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, id: Long) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val homeComponent = remember {
 //        throw RuntimeException()
