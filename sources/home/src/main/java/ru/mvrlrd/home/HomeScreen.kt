@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -66,7 +67,6 @@ fun ShowToast( flow: Flow<String>) {
         flow.collectLatest {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
-
     }
 }
 @Composable
@@ -134,9 +134,13 @@ fun HomeScreen(navController: NavController) {
                                 .weight(1f)
                                 .verticalScroll(scrollState)
                         ) {
-                            TypingAnimation(text = response, isLoading = isLoading)
+                            Column {
+                                Text(userInput.value.text)
+                                TypingAnimation(text = response, isLoading = isLoading)
+                            }
+
                         }
-                        ShowToast( flow = flow)
+                        ShowToast(flow = flow)
                         CustomTextField(
                             textState = userInput,
                             modifier = Modifier
