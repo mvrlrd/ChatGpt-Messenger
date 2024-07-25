@@ -233,8 +233,6 @@ fun CustomTextField(
             isClickable = true
         }
     }
-
-
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
