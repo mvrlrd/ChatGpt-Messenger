@@ -42,7 +42,7 @@ fun FavoritesScreen(providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.createChat(ChatEntity(0, "hello one", "12"))
+                viewModel.createChat(ChatEntity(0, "hello one", 12))
                 viewModel.getAllChats()
             }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")

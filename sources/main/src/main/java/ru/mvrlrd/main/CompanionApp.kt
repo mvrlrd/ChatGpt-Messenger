@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.favorites.FavoritesScreen
-import ru.mvrlrd.home.HomeScreen
+//import ru.mvrlrd.home.HomeScreen
 import ru.mvrlrd.home.HomeScreen2
 import ru.mvrlrd.main.theme.CompanionTheme
 
@@ -31,7 +31,7 @@ fun CompanionApp(onToggleTheme: () -> Unit, darkTheme: Boolean, context: Context
             }
             composable("Home/{id}") { backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()?:0L
-                HomeScreen2(id = id, navController = navController)
+                HomeScreen2(chatId = id, navController = navController)
             }
         }
     }

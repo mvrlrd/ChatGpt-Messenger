@@ -5,8 +5,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import ru.mvrlrd.core_api.database.chat.entity.Chat
+import ru.mvrlrd.core_api.database.chat.entity.ChatWithMessages
+import ru.mvrlrd.core_api.database.chat.entity.Message
 
 @Dao
 interface ChatDao {
@@ -16,6 +19,15 @@ interface ChatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChat(chat: Chat): Long
 
-    @Query("DELETE FROM chat_rooms WHERE chatId=:id")
+    @Query("DELETE FROM chat_rooms WHERE chatId = :id")
     suspend fun removeChat(id: Long)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessage(message: Message): Long
+    @Transaction
+    @Query("SELECT * FROM chat_rooms WHERE chatId = :chatId")
+    fun getChatWithMessages(chatId: Long): Flow<ChatWithMessages>
+
+    @Query("SELECT * FROM messages WHERE holderChatId = :chatId")
+    fun getMessagesForChat(chatId: Long): Flow<List<Message>>
 }

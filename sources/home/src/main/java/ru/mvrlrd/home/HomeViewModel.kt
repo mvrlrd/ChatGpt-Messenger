@@ -9,13 +9,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.database.answer.entity.Answer
+import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.RemoteRepository
-import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
-import ru.mvrlrd.home.domain.api.SaveAnswerUseCase
+import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
+import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 import ru.mvrlrd.home.pullrefresh.ColorItemDataSource
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 import ru.mvrlrd.home.pullrefresh.Result
@@ -24,8 +27,10 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
-    private val getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase,
-    private val saveAnswerUseCase: SaveAnswerUseCase
+    private val saveMessageToChatUseCase: SaveMessageToChatUseCase,
+    private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
+    private val chatId: Long
+
 ) : ViewModel() {
     private var _responseAnswer = MutableLiveData<String>()
     val responseAnswer: LiveData<String> = _responseAnswer
@@ -36,15 +41,26 @@ class HomeViewModel @Inject constructor(
 
     val oneShotEventChannel = Channel<String>()
 
+    private val _messages = MutableStateFlow<List<Message>>(emptyList())
+    val messages: StateFlow<List<Message>> get() = _messages.asStateFlow()
+
+init {
+    getAllMessagesForChat(chatId)
+}
+
     fun sendRequest(query: String) {
         if (query.isNotBlank() && isNotSameRequest(query)) {
+            viewModelScope.launch {
+                saveMessageToChatUseCase(Message(0,chatId,query,1L,false))
+            }
             viewModelScope.launch {
                 _isLoading.postValue(true)
                 val responseText = remoteRepository.getAnswer("", query)
                 _responseAnswer.postValue(responseText)
                 _isLoading.postValue(false)
-                val answer = Answer(question =  query, answerText = responseText)
-                saveAnswer(answer)
+//                val answer = Answer(question =  query, answerText = responseText)
+//                saveAnswer(answer)
+                saveMessageToChat(Message(0,chatId,responseText,1,true))
             }
         }else{
             val message = if (query.isBlank()){
@@ -58,18 +74,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun saveAnswer(answer: Answer){
-        viewModelScope.launch {
-            val id =  saveAnswerUseCase(answer)
 
-            Log.d("TAG", "viewModel_______ saved = $id")
-        }
-    }
-    private suspend fun getFavoriteAnswers(){
-        viewModelScope.launch {
-            getFavoritesAnswersUseCase()
-        }
-    }
 
     private fun isNotSameRequest(query: String): Boolean{
         if (lastRequest == query) return false
@@ -77,18 +82,35 @@ class HomeViewModel @Inject constructor(
         return true
     }
 
+   private fun saveMessageToChat(message: Message){
+        viewModelScope.launch {
+            Log.d("TAG","message saved ${message.text}")
+            saveMessageToChatUseCase(message)
+        }
+    }
+    fun getAllMessagesForChat(chatId: Long){
+        viewModelScope.launch {
+            getAllMessagesForChatUseCase(chatId).collect{
+                _messages.value = it
+                Log.d("TAG", "getAllMessagesForChat()  ${it}")
+            }
+        }
+    }
+
     companion object {
         fun createHomeViewModelFactory(
             remoteRepository: RemoteRepository,
-            getFavoritesAnswersUseCase: GetFavoritesAnswersUseCase,
-            saveAnswerUseCase: SaveAnswerUseCase
+            saveMessageToChatUseCase: SaveMessageToChatUseCase,
+            getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
+            chatId: Long
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return HomeViewModel(
                         remoteRepository,
-                        getFavoritesAnswersUseCase,
-                        saveAnswerUseCase
+                        saveMessageToChatUseCase,
+                        getAllMessagesForChatUseCase,
+                         chatId
                     ) as T
                 }
             }

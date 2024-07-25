@@ -3,9 +3,8 @@ package ru.mvrlrd.home.di
 import dagger.Component
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.core_api.network.RemoteRepository
-
-import ru.mvrlrd.home.domain.api.GetFavoritesAnswersUseCase
-import ru.mvrlrd.home.domain.api.SaveAnswerUseCase
+import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
+import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 
 @Component(
     dependencies = [ProvidersFacade::class],
@@ -14,8 +13,10 @@ import ru.mvrlrd.home.domain.api.SaveAnswerUseCase
 interface HomeComponent {
 
     fun getRepo(): RemoteRepository
-    fun getSaveUseCase(): SaveAnswerUseCase
-    fun getGetFavsUseCase(): GetFavoritesAnswersUseCase
+
+    fun provideSaveMessageToChatUseCase(): SaveMessageToChatUseCase
+    fun provideGetAllMessagesForChatUseCase(): GetAllMessagesForChatUseCase
+
 
     companion object {
         fun create(providersFacade: ProvidersFacade): HomeComponent =
