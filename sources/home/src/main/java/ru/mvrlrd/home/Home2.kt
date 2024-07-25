@@ -184,70 +184,72 @@ fun MessageBubble(message: Message) {
     }
 }
 
+//почему то не отображаются с bubble shape
 
-
-fun BubbleShape(
-    cornerRadius: Dp = 16.dp,
-    isReceived: Boolean
-) = GenericShape { size, _ ->
-    val cornerSize = cornerRadius.value
-    if (isReceived) {
-        // Received message shape
-        moveTo(0f, cornerSize)
-        arcTo(
-            rect = Rect(0f, 0f, cornerSize, cornerSize),
-            startAngleDegrees = 180f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-        lineTo(size.width - cornerSize, 0f)
-        arcTo(
-            rect = Rect(size.width - cornerSize, 0f, size.width, cornerSize),
-            startAngleDegrees = 270f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-        lineTo(size.width, size.height - cornerSize)
-        arcTo(
-            rect = Rect(size.width - cornerSize, size.height - cornerSize, size.width, size.height),
-            startAngleDegrees = 0f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-        lineTo(cornerSize, size.height)
-        arcTo(
-            rect = Rect(0f, size.height - cornerSize, cornerSize, size.height),
-            startAngleDegrees = 90f,
-            sweepAngleDegrees = 45f,
-            forceMoveTo = false
-        )
-        lineTo(0f, size.height)
-        lineTo(0f, cornerSize)
-    } else {
-        // Sent message shape
-        moveTo(0f, cornerSize)
-        arcTo(
-            rect = Rect(0f, 0f, cornerSize, cornerSize),
-            startAngleDegrees = 180f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-        lineTo(size.width - cornerSize, 0f)
-        arcTo(
-            rect = Rect(size.width - cornerSize, 0f, size.width, cornerSize),
-            startAngleDegrees = 270f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-        lineTo(size.width, size.height)
-        lineTo(size.width - cornerSize, size.height)
-        arcTo(
-            rect = Rect(size.width - cornerSize, size.height - cornerSize, size.width, size.height),
-            startAngleDegrees = 90f,
-            sweepAngleDegrees = 45f,
-            forceMoveTo = false
-        )
-        lineTo(0f, size.height)
-        lineTo(0f, cornerSize)
-    }
-}
+//fun BubbleShape(
+//    cornerRadius: Dp = 16.dp,
+//    isReceived: Boolean
+//) = GenericShape { size, _ ->
+//    val cornerSizePx = with(LocalDensity.current) { cornerRadius.toPx() }
+//
+//    // Ensure the path starts from the correct point
+//    if (isReceived) {
+//        // For received messages (left side)
+//        moveTo(0f, cornerSizePx)
+//        arcTo(
+//            rect = Rect(0f, 0f, cornerSizePx, cornerSizePx),
+//            startAngleDegrees = 180f,
+//            sweepAngleDegrees = 90f,
+//            forceMoveTo = false
+//        )
+//        lineTo(size.width - cornerSizePx, 0f)
+//        arcTo(
+//            rect = Rect(size.width - cornerSizePx, 0f, size.width, cornerSizePx),
+//            startAngleDegrees = 270f,
+//            sweepAngleDegrees = 90f,
+//            forceMoveTo = false
+//        )
+//        lineTo(size.width, size.height - cornerSizePx)
+//        arcTo(
+//            rect = Rect(size.width - cornerSizePx, size.height - cornerSizePx, size.width, size.height),
+//            startAngleDegrees = 0f,
+//            sweepAngleDegrees = 90f,
+//            forceMoveTo = false
+//        )
+//        lineTo(cornerSizePx, size.height)
+//        arcTo(
+//            rect = Rect(0f, size.height - cornerSizePx, cornerSizePx, size.height),
+//            startAngleDegrees = 90f,
+//            sweepAngleDegrees = 45f,
+//            forceMoveTo = false
+//        )
+//        lineTo(0f, size.height)
+//        lineTo(0f, cornerSizePx)
+//    } else {
+//        // For sent messages (right side)
+//        moveTo(0f, cornerSizePx)
+//        arcTo(
+//            rect = Rect(0f, 0f, cornerSizePx, cornerSizePx),
+//            startAngleDegrees = 180f,
+//            sweepAngleDegrees = 90f,
+//            forceMoveTo = false
+//        )
+//        lineTo(size.width - cornerSizePx, 0f)
+//        arcTo(
+//            rect = Rect(size.width - cornerSizePx, 0f, size.width, cornerSizePx),
+//            startAngleDegrees = 270f,
+//            sweepAngleDegrees = 90f,
+//            forceMoveTo = false
+//        )
+//        lineTo(size.width, size.height)
+//        lineTo(size.width - cornerSizePx, size.height)
+//        arcTo(
+//            rect = Rect(size.width - cornerSizePx, size.height - cornerSizePx, size.width, size.height),
+//            startAngleDegrees = 90f,
+//            sweepAngleDegrees = 45f,
+//            forceMoveTo = false
+//        )
+//        lineTo(0f, size.height)
+//        lineTo(0f, cornerSizePx)
+//    }
+//}
