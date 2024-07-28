@@ -16,10 +16,10 @@ class RepositoryImpl@Inject constructor(private val dao: ChatDao): Repository {
     }
 
     override suspend fun deleteMessage(messageId: Long) {
-        TODO("Not yet implemented")
+        dao.deleteMessage(messageId)
     }
 
     override suspend fun clearChat(chatId: Long) {
-        TODO("Not yet implemented")
+        dao.clearMessages(chatId)
     }
 }

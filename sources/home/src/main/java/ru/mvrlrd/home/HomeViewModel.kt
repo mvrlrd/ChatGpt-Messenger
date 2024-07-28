@@ -2,6 +2,7 @@ package ru.mvrlrd.home
 
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,8 @@ import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.RemoteRepository
+import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
+import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
 import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 import ru.mvrlrd.home.pullrefresh.ColorItemDataSource
@@ -29,6 +32,8 @@ class HomeViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
     private val saveMessageToChatUseCase: SaveMessageToChatUseCase,
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
+    private val deleteMessageUseCase: DeleteMessageUseCase,
+    private val clearMessagesUseCase: ClearMessagesUseCase,
     private val chatId: Long
 
 ) : ViewModel() {
@@ -41,8 +46,7 @@ class HomeViewModel @Inject constructor(
 
     val oneShotEventChannel = Channel<String>()
 
-    private val _messages = MutableStateFlow<List<Message>>(emptyList())
-    val messages: StateFlow<List<Message>> get() = _messages.asStateFlow()
+    val messages = mutableStateListOf <Message>()
 
 init {
     getAllMessagesForChat(chatId)
@@ -91,9 +95,16 @@ init {
     fun getAllMessagesForChat(chatId: Long){
         viewModelScope.launch {
             getAllMessagesForChatUseCase(chatId).collect{
-                _messages.value = it
+                messages.clear()
+                messages.addAll(it)
                 Log.d("TAG", "getAllMessagesForChat()  ${it}")
             }
+        }
+    }
+
+    fun deleteMessage(messageId: Long){
+        viewModelScope.launch {
+            deleteMessageUseCase(messageId)
         }
     }
 
@@ -102,6 +113,8 @@ init {
             remoteRepository: RemoteRepository,
             saveMessageToChatUseCase: SaveMessageToChatUseCase,
             getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
+            deleteMessageUseCase: DeleteMessageUseCase,
+            clearMessagesUseCase: ClearMessagesUseCase,
             chatId: Long
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
@@ -110,7 +123,9 @@ init {
                         remoteRepository,
                         saveMessageToChatUseCase,
                         getAllMessagesForChatUseCase,
-                         chatId
+                        deleteMessageUseCase,
+                        clearMessagesUseCase,
+                        chatId
                     ) as T
                 }
             }

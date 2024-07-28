@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "messages",
     foreignKeys = [ForeignKey(
@@ -21,4 +22,4 @@ data class Message(
     val text: String,
     val date: Long,
     val isReceived: Boolean
-)
+): Serializable

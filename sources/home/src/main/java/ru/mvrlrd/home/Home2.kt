@@ -17,6 +17,12 @@ import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +34,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,19 +78,26 @@ fun HomeScreen2(navController: NavController, chatId: Long) {
         homeComponent.provideGetAllMessagesForChatUseCase()
     }
 
+    val deleteMessageUseCase = remember {
+        homeComponent.provideDeleteMessageUseCase()
+    }
+    val clearMessagesUseCase = remember {
+        homeComponent.provideClearMessagesUseCase()
+    }
 
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.createHomeViewModelFactory(
             repo,
             saveMessageToChatUseCase,
             getAllMessagesForChatUseCase,
+            deleteMessageUseCase,
+            clearMessagesUseCase,
             chatId
         )
     )
 
-    val messages = viewModel.messages.collectAsState()
+    val messages = viewModel.messages
 
-    Log.d("TAG","messages size  ${messages.value.size}")
 
     val userInput = remember { mutableStateOf(TextFieldValue()) }
     var response by remember { mutableStateOf("") }
@@ -114,7 +128,9 @@ fun HomeScreen2(navController: NavController, chatId: Long) {
             ) {
 //                MessageBubble(message = Message(0,0,messages.value.toString(),1L,true))
 
-              MessageList(messages = messages.value)
+              MessageList(messages = messages){
+                  viewModel.deleteMessage(it)
+              }
 
 
             }
@@ -134,9 +150,8 @@ fun HomeScreen2(navController: NavController, chatId: Long) {
 }
 
 @Composable
-fun MessageList(messages: List<Message>){
+fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit){
     val listState = rememberLazyListState()
-
     LaunchedEffect(messages) {
         if (messages.isNotEmpty()) {
             listState.animateScrollToItem(messages.size - 1)
@@ -144,15 +159,20 @@ fun MessageList(messages: List<Message>){
     }
 
 
+
     LazyColumn(
         state=listState,
         modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)){
-        items(
-            messages
-        ){message->
-            MessageBubble(message = message)
+            .fillMaxSize()
+            .padding(16.dp)){
+        itemsIndexed(
+            items = messages,
+            key = {_,item->
+                item}
+        ){_, item->
+            SwipeToDismissMessage(item = item){
+                onDismiss(it)
+            }
         }
     }
 }
@@ -182,6 +202,47 @@ fun MessageBubble(message: Message) {
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeToDismissMessage(item: Message, onDismiss: (Long)->Unit) {
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToStart) {
+                onDismiss(item.id)
+            }
+            true
+        }
+    )
+    SwipeToDismiss(
+        state = dismissState,
+        directions = setOf(
+            DismissDirection.EndToStart
+        ),
+        dismissThresholds = { direction ->
+            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+        },
+        background = {
+            val color = when (dismissState.dismissDirection) {
+                DismissDirection.StartToEnd -> Color.Blue
+                DismissDirection.EndToStart -> Color.Red
+                null -> Color.Transparent
+            }
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(color)
+                    .padding(16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                androidx.compose.material.Text("Delete", color = Color.Black)
+            }
+        },
+        dismissContent = {
+            MessageBubble(message = item)
+        }
+    )
 }
 
 //почему то не отображаются с bubble shape

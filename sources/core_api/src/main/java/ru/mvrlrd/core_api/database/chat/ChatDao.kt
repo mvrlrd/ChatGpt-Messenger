@@ -24,10 +24,17 @@ interface ChatDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(message: Message): Long
+
     @Transaction
     @Query("SELECT * FROM chat_rooms WHERE chatId = :chatId")
     fun getChatWithMessages(chatId: Long): Flow<ChatWithMessages>
 
     @Query("SELECT * FROM messages WHERE holderChatId = :chatId")
     fun getMessagesForChat(chatId: Long): Flow<List<Message>>
+
+    @Query("DELETE FROM messages WHERE messageId = :messageId")
+    suspend fun deleteMessage(messageId: Long)
+
+    @Query("DELETE FROM messages WHERE holderChatId = :chatId")
+    suspend fun clearMessages(chatId: Long)
 }
