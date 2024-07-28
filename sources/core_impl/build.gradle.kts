@@ -13,6 +13,13 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+    defaultConfig {
+        buildConfigField("String", "BASE_URL", "\"${property("BASE_URL")}\"")
+        buildConfigField("String", "API_KEY", "\"${property("API_KEY")}\"")
+    }
+    buildFeatures{
+        buildConfig = true
+    }
 }
 
 

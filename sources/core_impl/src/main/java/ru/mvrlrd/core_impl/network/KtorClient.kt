@@ -13,19 +13,19 @@ import ru.mvrlrd.core_api.network.dto.Request
 import ru.mvrlrd.core_api.network.dto.RequestData
 import ru.mvrlrd.core_api.network.dto.Response
 import ru.mvrlrd.core_api.network.dto.ServerResponse
+import ru.mvrlrd.core_impl.BuildConfig
 import javax.inject.Inject
 
- const val API_KEY = "AQVN2zyLDOY0ImCZQEi2zoIpClm5tF3onFZiOgRg"
- const val URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+
 class KtorClient @Inject constructor(private val client: HttpClient): NetworkClient {
 
     override suspend fun doRequest(request: Request): Response {
        when (request){
            is RequestData -> {
-               val response = client.post(URL) {
+               val response = client.post(BuildConfig.BASE_URL) {
                    val jsonString = Json.encodeToString<RequestData>(request)
                    headers {
-                       append("Authorization", "Api-Key $API_KEY")
+                       append("Authorization", "Api-Key ${BuildConfig.API_KEY}")
                    }
                    setBody(jsonString)
                }
