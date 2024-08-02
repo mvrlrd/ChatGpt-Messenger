@@ -20,15 +20,15 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService): Ne
                 is RequestData -> {
                     val jsonString = Json.encodeToString<RequestData>(request)
                     val response = apiService.getCompletion(jsonString.toRequestBody())
-                    if (response.isSuccessful) {
-                        Result.success(response.body()!!)
-//                        Result.failure(MyException.BadRequest)
-                    } else {
-                        // Обработка HTTP ошибок (например, 400, 500)
-                        Result.failure(MyException.HttpError(response.code(), response.message()))
+                   return when(response.code()){
+                        200 -> {
+                            Result.success(response.body()!!)
+                        }
+                       else -> {
+                           Result.failure(MyException.HttpError(response.code(), response.message()))
+                       }
                     }
                 }
-
                 else -> Result.failure(MyException.BadRequest)
             }
         } catch (e: Exception) {
