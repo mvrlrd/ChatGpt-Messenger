@@ -8,10 +8,12 @@ import ru.mvrlrd.core_api.network.NetworkClientProvider
 import ru.mvrlrd.core_impl.database.chatdatabase.di.DaggerChatDatabaseComponent
 import ru.mvrlrd.core_impl.database.di.DaggerDatabaseComponent
 import ru.mvrlrd.core_impl.network.di.DaggerKtorComponent
+import ru.mvrlrd.core_impl.network2.di.DaggerNetworkComponent
+import ru.mvrlrd.core_impl.network2.di.NetworkComponent
 
 object CoreProvidersFactory {
     fun createNetworkClient(): NetworkClientProvider {
-        return DaggerKtorComponent.create()
+        return DaggerNetworkComponent.create()
     }
 
     fun createDatabaseComponent(appProvider: AppProvider): DatabaseProvider {

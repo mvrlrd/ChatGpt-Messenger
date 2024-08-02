@@ -1,7 +1,10 @@
 package ru.mvrlrd.core_api.network.dto
 
+import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
+
 interface Response
 
 @Serializable

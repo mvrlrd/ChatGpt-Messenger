@@ -38,7 +38,7 @@ class ComposePlugin : Plugin<Project> {
         private const val material3Version = "1.2.1"
         private const val junitVersion = "4.13.2"
         private  const val espressoCoreVersion = "3.5.1"
-        private const val uiTestJUnit4Version = "1.1.5"
+        private const val uiTestJUnit4Version = "1.2.0"
         private const val composeBom = "2023.03.00"
         private const val lifecycleViewmodelCompose = "1.0.0-alpha07"
         private const val runtimeLivedata = "1.2.0"
