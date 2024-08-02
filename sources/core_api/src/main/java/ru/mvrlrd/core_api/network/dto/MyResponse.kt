@@ -1,11 +1,10 @@
 package ru.mvrlrd.core_api.network.dto
 
-import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
-interface Response
+interface MyResponse
 
 @Serializable
 data class Alternative(
@@ -34,7 +33,7 @@ data class Usage(
 @Serializable
 data class ServerResponse(
     val result: Result
-): Response {
+): MyResponse {
     companion object{
         fun getDefault() =
             ServerResponse(

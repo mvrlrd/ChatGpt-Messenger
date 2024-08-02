@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.RemoteRepository
+import ru.mvrlrd.core_api.network.dto.ServerResponse
 import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
@@ -59,12 +60,21 @@ init {
             }
             viewModelScope.launch {
                 _isLoading.postValue(true)
-                val responseText = remoteRepository.getAnswer("", query)
-                _responseAnswer.postValue(responseText)
-                _isLoading.postValue(false)
+                remoteRepository.getAnswer("", query).onSuccess {
+                    Log.d("TAG","+++viewModel  = ${(it as ServerResponse).result.alternatives}")
+                    val text = (it as ServerResponse).result.alternatives[0].message.text
+                    _responseAnswer.postValue(text)
+                    _isLoading.postValue(false)
 //                val answer = Answer(question =  query, answerText = responseText)
 //                saveAnswer(answer)
-                saveMessageToChat(Message(0,chatId,responseText,1,true))
+                    saveMessageToChat(Message(0,chatId,text,1,true))
+                }
+
+                remoteRepository.getAnswer("", query).onFailure {
+                    Log.e("TAG", "HomeViewModel onFailure   ${it}")
+                }
+
+
             }
         }else{
             val message = if (query.isBlank()){

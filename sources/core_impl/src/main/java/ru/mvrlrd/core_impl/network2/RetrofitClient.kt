@@ -1,40 +1,39 @@
 package ru.mvrlrd.core_impl.network2
 
-import android.util.Log
-import io.ktor.client.HttpClient
-import io.ktor.client.request.headers
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import ru.mvrlrd.core_api.network.NetworkClient
+import ru.mvrlrd.core_api.network.dto.MyResponse
 import ru.mvrlrd.core_api.network.dto.Request
 import ru.mvrlrd.core_api.network.dto.RequestData
-import ru.mvrlrd.core_api.network.dto.Response
-import ru.mvrlrd.core_api.network.dto.ServerResponse
-import ru.mvrlrd.core_impl.BuildConfig
+import ru.mvrlrd.core_impl.network.MyException
 import javax.inject.Inject
 
 class RetrofitClient @Inject constructor(private val apiService: ApiService): NetworkClient {
 
-    override suspend fun doRequest(request: Request): Response {
-        when (request){
-            is RequestData -> {
-                val jsonString = Json.encodeToString<RequestData>(request)
-                val response = apiService.getCompletion(jsonString.toRequestBody())
-                Log.d("TAG", "_____ ${response.body()}")
-//               ( response as ServerResponse).result.alternatives.forEach {
-//                   Log.d("TAG", "_____ ${it.message}")
-//               }
-//удалить интерфейс response?
-                //обработка ошибок
-                return ServerResponse.getDefault()
+    override suspend fun doRequest(request: Request): Result<MyResponse> {
+        return try {
+            when (request) {
+                is RequestData -> {
+                    val jsonString = Json.encodeToString<RequestData>(request)
+                    val response = apiService.getCompletion(jsonString.toRequestBody())
+                    if (response.isSuccessful) {
+                        Result.success(response.body()!!)
+//                        Result.failure(MyException.BadRequest)
+                    } else {
+                        // Обработка HTTP ошибок (например, 400, 500)
+                        Result.failure(MyException.HttpError(response.code(), response.message()))
+                    }
+                }
+
+                else -> Result.failure(MyException.BadRequest)
             }
+        } catch (e: Exception) {
+            // Обработка исключений, связанных с сетью, JSON, и т.д.
+            Result.failure(MyException.NetworkError(e))
         }
-        return ServerResponse.getDefault()
     }
 }
