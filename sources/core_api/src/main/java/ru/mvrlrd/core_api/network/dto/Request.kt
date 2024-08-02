@@ -1,10 +1,12 @@
 package ru.mvrlrd.core_api.network.dto
 
 import kotlinx.serialization.Serializable
+import javax.inject.Named
 
 
-private const val FOLDER_ID = "b1ghr3vks6vu23rdjtn6"
-interface Request
+sealed interface Request{
+
+}
 
 @Serializable
 data class CompletionOptions(
@@ -34,9 +36,9 @@ data class RequestData(
     val messages: List<Message>
 ) : Request {
     companion object {
-        fun getDefault(listOfMessages: List<Message>): RequestData =
+        fun getDefault(@Named("modelUrl") modelUri: String, listOfMessages: List<Message>): RequestData =
             RequestData(
-                modelUri = "gpt://$FOLDER_ID/yandexgpt-lite",
+                modelUri = modelUri,
                 completionOptions = CompletionOptions.getDefault(),
                 messages = listOfMessages
             )

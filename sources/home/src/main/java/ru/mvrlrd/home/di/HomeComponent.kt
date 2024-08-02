@@ -6,6 +6,7 @@ import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
+import ru.mvrlrd.home.domain.api.GetAnswerUseCase
 import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 
 @Component(
@@ -20,6 +21,7 @@ interface HomeComponent {
     fun provideGetAllMessagesForChatUseCase(): GetAllMessagesForChatUseCase
     fun provideDeleteMessageUseCase(): DeleteMessageUseCase
     fun provideClearMessagesUseCase(): ClearMessagesUseCase
+    fun provideGetAnswerUseCase(): GetAnswerUseCase
 
 
     companion object {

@@ -1,6 +1,5 @@
-package ru.mvrlrd.core_impl.network2
+package ru.mvrlrd.core_impl.network
 
-import kotlinx.coroutines.flow.Flow
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body

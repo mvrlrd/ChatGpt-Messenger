@@ -4,5 +4,5 @@ import ru.mvrlrd.core_api.network.dto.MyResponse
 
 
 interface RemoteRepository {
-    suspend fun getAnswer(systemRole: String,query: String): Result<Any>
+    suspend fun getAnswer(systemRole: String,query: String): Result<MyResponse>
 }

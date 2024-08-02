@@ -77,6 +77,9 @@ fun HomeScreen2(navController: NavController, chatId: Long) {
     val getAllMessagesForChatUseCase = remember {
         homeComponent.provideGetAllMessagesForChatUseCase()
     }
+    val getAnswerUseCase = remember {
+        homeComponent.provideGetAnswerUseCase()
+    }
 
     val deleteMessageUseCase = remember {
         homeComponent.provideDeleteMessageUseCase()
@@ -87,7 +90,7 @@ fun HomeScreen2(navController: NavController, chatId: Long) {
 
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.createHomeViewModelFactory(
-            repo,
+            getAnswerUseCase,
             saveMessageToChatUseCase,
             getAllMessagesForChatUseCase,
             deleteMessageUseCase,

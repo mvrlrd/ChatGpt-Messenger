@@ -18,7 +18,7 @@ interface FacadeComponent: ProvidersFacade {
                 .appProvider(AppComponent.create(application))
                 .databaseProvider(CoreProvidersFactory.createDatabaseComponent(AppComponent.create(application)))
                 .chatDatabaseProvider(CoreProvidersFactory.createChatDatabaseComponent(AppComponent.create(application)))
-                .networkClientProvider(CoreProvidersFactory.createNetworkClient())
+                .networkClientProvider(CoreProvidersFactory.createNetworkClient(AppComponent.create(application)))
                 .build()
     }
 }

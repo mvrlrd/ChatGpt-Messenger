@@ -7,10 +7,12 @@ import ru.mvrlrd.home.domain.Repository
 import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
+import ru.mvrlrd.home.domain.api.GetAnswerUseCase
 import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 import ru.mvrlrd.home.domain.impl.ClearMessagesUseCaseImpl
 import ru.mvrlrd.home.domain.impl.DeleteMessageUseCaseImpl
 import ru.mvrlrd.home.domain.impl.GetAllMessagesForChatUseCaseImpl
+import ru.mvrlrd.home.domain.impl.GetAnswerUseCaseImpl
 import ru.mvrlrd.home.domain.impl.SaveMessageToChatUseCaseImpl
 
 @Module
@@ -29,4 +31,7 @@ interface HomeModule {
 
     @Binds
     fun bindClearMessagesUseCase(clearMessagesUseCaseImpl: ClearMessagesUseCaseImpl): ClearMessagesUseCase
+
+    @Binds
+    fun bindGetAnswerUseCase(getAnswerUseCaseImpl: GetAnswerUseCaseImpl): GetAnswerUseCase
 }

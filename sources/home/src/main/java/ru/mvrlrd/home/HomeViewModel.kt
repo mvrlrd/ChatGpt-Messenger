@@ -22,6 +22,7 @@ import ru.mvrlrd.core_api.network.dto.ServerResponse
 import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.home.domain.api.GetAllMessagesForChatUseCase
+import ru.mvrlrd.home.domain.api.GetAnswerUseCase
 import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 import ru.mvrlrd.home.pullrefresh.ColorItemDataSource
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
@@ -30,7 +31,7 @@ import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
+    private val getAnswerUseCase: GetAnswerUseCase,
     private val saveMessageToChatUseCase: SaveMessageToChatUseCase,
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
     private val deleteMessageUseCase: DeleteMessageUseCase,
@@ -60,7 +61,7 @@ init {
             }
             viewModelScope.launch {
                 _isLoading.postValue(true)
-                remoteRepository.getAnswer("", query).onSuccess {
+                getAnswerUseCase("", query).onSuccess {
                     Log.d("TAG","+++viewModel  = ${(it as ServerResponse).result.alternatives}")
                     val text = (it as ServerResponse).result.alternatives[0].message.text
                     _responseAnswer.postValue(text)
@@ -70,8 +71,9 @@ init {
                     saveMessageToChat(Message(0,chatId,text,1,true))
                 }
 
-                remoteRepository.getAnswer("", query).onFailure {
-                    Log.e("TAG", "HomeViewModel onFailure   ${it}")
+                getAnswerUseCase("", query).onFailure {
+                    oneShotEventChannel.send(it.message.toString())
+                    Log.e("TAG", "HomeViewModel onFailure   ${it.message}")
                 }
 
 
@@ -120,7 +122,7 @@ init {
 
     companion object {
         fun createHomeViewModelFactory(
-            remoteRepository: RemoteRepository,
+            getAnswerUseCase: GetAnswerUseCase,
             saveMessageToChatUseCase: SaveMessageToChatUseCase,
             getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
             deleteMessageUseCase: DeleteMessageUseCase,
@@ -130,7 +132,7 @@ init {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return HomeViewModel(
-                        remoteRepository,
+                        getAnswerUseCase,
                         saveMessageToChatUseCase,
                         getAllMessagesForChatUseCase,
                         deleteMessageUseCase,

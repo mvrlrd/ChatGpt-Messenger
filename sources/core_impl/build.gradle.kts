@@ -17,6 +17,7 @@ android {
     defaultConfig {
         buildConfigField("String", "BASE_URL", "\"${property("BASE_URL")}\"")
         buildConfigField("String", "API_KEY", "\"${property("API_KEY")}\"")
+        buildConfigField("String", "FOLDER_ID", "\"${property("FOLDER_ID")}\"")
     }
     buildFeatures{
         buildConfig = true
