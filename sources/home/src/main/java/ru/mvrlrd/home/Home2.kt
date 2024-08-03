@@ -1,22 +1,23 @@
 package ru.mvrlrd.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,26 +28,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,8 +54,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.home.di.DaggerHomeComponent
-import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
-import ru.mvrlrd.main.pullrefresh.rememberPullToRefreshState
 
 @Composable
 fun HomeScreen2(navController: NavController, chatId: Long) {
@@ -180,32 +177,92 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
     }
 }
 
-
 @Composable
 fun MessageBubble(message: Message) {
     val bubbleColor = if (message.isReceived) Color(0xFFE0E0E0) else Color(0xFFDCF8C6)
     val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
+
+
+
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         contentAlignment = alignment
     ) {
-        Box(
+        Row(modifier = Modifier.height(IntrinsicSize.Max)) {
+            if (message.isReceived){
+                Arrow(isReceived = message.isReceived,
+                    color = bubbleColor)
+                BubbleNew(bubbleColor = bubbleColor, text = message.text, isReceived = message.isReceived)
+            }else{
+                BubbleNew(bubbleColor = bubbleColor, text = message.text, isReceived = message.isReceived)
+                Arrow(isReceived = message.isReceived,
+                    color = bubbleColor)
+            }
+        }
+    }
+}
+
+@Composable
+fun Arrow(isReceived: Boolean, color: Color){
+    Box(
+        modifier = Modifier
+            .background(
+                color = color,
+                shape = TriangleEdgeShape(20, isReceived)
+            )
+            .width(8.dp)
+            .fillMaxHeight()
+    )
+}
+
+@Composable
+fun BubbleNew(bubbleColor: Color, text: String, isReceived: Boolean){
+    Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(bubbleColor)
+                .background(bubbleColor, shape = RoundedCornerShape(
+                    topStart = if (isReceived) 0.dp else 16.dp,
+                    topEnd = 16.dp,
+                    bottomEnd = if (isReceived) 16.dp else 0.dp,
+                    bottomStart = 16.dp
+                ))
                 .padding(12.dp)
         ) {
             Text(
-                text = message.text,
+                text = text,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Black
             )
         }
+}
+
+class TriangleEdgeShape(private val offset: Int, private val isReceived: Boolean) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val trianglePath = Path().apply {
+            if (isReceived) {
+                moveTo(x = size.width, y = 0f)
+                lineTo(x = size.width, y = offset.toFloat())
+                lineTo(x = size.width - offset, y = 0f)
+            } else {
+                moveTo(x = 0f, y = size.height - offset)
+                lineTo(x = 0f, y = size.height)
+                lineTo(x = 0f + offset, y = size.height)
+            }
+            close()
+        }
+        return Outline.Generic(path = trianglePath)
     }
 }
+
+
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
