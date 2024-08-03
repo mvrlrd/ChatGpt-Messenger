@@ -20,6 +20,7 @@ android {
 
 dependencies {
     implementation(projects.sources.coreApi)
+    implementation(projects.sources.uiKit)
     implementation(projects.sources.home)
     implementation(projects.sources.favorites)
 

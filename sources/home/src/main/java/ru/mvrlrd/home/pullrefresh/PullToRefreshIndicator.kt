@@ -1,6 +1,7 @@
 package ru.mvrlrd.main.pullrefresh
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,9 @@ fun PullToRefreshIndicator(
             .fillMaxWidth()
             .animateContentSize()
             .then(heightModifier)
-            .padding(15.dp),
+            .padding(15.dp)
+          ,
+
         contentAlignment = Alignment.BottomStart,
     ) {
         Column(

@@ -1,6 +1,10 @@
 package ru.mvrlrd.main
 
 import android.content.Context
+import android.content.res.Resources.Theme
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,29 +13,35 @@ import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.favorites.FavoritesScreen
 //import ru.mvrlrd.home.HomeScreen
 import ru.mvrlrd.home.HomeScreen
-import ru.mvrlrd.main.theme.CompanionTheme
+import ru.mvrlrd.main.theme.AppColors
+import ru.mvrlrd.main.theme.AppTheme
+import ru.mvrlrd.main.theme.JetHeroesTheme
 
 @Composable
-fun CompanionApp(onToggleTheme: () -> Unit, darkTheme: Boolean, context: Context, providersFacade: ProvidersFacade) {
+fun CompanionApp(
+    onToggleTheme: () -> Unit,
+    darkTheme: Boolean,
+    context: Context,
+    providersFacade: ProvidersFacade
+) {
 
-    CompanionTheme(darkTheme = darkTheme) {
+    JetHeroesTheme(darkTheme = darkTheme) {
+
         val navController = rememberNavController()
-
         NavHost(
             navController = navController,
             startDestination = "Favs"
         ) {
-//            composable("Home") {
-//                HomeScreen(navController)
-//            }
             composable("Favs") {
-                FavoritesScreen(providersFacade = providersFacade,){
+                FavoritesScreen(providersFacade = providersFacade) {
                     navController.navigate("Home/$it")
                 }
             }
             composable("Home/{id}") { backStackEntry ->
-                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()?:0L
-                HomeScreen(chatId = id)
+                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: 0L
+                HomeScreen(chatId = id) {
+                    onToggleTheme()
+                }
             }
         }
     }

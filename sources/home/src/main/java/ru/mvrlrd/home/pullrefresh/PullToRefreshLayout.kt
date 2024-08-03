@@ -1,9 +1,11 @@
 package ru.mvrlrd.main.pullrefresh
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 
@@ -50,14 +53,15 @@ fun PullToRefreshLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .pullRefresh(pullToRefreshState),
+            .pullRefresh(pullToRefreshState)
+            .background(MaterialTheme.colors.onPrimary),
     ) {
         PullToRefreshIndicator(
             indicatorState = refreshIndicatorState,
             pullToRefreshProgress = pullToRefreshState.progress,
             timeElapsed = timeElapsedSinceLastRefresh,
         )
-        Box(modifier = Modifier.weight(1f)) {
+        Box(modifier = Modifier.weight(1f),) {
             content()
         }
     }

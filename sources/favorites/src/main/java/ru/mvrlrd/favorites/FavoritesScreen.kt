@@ -98,9 +98,9 @@ fun SwipeToDismissCard(item: ChatEntity, onDismiss: ()->Unit, onClick: (id: Long
         },
         background = {
             val color = when (dismissState.dismissDirection) {
-                StartToEnd -> Color.Blue
-                EndToStart -> Color.Red
-                null -> Color.Transparent
+                StartToEnd -> Color.Transparent
+                EndToStart -> Color.Transparent
+                else -> Color.Transparent
             }
             Box(
                 Modifier
@@ -109,7 +109,7 @@ fun SwipeToDismissCard(item: ChatEntity, onDismiss: ()->Unit, onClick: (id: Long
                     .padding(16.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text("Delete", color = Color.Black)
+//                Text("Delete", color = Color.Black)
             }
         },
         dismissContent = {
@@ -129,7 +129,6 @@ fun RoundedCard(title: String, onClick: () -> Unit) {
             .clickable { onClick() },
         shape = MaterialTheme.shapes.small,
         elevation = 8.dp,
-        backgroundColor = Color.White
     ) {
         Box(
             modifier = Modifier
@@ -139,8 +138,7 @@ fun RoundedCard(title: String, onClick: () -> Unit) {
         ) {
             Text(
                 text = title.uppercase(),
-                style = MaterialTheme.typography.h6,
-                fontSize = 36.sp
+                style = MaterialTheme.typography.button,
             )
         }
     }

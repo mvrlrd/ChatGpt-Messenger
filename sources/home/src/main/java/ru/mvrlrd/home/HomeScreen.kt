@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,8 +23,10 @@ import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +45,9 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Density
@@ -54,9 +59,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.home.di.DaggerHomeComponent
+import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
+import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
 
 @Composable
-fun HomeScreen(chatId: Long) {
+fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
 
     val homeComponent = remember {
@@ -101,73 +108,79 @@ fun HomeScreen(chatId: Long) {
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
 
 
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.White,
+    PullToRefreshLayout(
+        pullRefreshLayoutState = PullToRefreshLayoutState { "hello" },
+        onRefresh = onToggleTheme
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(scrollState),
 
-            verticalArrangement = Arrangement.Center
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-//                    .verticalScroll(scrollState)
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(scrollState),
+
+                verticalArrangement = Arrangement.Center
             ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+//                    .verticalScroll(scrollState)
+                ) {
 //                MessageBubble(message = Message(0,0,messages.value.toString(),1L,true))
 
-              MessageList(messages = messages){
-                  viewModel.deleteMessage(it)
-              }
+                    MessageList(messages = messages) {
+                        viewModel.deleteMessage(it)
+                    }
 
 
-            }
-            ShowToast(flow = oneShotEvent)
-            CustomTextField(
-                textState = userInput,
-                modifier = Modifier
-                    .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
-            ) {
+                }
+                ShowToast(flow = oneShotEvent)
+                CustomTextField(
+                    textState = userInput,
+                    modifier = Modifier
+                        .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
+                ) {
 //                viewModel.saveMessageToChat(Message(holderChatId = chatId, text = userInput.value.text, date = 1L, isReceived = false ))
-                viewModel.sendRequest(userInput.value.text)
+                    viewModel.sendRequest(userInput.value.text)
+                }
+            }
+        }
+
+    }
+    }
+
+    @Composable
+    fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
+        val listState = rememberLazyListState()
+        LaunchedEffect(messages) {
+            if (messages.isNotEmpty()) {
+                listState.animateScrollToItem(messages.size - 1)
+            }
+        }
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_big))
+        ) {
+            itemsIndexed(
+                items = messages,
+                key = { _, item ->
+                    item
+                }
+            ) { _, item ->
+                SwipeToDismissMessageBubble(item = item) {
+                    onDismiss(it)
+                }
             }
         }
     }
 
-
-}
-
-@Composable
-fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(messages) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.size - 1)
-        }
-    }
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_big))
-    ) {
-        itemsIndexed(
-            items = messages,
-            key = { _, item ->
-                item
-            }
-        ) { _, item ->
-            SwipeToDismissMessageBubble(item = item) {
-                onDismiss(it)
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -190,9 +203,8 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
         },
         background = {
             val color = when (dismissState.dismissDirection) {
-                DismissDirection.StartToEnd -> Color.Blue
-                DismissDirection.EndToStart -> Color.Red
-                null -> Color.Transparent
+                DismissDirection.EndToStart -> Color.Transparent
+                else -> Color.Transparent
             }
             Box(
                 Modifier
@@ -201,7 +213,19 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
                     .padding(dimensionResource(id = R.dimen.padding_big)),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text("Delete", color = Color.Black) //_____поставить иконки
+                when(dismissState.dismissDirection){
+                    DismissDirection.EndToStart -> {
+//                        Icon(
+//                            painter = painterResource(id = ru.mvrlrd.uikit.R.drawable.baseline_delete_forever_24), // Replace with your drawable resource ID
+//                            contentDescription = "Delete Icon",
+//                            modifier = Modifier.size(50.dp)
+//                        )
+                    }
+                    else -> {
+
+                    }
+
+                } //_____поставить иконки
             }
         },
         dismissContent = {
@@ -213,7 +237,8 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
 
 @Composable
 fun MessageBubble(message: Message) {
-    val bubbleColor = if (message.isReceived) Color(0xFFE0E0E0) else Color(0xFFDCF8C6)
+    val bubbleColor = if (message.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
+
     val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
 
     Box(
@@ -259,7 +284,8 @@ fun Bubble(color: Color, text: String, isReceived: Boolean){
     Box(
         modifier = Modifier
             .background(
-                color, shape = RoundedCornerShape(
+                color = color,
+                shape = RoundedCornerShape(
                     topStart = if (isReceived) 0.dp else dimensionResource(id = R.dimen.corner_size),
                     topEnd = dimensionResource(id = R.dimen.corner_size),
                     bottomEnd = if (isReceived) dimensionResource(id = R.dimen.corner_size) else 0.dp,
