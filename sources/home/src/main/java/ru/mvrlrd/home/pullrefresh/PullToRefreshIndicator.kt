@@ -17,13 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.mvrlrd.home.R
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 import kotlin.math.roundToInt
 
-private const val maxHeight = 100
 
 @Composable
 fun PullToRefreshIndicator(
@@ -36,10 +37,10 @@ fun PullToRefreshIndicator(
             Modifier.height(
                 (pullToRefreshProgress * 100)
                     .roundToInt()
-                    .coerceAtMost(maxHeight).dp,
+                    .coerceAtMost(integerResource(id = R.integer.pull_max_deep)).dp,
             )
         }
-        RefreshIndicatorState.ReachedThreshold -> Modifier.height(maxHeight.dp)
+        RefreshIndicatorState.ReachedThreshold -> Modifier.height(integerResource(id = R.integer.pull_max_deep).dp)
         RefreshIndicatorState.Refreshing -> Modifier.wrapContentHeight()
         RefreshIndicatorState.Default -> Modifier.height(0.dp)
     }
@@ -48,9 +49,7 @@ fun PullToRefreshIndicator(
             .fillMaxWidth()
             .animateContentSize()
             .then(heightModifier)
-            .padding(15.dp)
-          ,
-
+            .padding(15.dp),
         contentAlignment = Alignment.BottomStart,
     ) {
         Column(
@@ -58,11 +57,13 @@ fun PullToRefreshIndicator(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Text(
-                text = indicatorState.messageRes,
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Black,
-            )
+            //text while pulling down
+//            Text(
+//                text = "fuck",
+////                indicatorState.messageRes,
+//                style = MaterialTheme.typography.labelMedium,
+//                color = Color.Black,
+//            )
             if (indicatorState == RefreshIndicatorState.Refreshing) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(16.dp),
@@ -71,11 +72,11 @@ fun PullToRefreshIndicator(
                     strokeWidth = 2.dp,
                 )
             } else {
-                Text(
-                    text = "WOWOWOWOW",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Black,
-                )
+//                Text(
+//                    text = "WOWOWOWOW",
+//                    style = MaterialTheme.typography.labelSmall,
+//                    color = Color.Black,
+//                )
             }
         }
     }

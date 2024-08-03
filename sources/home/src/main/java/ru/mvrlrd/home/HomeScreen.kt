@@ -112,8 +112,6 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
         pullRefreshLayoutState = PullToRefreshLayoutState { "hello" },
         onRefresh = onToggleTheme
     ) {
-
-
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -123,7 +121,6 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
                     .fillMaxSize()
                     .padding(16.dp)
                     .verticalScroll(scrollState),
-
                 verticalArrangement = Arrangement.Center
             ) {
                 Box(
@@ -136,8 +133,6 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
                     MessageList(messages = messages) {
                         viewModel.deleteMessage(it)
                     }
-
-
                 }
                 ShowToast(flow = oneShotEvent)
                 CustomTextField(
