@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.DismissDirection.*
 import androidx.compose.material.icons.Icons
@@ -39,6 +40,8 @@ fun FavoritesScreen(providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
     )
     val itemList = remember { viewModel.items }
 
+
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -63,8 +66,22 @@ fun CardList(
     viewModel: ChatRoomsViewModel,
     onClick: (id: Long) -> Unit
 ) {
-    LazyColumn {
+
+    val listState = rememberLazyListState()
+    var previousSize by remember { mutableStateOf(cards.size) }
+
+    LaunchedEffect(cards.size) {
+        if (cards.size > previousSize) {
+            listState.animateScrollToItem(cards.size - 1)
+        }
+        previousSize = cards.size
+    }
+
+    LazyColumn(
+        state = listState,
+    ){
         itemsIndexed(
+
             items = cards,
             key = { _, item ->
                 item

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -29,7 +30,9 @@ class ChatRoomsViewModel@Inject constructor(
 
 //    private var _chats = MutableStateFlow<List<ChatEntity>>(emptyList())
 //    val chats : StateFlow<List<ChatEntity>> get() = _chats.asStateFlow()
-    val items = mutableStateListOf<ChatEntity>()
+    private val _items = mutableStateListOf<ChatEntity>()
+    val items : SnapshotStateList<ChatEntity> get()=_items
+
 
 
     init {
@@ -45,8 +48,8 @@ class ChatRoomsViewModel@Inject constructor(
      fun getAllChats(){
          viewModelScope.launch {
              getAllChatsUseCase().collect{
-                 items.clear()
-                 items.addAll(it)
+                 _items.clear()
+                 _items.addAll(it)
              }
          }
     }

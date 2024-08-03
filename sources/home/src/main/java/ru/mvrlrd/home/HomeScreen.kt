@@ -156,11 +156,12 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
     @Composable
     fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
         val listState = rememberLazyListState()
-
+        var previousSize by remember { mutableStateOf(messages.size) }
         LaunchedEffect(messages.size) {
-            if (messages.size > 0) {
+            if (messages.size > previousSize) {
                 listState.animateScrollToItem(messages.size - 1)
             }
+            previousSize = messages.size
         }
         LazyColumn(
             state = listState,
