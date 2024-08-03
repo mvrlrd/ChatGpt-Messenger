@@ -39,7 +39,7 @@ fun lightColorPalette(): ColorPalette = object : ColorPalette {
     override val background: Color
         get() = AppColors.light
     override val surface: Color
-        get() =  AppColors.light
+        get() =  Color.Gray
     override val error: Color
         get() = AppColors.red
     override val onPrimary: Color
@@ -78,7 +78,7 @@ fun darkColorPalette(): ColorPalette = object : ColorPalette {
     override val background: Color
         get() = AppColors.dark
     override val surface: Color
-        get() =  AppColors.dark
+        get() =  Color.Gray
     override val error: Color
         get() = AppColors.red
     override val onPrimary: Color

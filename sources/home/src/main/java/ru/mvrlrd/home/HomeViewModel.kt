@@ -73,7 +73,7 @@ init {
 
                 getAnswerUseCase("", query).onFailure {
                     oneShotEventChannel.send(it.message.toString())
-                    Log.e("TAG", "HomeViewModel onFailure   ${it.message}")
+                    Log.e("TAG", "HomeViewModel onFailure   ${it}")
                 }
 
 

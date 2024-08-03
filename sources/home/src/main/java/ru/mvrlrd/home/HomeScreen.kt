@@ -1,25 +1,22 @@
 package ru.mvrlrd.home
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,12 +24,10 @@ import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.rememberDismissState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -41,21 +36,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.receiveAsFlow
 import ru.mvrlrd.core_api.database.chat.entity.Message
@@ -65,7 +59,7 @@ import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
 import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
 
 @Composable
-fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
+fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
 
     val homeComponent = remember {
@@ -101,17 +95,10 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
     val messages = remember {
         viewModel.messages
     }
-
-
-
-//    val userInput = remember { mutableStateOf(TextFieldValue()) }
     var response by remember { mutableStateOf("") }
-    val scrollState = rememberScrollState()
     response = viewModel.responseAnswer.observeAsState("").value
-    val isLoading by viewModel.isLoading.observeAsState(false) // наблюдаем за состоянием загрузки
-
+//    val isLoading by viewModel.isLoading.observeAsState(false)
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
-
 
     PullToRefreshLayout(
         pullRefreshLayoutState = PullToRefreshLayoutState { "hello" },
@@ -119,68 +106,70 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colors.background,
         ) {
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-//                    .verticalScroll(scrollState)
-                ) {
-//                MessageBubble(message = Message(0,0,messages.value.toString(),1L,true))
-
-                    MessageList(messages = messages) {
-                        viewModel.deleteMessage(it)
-                    }
+                MessageList(messages = messages) {
+                    viewModel.deleteMessage(it)
                 }
-                ShowToast(flow = oneShotEvent)
                 CustomTextField(
                     modifier = Modifier
-                        .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
+                        .zIndex(1f)
+                        .wrapContentSize()
+                        .align(Alignment.BottomStart)
+                        .padding(
+                            bottom = 16.dp,
+                            start = 16.dp, end = 16.dp
+                        )
                 ) {
-//                viewModel.saveMessageToChat(Message(holderChatId = chatId, text = userInput.value.text, date = 1L, isReceived = false ))
                     viewModel.sendRequest(it)
                 }
             }
+            ShowToast(flow = oneShotEvent)
+        }
+    }
+}
+
+@Composable
+fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
+    val listState = rememberLazyListState()
+    var previousSize by remember { mutableStateOf(messages.size) }
+    LaunchedEffect(messages.size) {
+        if (messages.size > previousSize) {
+            listState.animateScrollToItem(messages.size - 1)
+        }
+        previousSize = messages.size
+    }
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                bottom = 0.dp,
+                top = dimensionResource(id = R.dimen.padding_big),
+                end = dimensionResource(id = R.dimen.padding_big),
+                start = dimensionResource(id = R.dimen.padding_big)
+            )
+    ) {
+        itemsIndexed(
+            items = messages,
+            key = { _, item ->
+                item
+            }
+        ) { _, item ->
+            SwipeToDismissMessageBubble(item = item) {
+                onDismiss(it)
+            }
         }
 
-    }
-    }
-
-    @Composable
-    fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
-        val listState = rememberLazyListState()
-        var previousSize by remember { mutableStateOf(messages.size) }
-        LaunchedEffect(messages.size) {
-            if (messages.size > previousSize) {
-                listState.animateScrollToItem(messages.size - 1)
-            }
-            previousSize = messages.size
-        }
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(dimensionResource(id = R.dimen.padding_big))
-        ) {
-            itemsIndexed(
-                items = messages,
-                key = { _, item ->
-                    item
-                }
-            ) { _, item ->
-                SwipeToDismissMessageBubble(item = item) {
-                    onDismiss(it)
-                }
-            }
+        item {
+            Spacer(modifier = Modifier.height(72.dp)) // отступ от посл эл-та до нижнего края
         }
     }
+}
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -214,7 +203,7 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
                     .padding(dimensionResource(id = R.dimen.padding_big)),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                when(dismissState.dismissDirection){
+                when (dismissState.dismissDirection) {
                     DismissDirection.EndToStart -> {
 //                        Icon(
 //                            painter = painterResource(id = ru.mvrlrd.uikit.R.drawable.baseline_delete_forever_24), // Replace with your drawable resource ID
@@ -222,11 +211,12 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
 //                            modifier = Modifier.size(50.dp)
 //                        )
                     }
+
                     else -> {
 
                     }
 
-                } //_____поставить иконки
+                }
             }
         },
         dismissContent = {
@@ -238,7 +228,8 @@ fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
 
 @Composable
 fun MessageBubble(message: Message) {
-    val bubbleColor = if (message.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
+    val bubbleColor =
+        if (message.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
 
     val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
 
@@ -268,12 +259,18 @@ fun MessageBubble(message: Message) {
 }
 
 @Composable
-fun BubbleWithArrow(bubble: @Composable ()-> Unit, arrow: @Composable ()->Unit, isReceived: Boolean) {
-    Row(modifier = Modifier.height(IntrinsicSize.Max)) {
-        if (isReceived){
+fun BubbleWithArrow(
+    bubble: @Composable () -> Unit,
+    arrow: @Composable () -> Unit,
+    isReceived: Boolean
+) {
+    Row(modifier = Modifier
+        .height(IntrinsicSize.Max)
+    ) {
+        if (isReceived) {
             arrow()
             bubble()
-        }else{
+        } else {
             bubble()
             arrow()
         }
@@ -281,7 +278,7 @@ fun BubbleWithArrow(bubble: @Composable ()-> Unit, arrow: @Composable ()->Unit, 
 }
 
 @Composable
-fun Bubble(color: Color, text: String, isReceived: Boolean){
+fun Bubble(color: Color, text: String, isReceived: Boolean) {
     Box(
         modifier = Modifier
             .background(
@@ -316,7 +313,6 @@ private fun Arrow(color: Color, isReceived: Boolean) {
             .fillMaxHeight()
     )
 }
-
 
 
 private class TriangleEdgeShape(private val isReceived: Boolean) : Shape {
