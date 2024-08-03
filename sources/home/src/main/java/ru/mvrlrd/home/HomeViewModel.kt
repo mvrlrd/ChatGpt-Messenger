@@ -3,6 +3,7 @@ package ru.mvrlrd.home
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,7 +49,8 @@ class HomeViewModel @Inject constructor(
 
     val oneShotEventChannel = Channel<String>()
 
-    val messages = mutableStateListOf <Message>()
+    private val _messages = mutableStateListOf<Message>()
+    val messages : SnapshotStateList <Message> get() = _messages
 
 init {
     getAllMessagesForChat(chatId)
@@ -63,12 +65,9 @@ init {
                 _isLoading.postValue(true)
 
                 getAnswerUseCase("", query).onSuccess {
-                    Log.d("TAG","+++viewModel  = ${(it as ServerResponse).result.alternatives}")
                     val text = (it as ServerResponse).result.alternatives[0].message.text
                     _responseAnswer.postValue(text)
                     _isLoading.postValue(false)
-//                val answer = Answer(question =  query, answerText = responseText)
-//                saveAnswer(answer)
                     saveMessageToChat(Message(0,chatId,text,1,true))
                 }
 
@@ -105,12 +104,11 @@ init {
             saveMessageToChatUseCase(message)
         }
     }
-    fun getAllMessagesForChat(chatId: Long){
+    private fun getAllMessagesForChat(chatId: Long){
         viewModelScope.launch {
             getAllMessagesForChatUseCase(chatId).collect{
-                messages.clear()
-                messages.addAll(it)
-                Log.d("TAG", "getAllMessagesForChat()  ${it}")
+                _messages.clear()
+                _messages.addAll(it)
             }
         }
     }

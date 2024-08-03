@@ -1,5 +1,6 @@
 package ru.mvrlrd.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -96,10 +98,13 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
         )
     )
 
-    val messages = viewModel.messages
+    val messages = remember {
+        viewModel.messages
+    }
 
 
-    val userInput = remember { mutableStateOf(TextFieldValue()) }
+
+//    val userInput = remember { mutableStateOf(TextFieldValue()) }
     var response by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
     response = viewModel.responseAnswer.observeAsState("").value
@@ -136,12 +141,11 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
                 }
                 ShowToast(flow = oneShotEvent)
                 CustomTextField(
-                    textState = userInput,
                     modifier = Modifier
                         .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
                 ) {
 //                viewModel.saveMessageToChat(Message(holderChatId = chatId, text = userInput.value.text, date = 1L, isReceived = false ))
-                    viewModel.sendRequest(userInput.value.text)
+                    viewModel.sendRequest(it)
                 }
             }
         }
@@ -152,8 +156,9 @@ fun HomeScreen(chatId: Long, onToggleTheme: ()-> Unit) {
     @Composable
     fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
         val listState = rememberLazyListState()
-        LaunchedEffect(messages) {
-            if (messages.isNotEmpty()) {
+
+        LaunchedEffect(messages.size) {
+            if (messages.size > 0) {
                 listState.animateScrollToItem(messages.size - 1)
             }
         }

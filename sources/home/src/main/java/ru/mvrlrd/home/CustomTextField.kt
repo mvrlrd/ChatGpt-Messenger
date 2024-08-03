@@ -22,6 +22,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +38,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
-    textState: MutableState<TextFieldValue>,
-    onSend: () -> Unit
+//    textState: MutableState<TextFieldValue>,
+    onSend: (String) -> Unit
 ) {
     val debounceDuration: Long = 3000
     var isClickable by remember { mutableStateOf(true) }
@@ -48,6 +49,8 @@ fun CustomTextField(
             isClickable = true
         }
     }
+    val userInput = remember { mutableStateOf(TextFieldValue()) }
+
         Surface(modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.surface
         ) {
@@ -65,8 +68,8 @@ fun CustomTextField(
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                 ) {
                     BasicTextField(
-                        value = textState.value,
-                        onValueChange = { textState.value = it },
+                        value = userInput.value,
+                        onValueChange = { userInput.value = it },
                         textStyle = MaterialTheme.typography.body1.copy(
                             color = MaterialTheme.colors.onSurface
                         ),
@@ -82,7 +85,8 @@ fun CustomTextField(
                             if (isClickable) {
                                 Log.d("TAG","clicked")
                                 isClickable = false
-                                onSend()
+                                onSend(userInput.value.text)
+                                userInput.value = TextFieldValue("")
                             }
                         },
                         modifier = Modifier
