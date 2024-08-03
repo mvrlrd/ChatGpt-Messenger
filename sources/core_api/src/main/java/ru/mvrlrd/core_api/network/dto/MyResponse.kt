@@ -35,9 +35,9 @@ data class ServerResponse(
     val result: Result
 ): MyResponse {
     companion object{
-        fun getDefault() =
+        fun getDefault(text: String="") =
             ServerResponse(
-                Result(listOf(Alternative(Message("","error"), "")), Usage("","",""), "")
+                Result(listOf(Alternative(Message("",text), "")), Usage("","",""), "")
             )
     }
 }

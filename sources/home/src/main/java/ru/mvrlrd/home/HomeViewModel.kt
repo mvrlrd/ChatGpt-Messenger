@@ -61,6 +61,7 @@ init {
             }
             viewModelScope.launch {
                 _isLoading.postValue(true)
+
                 getAnswerUseCase("", query).onSuccess {
                     Log.d("TAG","+++viewModel  = ${(it as ServerResponse).result.alternatives}")
                     val text = (it as ServerResponse).result.alternatives[0].message.text

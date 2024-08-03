@@ -1,362 +1,320 @@
 package ru.mvrlrd.home
 
-import android.R
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.home.di.DaggerHomeComponent
-import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
-import ru.mvrlrd.main.pullrefresh.rememberPullToRefreshState
 
 @Composable
-fun ShowToast( flow: Flow<String>) {
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    coroutineScope.launch {
-        flow.collectLatest {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+fun HomeScreen(chatId: Long) {
+    val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
+
+    val homeComponent = remember {
+        DaggerHomeComponent.builder().providersFacade(facade).build()
+    }
+    val saveMessageToChatUseCase = remember {
+        homeComponent.provideSaveMessageToChatUseCase()
+    }
+    val getAllMessagesForChatUseCase = remember {
+        homeComponent.provideGetAllMessagesForChatUseCase()
+    }
+    val getAnswerUseCase = remember {
+        homeComponent.provideGetAnswerUseCase()
+    }
+    val deleteMessageUseCase = remember {
+        homeComponent.provideDeleteMessageUseCase()
+    }
+    val clearMessagesUseCase = remember {
+        homeComponent.provideClearMessagesUseCase()
+    }
+
+    val viewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.createHomeViewModelFactory(
+            getAnswerUseCase,
+            saveMessageToChatUseCase,
+            getAllMessagesForChatUseCase,
+            deleteMessageUseCase,
+            clearMessagesUseCase,
+            chatId
+        )
+    )
+
+    val messages = viewModel.messages
+
+
+    val userInput = remember { mutableStateOf(TextFieldValue()) }
+    var response by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
+    response = viewModel.responseAnswer.observeAsState("").value
+    val isLoading by viewModel.isLoading.observeAsState(false) // наблюдаем за состоянием загрузки
+
+    val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
+
+
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(scrollState),
+
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+//                    .verticalScroll(scrollState)
+            ) {
+//                MessageBubble(message = Message(0,0,messages.value.toString(),1L,true))
+
+              MessageList(messages = messages){
+                  viewModel.deleteMessage(it)
+              }
+
+
+            }
+            ShowToast(flow = oneShotEvent)
+            CustomTextField(
+                textState = userInput,
+                modifier = Modifier
+                    .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
+            ) {
+//                viewModel.saveMessageToChat(Message(holderChatId = chatId, text = userInput.value.text, date = 1L, isReceived = false ))
+                viewModel.sendRequest(userInput.value.text)
+            }
+        }
+    }
+
+
+}
+
+@Composable
+fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(messages) {
+        if (messages.isNotEmpty()) {
+            listState.animateScrollToItem(messages.size - 1)
+        }
+    }
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(id = R.dimen.padding_big))
+    ) {
+        itemsIndexed(
+            items = messages,
+            key = { _, item ->
+                item
+            }
+        ) { _, item ->
+            SwipeToDismissMessageBubble(item = item) {
+                onDismiss(it)
+            }
         }
     }
 }
-//@Composable
-//fun HomeScreen(navController: NavController, id: Long) {
-//    val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
-//    val homeComponent = remember {
-////        throw RuntimeException()
-//        DaggerHomeComponent.builder().providersFacade(facade).build()
-//    }
-//    val repo = remember {
-////        throw RuntimeException()
-//        homeComponent.getRepo()
-//    }
-//
-//    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.createHomeViewModelFactory(repo))
-//    val userInput = remember { mutableStateOf(TextFieldValue()) }
-//    var response by remember { mutableStateOf("") }
-//    val scrollState = rememberScrollState()
-//    response = viewModel.responseAnswer.observeAsState("").value
-//    val isLoading by viewModel.isLoading.observeAsState(false) // наблюдаем за состоянием загрузки
-//
-//    val flow = viewModel.oneShotEventChannel.receiveAsFlow()
-//
-//    val uiState by viewModel.uiState.collectAsState()
-//
-//    val pullToRefreshState = rememberPullToRefreshState(
-//        onTimeUpdated = { timeElapsed ->
-//            viewModel.convertElapsedTimeIntoText(timeElapsed)
-//        },
-//    )
-//
-//    Log.d("TAG","uiState received = $uiState")
-//    when (uiState) {
-//        is UiState.Initial->{
-//            Surface(
-//                modifier = Modifier.fillMaxSize(),
-//                color = Color.White,
-//            ) {
-//                PullToRefreshLayout(
-//                    modifier = Modifier.fillMaxSize(),
-//                    pullRefreshLayoutState = pullToRefreshState,
-//                    onRefresh = {
-//                        navController.navigate("Favs")
-////                        viewModel.refresh()
-//                    },
-//                ) {
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .padding(16.dp)
-//                            .verticalScroll(scrollState),
-//
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Box(
-//                            modifier = Modifier
-//                                .weight(1f)
-//                                .verticalScroll(scrollState)
-//                        ) {
-//                            Column {
-//                                Text(userInput.value.text)
-//                                TypingAnimation(text = response, isLoading = isLoading)
-//                            }
-//
-//                        }
-//                        ShowToast(flow = flow)
-//                        CustomTextField(
-//                            textState = userInput,
-//                            modifier = Modifier
-//                                .align(Alignment.End) // Выравнивание CustomTextField внизу экрана
-//                        ) {
-//                            viewModel.sendRequest(userInput.value.text)
-//                        }
-//                    }
-//                }
-//            }
-//
-//
-//        }
-//        is UiState.Error -> {
-//            // show error message
-//        }
-//
-//        UiState.Loading -> {
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center,
-//            ) {
-//                androidx.compose.material.CircularProgressIndicator(color = Color.Black)
-//            }
-//
-//        }
-//
-//        is UiState.Success -> {
-//            Log.d("TAG", "success")
-//            navController.navigate("Favs")
-////                    FavoritesScreen((uiState as UiState.Success).list)
-//        }
-//    }
-//
-//
-//
-//
-//}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToStart) {
+                onDismiss(item.id)
+            }
+            true
+        }
+    )
+    SwipeToDismiss(
+        state = dismissState,
+        directions = setOf(
+            DismissDirection.EndToStart
+        ),
+        dismissThresholds = { direction ->
+            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+        },
+        background = {
+            val color = when (dismissState.dismissDirection) {
+                DismissDirection.StartToEnd -> Color.Blue
+                DismissDirection.EndToStart -> Color.Red
+                null -> Color.Transparent
+            }
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(color)
+                    .padding(dimensionResource(id = R.dimen.padding_big)),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Text("Delete", color = Color.Black) //_____поставить иконки
+            }
+        },
+        dismissContent = {
+            MessageBubble(message = item)
+        }
+    )
+}
+
 
 @Composable
-fun TypingAnimation(text: String, isLoading: Boolean) {
-    var displayedText by remember { mutableStateOf("") }
-    var visibleTextLength by remember { mutableStateOf(0) }
+fun MessageBubble(message: Message) {
+    val bubbleColor = if (message.isReceived) Color(0xFFE0E0E0) else Color(0xFFDCF8C6)
+    val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
 
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_medium),
+                vertical = dimensionResource(id = R.dimen.padding_small)
+            ),
+        contentAlignment = alignment
     ) {
-        if (isLoading) {
-            visibleTextLength =  0
-            CircularProgressIndicator() // Круговой прогресс-бар
+        if (message.isReceived) {
+            BubbleWithArrow(
+                bubble = { Bubble(color = bubbleColor, text = message.text, isReceived = true) },
+                arrow = { Arrow(isReceived = true, color = bubbleColor) },
+                isReceived = true
+            )
         } else {
-            LaunchedEffect(text) {
-                for (i in text.indices) {
-                    delay(50)
-                    visibleTextLength = i + 1
-                }
-            }
-            displayedText = text.take(visibleTextLength)
-
-            BasicText(
-                text = displayedText,
-                style = TextStyle(
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize * 1.2f, // Увеличиваем размер шрифта на 20%
-                    color = MaterialTheme.colorScheme.primary // Цвет текста противоположен основному цвету темы
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize(
-                        animationSpec = tween(
-                            durationMillis = 300,
-                            easing = LinearEasing
-                        )
-                    )
+            BubbleWithArrow(
+                bubble = { Bubble(color = bubbleColor, text = message.text, isReceived = false) },
+                arrow = { Arrow(isReceived = false, color = bubbleColor) },
+                isReceived = false
             )
         }
     }
 }
 
 @Composable
-fun CustomTextField(
-    modifier: Modifier = Modifier,
-    textState: MutableState<TextFieldValue>,
-    onSend: () -> Unit
-) {
-    val debounceDuration: Long = 3000
-    var isClickable by remember { mutableStateOf(true) }
-    LaunchedEffect(isClickable) {
-        while (!isClickable) {
-            delay(debounceDuration)
-            isClickable = true
-        }
-    }
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(Color.Gray.copy(alpha = 0.2f))
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                ) {
-                    BasicTextField(
-                        value = textState.value,
-                        onValueChange = { textState.value = it },
-                        textStyle = LocalTextStyle.current.copy(
-                            color = MaterialTheme.colorScheme.primary, // Цвет текста противоположен основному цвету темы
-                            fontSize = 16.sp
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp)
-                    )
-                    IconButton(
-                        onClick = {
-                            if (isClickable) {
-                                Log.d("TAG","clicked")
-                                isClickable = false
-                                onSend()
-                            }
-                        },
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.Blue)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_menu_send), // Use your own icon here
-                            contentDescription = "Send",
-                            tint = Color.White
-                        )
-                    }
-                }
-            }
+fun BubbleWithArrow(bubble: @Composable ()-> Unit, arrow: @Composable ()->Unit, isReceived: Boolean) {
+    Row(modifier = Modifier.height(IntrinsicSize.Max)) {
+        if (isReceived){
+            arrow()
+            bubble()
+        }else{
+            bubble()
+            arrow()
         }
     }
 }
 
-//////
-//
-//
-//    @Preview(showBackground = true)
-//    @Composable
-//    fun DefaultPreview() {
-//        MyApp()
-//    }
-//
-//    @Composable
-//    @Preview(showBackground = true)
-//    fun CustomTextFieldPreview() {
-//        val textState = remember { mutableStateOf(TextFieldValue()) }
-//        MaterialTheme {
-//            Surface(modifier = Modifier.fillMaxSize()) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(16.dp),
-//                    verticalArrangement = Arrangement.Top,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    CustomTextField(
-//                        textState = textState,
-//                        onSend = {
-//                            // Handle send action
-//                        },
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-//////////////
+@Composable
+fun Bubble(color: Color, text: String, isReceived: Boolean){
+    Box(
+        modifier = Modifier
+            .background(
+                color, shape = RoundedCornerShape(
+                    topStart = if (isReceived) 0.dp else dimensionResource(id = R.dimen.corner_size),
+                    topEnd = dimensionResource(id = R.dimen.corner_size),
+                    bottomEnd = if (isReceived) dimensionResource(id = R.dimen.corner_size) else 0.dp,
+                    bottomStart = dimensionResource(id = R.dimen.corner_size)
+                )
+            )
+            .padding(dimensionResource(id = R.dimen.text_padding))
+    ) {
+        Text(
+            text = text,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black
+        )
+    }
+}
 
-//@Composable
-//fun HomeScreen(
-//    items: List<String>,
-//    onItemClick: (String) -> Unit
-//    ) {
-//        LazyColumn {
-//            items(items.size) { index ->
-//                var expanded by remember { mutableStateOf(false) }
-//                val item = items[index]
-//
-//                // Обработчик клика по элементу списка
-//                val onItemClickInternal: () -> Unit = {
-//                    expanded = !expanded
-//                    onItemClick(item)
-//                }
-//
-//                // Вид списка
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .clickable(onClick = onItemClickInternal)
-//                ) {
-//                    Text(text = item, modifier = Modifier.padding(16.dp))
-//
-//                    // Дополнительный контент, который будет показан при раскрытии элемента
-//                    if (expanded) {
-//                        Text(
-//                            text = "Additional content for $item",
-//                            modifier = Modifier.padding(start = 16.dp)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
+@Composable
+private fun Arrow(color: Color, isReceived: Boolean) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = color,
+                shape = TriangleEdgeShape(isReceived)
+            )
+            .width(dimensionResource(id = R.dimen.arrow_width))
+            .fillMaxHeight()
+    )
+}
+
+
+
+private class TriangleEdgeShape(private val isReceived: Boolean) : Shape {
+    private val offset = 20
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val trianglePath = Path().apply {
+            if (isReceived) {
+                moveTo(x = size.width, y = 0f)
+                lineTo(x = size.width, y = offset.toFloat())
+                lineTo(x = size.width - offset, y = 0f)
+            } else {
+                moveTo(x = 0f, y = size.height - offset)
+                lineTo(x = 0f, y = size.height)
+                lineTo(x = 0f + offset, y = size.height)
+            }
+            close()
+        }
+        return Outline.Generic(path = trianglePath)
+    }
+}
 
 
 
 
-//    ExpandableRecyclerView(
-//        items = listOf("Item 1", "Item 2", "Item 3"),
-//        onItemClick = { selectedItem ->
-//            // Обработка выбора элемента
-//            println("Selected item: $selectedItem")
-//        }
-//    )
