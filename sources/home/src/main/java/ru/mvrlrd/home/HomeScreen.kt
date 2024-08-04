@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -238,45 +239,44 @@ fun CloudMessage(message: Message) {
     }
 }
 
-fun cloudShape(density: Density, isReceived: Boolean, inset: Float = 12f, cornerRadius: Float = 16f): GenericShape {
+fun cloudShape(density: Density, isReceived: Boolean, inset: Dp = 12.dp, cornerRadius: Dp = 16.dp): GenericShape {
     return GenericShape { size: Size, _ ->
-        val dpToPx = { dpValue: Float -> dpValue * density.density }
         val w = size.width
         val h = size.height
-        val _inset = dpToPx(inset)
-        val r = dpToPx(cornerRadius)
+        val _inset = with(density) { inset.toPx() }
+        val radius = with(density) { cornerRadius.toPx() }
         val path = Path().apply {
             if(isReceived){
                 moveTo(0f, 0f)
                 lineTo(_inset, _inset)
-                lineTo(w - r, _inset)
+                lineTo(w - radius, _inset)
                 //top right
                 arcTo(
                     rect = Rect(
-                        Offset(w - r, _inset),
-                        Offset(w, _inset+r)
+                        Offset(w - radius, _inset),
+                        Offset(w, _inset+radius)
                     ),
                     startAngleDegrees = 270f,
                     sweepAngleDegrees = 90f,
                     forceMoveTo = false
                 )
-                lineTo(w, h - r )
+                lineTo(w, h - radius )
                 //bottom right
                 arcTo(
                     rect = Rect(
-                        Offset(w -r , h-r),
+                        Offset(w -radius , h-radius),
                         Offset(w, h)
                     ),
                     startAngleDegrees = 0f,
                     sweepAngleDegrees = 90f,
                     forceMoveTo = false
                 )
-                lineTo(r, h)
+                lineTo(radius, h)
                 //bottom left
                 arcTo(
                     rect = Rect(
-                        Offset(0f, h-r),
-                        Offset(r, h)
+                        Offset(0f, h-radius),
+                        Offset(radius, h)
                     ),
                     startAngleDegrees = 90f,
                     sweepAngleDegrees = 90f,
@@ -285,12 +285,12 @@ fun cloudShape(density: Density, isReceived: Boolean, inset: Float = 12f, corner
                 lineTo(0f, 0f)
 
             }else{
-                moveTo(0f, r)
+                moveTo(0f, radius)
                 //top left
                 arcTo(
                     rect = Rect(
                         Offset(0f, 0f),
-                        Offset(r, r)
+                        Offset(radius, radius)
                     ),
                     startAngleDegrees = 180f,
                     sweepAngleDegrees = 90f,
@@ -300,8 +300,8 @@ fun cloudShape(density: Density, isReceived: Boolean, inset: Float = 12f, corner
                 //top right
                 arcTo(
                     rect = Rect(
-                        Offset(w -r, 0f),
-                        Offset(w, r)
+                        Offset(w -radius, 0f),
+                        Offset(w, radius)
                     ),
                     startAngleDegrees = 270f,
                     sweepAngleDegrees = 90f,
@@ -309,12 +309,12 @@ fun cloudShape(density: Density, isReceived: Boolean, inset: Float = 12f, corner
                 )
                 lineTo(w, h)
                 lineTo(w - _inset, h-_inset)
-                lineTo(r, h - _inset)
+                lineTo(radius, h - _inset)
                 //bottom left
                 arcTo(
                     rect = Rect(
-                        Offset(0f, h-r-_inset),
-                        Offset(r, h-_inset)
+                        Offset(0f, h-radius-_inset),
+                        Offset(radius, h-_inset)
                     ),
                     startAngleDegrees = 90f,
                     sweepAngleDegrees = 90f,
@@ -340,12 +340,12 @@ fun CloudCard(
         shape = cloudShape(
             density = density,
             isReceived = isReceived,
-            inset = 12f,
-            cornerRadius = 16f
+            inset = dimensionResource(id = R.dimen.bubble_inset),
+            cornerRadius = dimensionResource(id = R.dimen.corner_size)
         ),
         modifier = modifier,
         backgroundColor = color,
-        elevation = 10.dp
+        elevation = 8.dp
     ) {
         Box(
             modifier = Modifier
