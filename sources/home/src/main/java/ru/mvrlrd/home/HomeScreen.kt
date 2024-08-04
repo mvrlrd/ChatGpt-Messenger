@@ -158,8 +158,12 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
             key = { _, item ->
                 item
             }
-        ) { _, item ->
-            SwipeToDismissCloudMessage(item = item) {
+        ) { i, item ->
+            val prev = if (i>0) messages[i-1].isReceived else false
+            val next = if (i<messages.lastIndex) messages[i+1].isReceived else true
+
+
+            SwipeToDismissCloudMessage(item = item, prev=prev, next=next) {
                 onDismiss(it)
             }
         }
@@ -173,7 +177,7 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissCloudMessage(item: Message, onDismiss: (Long) -> Unit) {
+fun SwipeToDismissCloudMessage(item: Message,prev:Boolean, next: Boolean, onDismiss: (Long) -> Unit) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {
@@ -219,14 +223,14 @@ fun SwipeToDismissCloudMessage(item: Message, onDismiss: (Long) -> Unit) {
             }
         },
         dismissContent = {
-            CloudMessage(message = item)
+            CloudMessage(message = item, prev=prev, next = next)
         }
     )
 }
 
 
 @Composable
-fun CloudMessage(message: Message) {
+fun CloudMessage(message: Message, prev: Boolean, next: Boolean) {
     val cloudColor =
         if (message.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
     val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
@@ -234,19 +238,29 @@ fun CloudMessage(message: Message) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                vertical = dimensionResource(id = R.dimen.padding_small)
+                top = if (message.isReceived != prev) 10.dp else 2.dp ,
+                bottom = if (message.isReceived !=next) 10.dp else 2.dp
             ),
         contentAlignment = alignment
     ) {
-        CloudCard(color = cloudColor, text = message.text, isReceived = message.isReceived)
+        CloudCard(color = cloudColor, text = message.text, isReceived = message.isReceived, prev = prev, next = next)
     }
 }
 
-fun cloudShape(density: Density, isReceived: Boolean, inset: Dp = 12.dp, cornerRadius: Dp = 16.dp): GenericShape {
+fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boolean, inset: Dp = 12.dp, cornerRadius: Dp = 16.dp): GenericShape {
     return GenericShape { size: Size, _ ->
         val w = size.width
         val h = size.height
-        val _inset = with(density) { inset.toPx() }
+
+        val hvost =if (isReceived && !prev){
+            true
+        }else if(!isReceived && next){
+            true
+        }else{
+            false
+        }
+
+        val _inset = if (hvost) with(density) { inset.toPx() } else 0f
         val radius = with(density) { cornerRadius.toPx() }
         val path = Path().apply {
             if(isReceived){
@@ -336,7 +350,9 @@ fun CloudCard(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
-    isReceived: Boolean
+    isReceived: Boolean,
+    prev: Boolean,
+    next: Boolean
 ) {
     val density = LocalDensity.current
     Card(
@@ -344,7 +360,9 @@ fun CloudCard(
             density = density,
             isReceived = isReceived,
             inset = dimensionResource(id = R.dimen.bubble_inset),
-            cornerRadius = dimensionResource(id = R.dimen.corner_size)
+            cornerRadius = dimensionResource(id = R.dimen.corner_size),
+            prev = prev,
+            next = next
         ),
         modifier = modifier,
         backgroundColor = color,
@@ -355,10 +373,10 @@ fun CloudCard(
                 .padding(
                     start = dimensionResource(id = R.dimen.padding_medium),
                     end = dimensionResource(id = R.dimen.padding_medium),
-                    top = if (isReceived) dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
+                    top = if (isReceived && !prev) dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
                         id = R.dimen.bubble_inset
                     ) else dimensionResource(id = R.dimen.padding_medium),
-                    bottom = if (isReceived) dimensionResource(id = R.dimen.padding_medium) else dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
+                    bottom = if (!isReceived && !next || isReceived) dimensionResource(id = R.dimen.padding_medium) else dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
                         id = R.dimen.bubble_inset)
                 )
         ) {
@@ -377,7 +395,7 @@ fun CloudCard(
 @Preview
 fun TestDraw(){
     CloudCard(text = "hello how mpos?",
-        color = Color.Green, isReceived = false )
+        color = Color.Green, isReceived = true , prev = true, next = true)
 
 }
 
