@@ -159,11 +159,9 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
                 item
             }
         ) { i, item ->
-            val prev = if (i>0) messages[i-1].isReceived else false
-            val next = if (i<messages.lastIndex) messages[i+1].isReceived else true
-
-
-            SwipeToDismissCloudMessage(item = item, prev=prev, next=next) {
+            val prev = if (i > 0) messages[i - 1].isReceived else !item.isReceived
+            val next = if (i < messages.lastIndex) messages[i + 1].isReceived else !item.isReceived
+            SwipeToDismissCloudMessage(item = item, prev = prev, next = next) {
                 onDismiss(it)
             }
         }
@@ -238,8 +236,8 @@ fun CloudMessage(message: Message, prev: Boolean, next: Boolean) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = if (message.isReceived && !prev) 2.dp else if (message.isReceived != prev) 8.dp else 2.dp ,
-                bottom = if (!message.isReceived && next) 2.dp else if (message.isReceived !=next) 8.dp else 2.dp
+                top = if (message.isReceived && !prev) 2.dp else if (message.isReceived != prev) 8.dp else 2.dp,
+                bottom = if (!message.isReceived && next) 2.dp else if (message.isReceived != next) 8.dp else 2.dp
             ),
         contentAlignment = alignment
     ) {
@@ -251,7 +249,6 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
     return GenericShape { size: Size, _ ->
         val w = size.width
         val h = size.height
-
         val doDrawHvost =if (isReceived && !prev){
             true
         }else !isReceived && next
@@ -290,15 +287,28 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 )
                 lineTo(w, h - radius )
                 //bottom right
-                arcTo(
-                    rect = Rect(
-                        Offset(w -radius , h-radius),
-                        Offset(w, h)
-                    ),
-                    startAngleDegrees = 0f,
-                    sweepAngleDegrees = 90f,
-                    forceMoveTo = false
-                )
+                if (!next){
+                    arcTo(
+                        rect = Rect(
+                            Offset(w -radius*3 , h-radius*3),
+                            Offset(w, h)
+                        ),
+                        startAngleDegrees = 0f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }else{
+                    arcTo(
+                        rect = Rect(
+                            Offset(w -radius , h-radius),
+                            Offset(w, h)
+                        ),
+                        startAngleDegrees = 0f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }
+
                 lineTo(radius, h)
                 //bottom left
 
@@ -328,16 +338,28 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 )
                 lineTo(w, 0f)
                 //top right
+                if (prev){
+                    arcTo(
+                        rect = Rect(
+                            Offset(w - radius*3, 0f),
+                            Offset(w, radius*3)
+                        ),
+                        startAngleDegrees = 270f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }else{
+                    arcTo(
+                        rect = Rect(
+                            Offset(w -radius, 0f),
+                            Offset(w, radius)
+                        ),
+                        startAngleDegrees = 270f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }
 
-                arcTo(
-                    rect = Rect(
-                        Offset(w -radius, 0f),
-                        Offset(w, radius)
-                    ),
-                    startAngleDegrees = 270f,
-                    sweepAngleDegrees = 90f,
-                    forceMoveTo = false
-                )
                 lineTo(w, h)
 
                 if (doDrawHvost){
