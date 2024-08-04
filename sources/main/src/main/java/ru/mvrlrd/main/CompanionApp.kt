@@ -2,6 +2,10 @@ package ru.mvrlrd.main
 
 import android.content.Context
 import android.content.res.Resources.Theme
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -30,8 +34,21 @@ fun CompanionApp(
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = "Favs"
+            startDestination = "Favs",
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn()
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn()
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
+            },
         ) {
+
             composable("Favs") {
                 FavoritesScreen(providersFacade = providersFacade) {
                     navController.navigate("Home/$it")

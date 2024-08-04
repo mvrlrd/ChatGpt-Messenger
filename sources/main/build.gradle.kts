@@ -25,4 +25,7 @@ dependencies {
     implementation(projects.sources.favorites)
 
 
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.35.1-alpha")
+
+
 }
