@@ -115,11 +115,14 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
                     modifier = Modifier
                         .zIndex(1f)
                         .wrapContentSize()
-                        .align(Alignment.BottomStart)
+                        .align(Alignment.BottomCenter)
                         .padding(
                             bottom = 16.dp,
                             start = 16.dp, end = 16.dp
                         )
+//                        .background(Color.Yellow)
+
+
                 ) {
                     viewModel.sendRequest(it)
                 }
@@ -156,7 +159,7 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
                 item
             }
         ) { _, item ->
-            SwipeToDismissMessageBubble(item = item) {
+            SwipeToDismissCloudMessage(item = item) {
                 onDismiss(it)
             }
         }
@@ -170,7 +173,7 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissMessageBubble(item: Message, onDismiss: (Long) -> Unit) {
+fun SwipeToDismissCloudMessage(item: Message, onDismiss: (Long) -> Unit) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {
