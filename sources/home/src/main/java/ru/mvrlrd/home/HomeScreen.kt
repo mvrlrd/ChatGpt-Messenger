@@ -238,8 +238,8 @@ fun CloudMessage(message: Message, prev: Boolean, next: Boolean) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = if (message.isReceived != prev) 10.dp else 2.dp ,
-                bottom = if (message.isReceived !=next) 10.dp else 2.dp
+                top = if (message.isReceived && !prev) 2.dp else if (message.isReceived != prev) 8.dp else 2.dp ,
+                bottom = if (!message.isReceived && next) 2.dp else if (message.isReceived !=next) 8.dp else 2.dp
             ),
         contentAlignment = alignment
     ) {
@@ -252,21 +252,32 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
         val w = size.width
         val h = size.height
 
-        val hvost =if (isReceived && !prev){
+        val doDrawHvost =if (isReceived && !prev){
             true
-        }else if(!isReceived && next){
-            true
-        }else{
-            false
-        }
+        }else !isReceived && next
 
-        val _inset = if (hvost) with(density) { inset.toPx() } else 0f
+        val _inset = if (doDrawHvost) with(density) { inset.toPx() } else 0f
         val radius = with(density) { cornerRadius.toPx() }
         val path = Path().apply {
             if(isReceived){
-                moveTo(0f, 0f)
-                lineTo(_inset, _inset)
-                lineTo(w - radius, _inset)
+                if (doDrawHvost){
+                    moveTo(0f, 0f)
+                    lineTo(_inset, _inset)
+                    lineTo(w - radius, _inset)
+                }else{
+                    moveTo(0f, radius)
+                    //top left
+                    arcTo(
+                        rect = Rect(
+                            Offset(0f, 0f),
+                            Offset(radius, radius)
+                        ),
+                        startAngleDegrees = 180f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }
+
                 //top right
                 arcTo(
                     rect = Rect(
@@ -290,6 +301,7 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 )
                 lineTo(radius, h)
                 //bottom left
+
                 arcTo(
                     rect = Rect(
                         Offset(0f, h-radius),
@@ -302,6 +314,7 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 lineTo(0f, 0f)
 
             }else{
+
                 moveTo(0f, radius)
                 //top left
                 arcTo(
@@ -315,6 +328,7 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 )
                 lineTo(w, 0f)
                 //top right
+
                 arcTo(
                     rect = Rect(
                         Offset(w -radius, 0f),
@@ -325,8 +339,25 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                     forceMoveTo = false
                 )
                 lineTo(w, h)
-                lineTo(w - _inset, h-_inset)
-                lineTo(radius, h - _inset)
+
+                if (doDrawHvost){
+                    lineTo(w - _inset, h-_inset)
+                    lineTo(radius, h - _inset)
+                }else{
+                    lineTo(w, h - radius )
+                    //bottom right
+                    arcTo(
+                        rect = Rect(
+                            Offset(w -radius , h-radius),
+                            Offset(w, h)
+                        ),
+                        startAngleDegrees = 0f,
+                        sweepAngleDegrees = 90f,
+                        forceMoveTo = false
+                    )
+                }
+
+
                 //bottom left
                 arcTo(
                     rect = Rect(
@@ -395,7 +426,7 @@ fun CloudCard(
 @Preview
 fun TestDraw(){
     CloudCard(text = "hello how mpos?",
-        color = Color.Green, isReceived = true , prev = true, next = true)
+        color = Color.Green, isReceived = true , prev = false, next = false)
 
 }
 
