@@ -35,6 +35,12 @@ fun CompanionApp(
             composable("Favs") {
                 FavoritesScreen(providersFacade = providersFacade) {
                     navController.navigate("Home/$it")
+                    //разобраться с навигацией!
+                    //улучшить анимацию ресайклеров
+                    //добавить экран создания чата
+                    // убирать фаб при скроле
+                    //поменять цвет баббл от ИИ
+                    //добавить отбивку дат в чат
                 }
             }
             composable("Home/{id}") { backStackEntry ->
