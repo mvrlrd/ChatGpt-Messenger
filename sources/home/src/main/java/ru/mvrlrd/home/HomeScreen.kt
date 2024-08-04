@@ -20,6 +20,7 @@ import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -93,8 +94,9 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
     }
     var response by remember { mutableStateOf("") }
     response = viewModel.responseAnswer.observeAsState("").value
-//    val isLoading by viewModel.isLoading.observeAsState(false)
+    val isLoading by viewModel.isLoading.observeAsState(true)
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
+
 
     PullToRefreshLayout(
         pullRefreshLayoutState = PullToRefreshLayoutState { "hello" },
@@ -108,24 +110,24 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                MessageList(messages = messages) {
-                    viewModel.deleteMessage(it)
-                }
-                CustomTextField(
-                    modifier = Modifier
-                        .zIndex(1f)
-                        .wrapContentSize()
-                        .align(Alignment.BottomCenter)
-                        .padding(
-                            bottom = 16.dp,
-                            start = 16.dp, end = 16.dp
-                        )
-//                        .background(Color.Yellow)
+
+                    MessageList(messages = messages) {
+                        viewModel.deleteMessage(it)
+                    }
+                    CustomTextField(
+                        modifier = Modifier
+                            .zIndex(1f)
+                            .wrapContentSize()
+                            .align(Alignment.BottomCenter)
+                            .padding(
+                                bottom = 16.dp,
+                                start = 16.dp, end = 16.dp
+                            )
+                    ) {
+                        viewModel.sendRequest(it)
+                    }
 
 
-                ) {
-                    viewModel.sendRequest(it)
-                }
             }
             ShowToast(flow = oneShotEvent)
         }
@@ -148,7 +150,7 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
             .fillMaxSize()
             .padding(
                 bottom = 0.dp,
-                top = dimensionResource(id = R.dimen.padding_big),
+                top = 0.dp,
                 end = dimensionResource(id = R.dimen.padding_big),
                 start = dimensionResource(id = R.dimen.padding_big)
             )
@@ -165,7 +167,6 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
                 onDismiss(it)
             }
         }
-
         item {
             Spacer(modifier = Modifier.height(72.dp)) // отступ от посл эл-та до нижнего края
         }
@@ -175,7 +176,12 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissCloudMessage(item: Message,prev:Boolean, next: Boolean, onDismiss: (Long) -> Unit) {
+fun SwipeToDismissCloudMessage(
+    item: Message,
+    prev: Boolean,
+    next: Boolean,
+    onDismiss: (Long) -> Unit
+) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {
@@ -205,23 +211,13 @@ fun SwipeToDismissCloudMessage(item: Message,prev:Boolean, next: Boolean, onDism
                 contentAlignment = Alignment.CenterEnd
             ) {
                 when (dismissState.dismissDirection) {
-                    DismissDirection.EndToStart -> {
-//                        Icon(
-//                            painter = painterResource(id = ru.mvrlrd.uikit.R.drawable.baseline_delete_forever_24), // Replace with your drawable resource ID
-//                            contentDescription = "Delete Icon",
-//                            modifier = Modifier.size(50.dp)
-//                        )
-                    }
-
-                    else -> {
-
-                    }
-
+                    DismissDirection.EndToStart -> {}
+                    else -> {}
                 }
             }
         },
         dismissContent = {
-            CloudMessage(message = item, prev=prev, next = next)
+            CloudMessage(message = item, prev = prev, next = next)
         }
     )
 }
@@ -241,27 +237,39 @@ fun CloudMessage(message: Message, prev: Boolean, next: Boolean) {
             ),
         contentAlignment = alignment
     ) {
-        CloudCard(color = cloudColor, text = message.text, isReceived = message.isReceived, prev = prev, next = next)
+        CloudCard(
+            color = cloudColor,
+            text = message.text,
+            isReceived = message.isReceived,
+            prev = prev,
+            next = next
+        )
     }
 }
 
-fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boolean, inset: Dp = 12.dp, cornerRadius: Dp = 16.dp): GenericShape {
+fun cloudShape(
+    density: Density,
+    isReceived: Boolean,
+    prev: Boolean,
+    next: Boolean,
+    inset: Dp = 12.dp,
+    cornerRadius: Dp = 16.dp
+): GenericShape {
     return GenericShape { size: Size, _ ->
         val w = size.width
         val h = size.height
-        val doDrawHvost =if (isReceived && !prev){
+        val doDrawHvost = if (isReceived && !prev) {
             true
-        }else !isReceived && next
-
+        } else !isReceived && next
         val _inset = if (doDrawHvost) with(density) { inset.toPx() } else 0f
         val radius = with(density) { cornerRadius.toPx() }
         val path = Path().apply {
-            if(isReceived){
-                if (doDrawHvost){
+            if (isReceived) {
+                if (doDrawHvost) {
                     moveTo(0f, 0f)
                     lineTo(_inset, _inset)
                     lineTo(w - radius, _inset)
-                }else{
+                } else {
                     moveTo(0f, radius)
                     //top left
                     arcTo(
@@ -274,33 +282,32 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                         forceMoveTo = false
                     )
                 }
-
                 //top right
                 arcTo(
                     rect = Rect(
                         Offset(w - radius, _inset),
-                        Offset(w, _inset+radius)
+                        Offset(w, _inset + radius)
                     ),
                     startAngleDegrees = 270f,
                     sweepAngleDegrees = 90f,
                     forceMoveTo = false
                 )
-                lineTo(w, h - radius )
+                lineTo(w, h - radius)
                 //bottom right
-                if (!next){
+                if (!next) {
                     arcTo(
                         rect = Rect(
-                            Offset(w -radius*3 , h-radius*3),
+                            Offset(w - radius * 3, h - radius * 3),
                             Offset(w, h)
                         ),
                         startAngleDegrees = 0f,
                         sweepAngleDegrees = 90f,
                         forceMoveTo = false
                     )
-                }else{
+                } else {
                     arcTo(
                         rect = Rect(
-                            Offset(w -radius , h-radius),
+                            Offset(w - radius, h - radius),
                             Offset(w, h)
                         ),
                         startAngleDegrees = 0f,
@@ -308,13 +315,11 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                         forceMoveTo = false
                     )
                 }
-
                 lineTo(radius, h)
                 //bottom left
-
                 arcTo(
                     rect = Rect(
-                        Offset(0f, h-radius),
+                        Offset(0f, h - radius),
                         Offset(radius, h)
                     ),
                     startAngleDegrees = 90f,
@@ -322,9 +327,7 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                     forceMoveTo = false
                 )
                 lineTo(0f, 0f)
-
-            }else{
-
+            } else {
                 moveTo(0f, radius)
                 //top left
                 arcTo(
@@ -338,20 +341,20 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                 )
                 lineTo(w, 0f)
                 //top right
-                if (prev){
+                if (prev) {
                     arcTo(
                         rect = Rect(
-                            Offset(w - radius*3, 0f),
-                            Offset(w, radius*3)
+                            Offset(w - radius * 3, 0f),
+                            Offset(w, radius * 3)
                         ),
                         startAngleDegrees = 270f,
                         sweepAngleDegrees = 90f,
                         forceMoveTo = false
                     )
-                }else{
+                } else {
                     arcTo(
                         rect = Rect(
-                            Offset(w -radius, 0f),
+                            Offset(w - radius, 0f),
                             Offset(w, radius)
                         ),
                         startAngleDegrees = 270f,
@@ -359,18 +362,16 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                         forceMoveTo = false
                     )
                 }
-
                 lineTo(w, h)
-
-                if (doDrawHvost){
-                    lineTo(w - _inset, h-_inset)
+                if (doDrawHvost) {
+                    lineTo(w - _inset, h - _inset)
                     lineTo(radius, h - _inset)
-                }else{
-                    lineTo(w, h - radius )
+                } else {
+                    lineTo(w, h - radius)
                     //bottom right
                     arcTo(
                         rect = Rect(
-                            Offset(w -radius , h-radius),
+                            Offset(w - radius, h - radius),
                             Offset(w, h)
                         ),
                         startAngleDegrees = 0f,
@@ -378,13 +379,11 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
                         forceMoveTo = false
                     )
                 }
-
-
                 //bottom left
                 arcTo(
                     rect = Rect(
-                        Offset(0f, h-radius-_inset),
-                        Offset(radius, h-_inset)
+                        Offset(0f, h - radius - _inset),
+                        Offset(radius, h - _inset)
                     ),
                     startAngleDegrees = 90f,
                     sweepAngleDegrees = 90f,
@@ -396,7 +395,6 @@ fun cloudShape(density: Density, isReceived: Boolean, prev: Boolean, next: Boole
         addPath(path)
     }
 }
-
 
 @Composable
 fun CloudCard(
@@ -429,8 +427,11 @@ fun CloudCard(
                     top = if (isReceived && !prev) dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
                         id = R.dimen.bubble_inset
                     ) else dimensionResource(id = R.dimen.padding_medium),
-                    bottom = if (!isReceived && !next || isReceived) dimensionResource(id = R.dimen.padding_medium) else dimensionResource(id = R.dimen.padding_medium) + dimensionResource(
-                        id = R.dimen.bubble_inset)
+                    bottom = if (!isReceived && !next || isReceived) dimensionResource(id = R.dimen.padding_medium) else dimensionResource(
+                        id = R.dimen.padding_medium
+                    ) + dimensionResource(
+                        id = R.dimen.bubble_inset
+                    )
                 )
         ) {
             Text(
@@ -443,12 +444,13 @@ fun CloudCard(
 }
 
 
-
 @Composable
 @Preview
-fun TestDraw(){
-    CloudCard(text = "hello how mpos?",
-        color = Color.Green, isReceived = true , prev = false, next = false)
+fun TestDraw() {
+    CloudCard(
+        text = "hello how mpos?",
+        color = Color.Green, isReceived = true, prev = false, next = false
+    )
 
 }
 

@@ -2,6 +2,7 @@ package ru.mvrlrd.main
 
 import android.content.Context
 import android.content.res.Resources.Theme
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -36,16 +37,16 @@ fun CompanionApp(
             navController = navController,
             startDestination = "Favs",
             enterTransition = {
-                slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn()
+                slideInHorizontally(initialOffsetX = { 1000 }) + expandIn()
             },
             exitTransition = {
                 slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             },
             popEnterTransition = {
-                slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn()
+                slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn()
             },
             popExitTransition = {
-                slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
+                slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             },
         ) {
 
