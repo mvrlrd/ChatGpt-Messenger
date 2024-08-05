@@ -10,5 +10,5 @@ interface Repository {
     suspend fun deleteMessage(messageId: Long)
     suspend fun clearChat(chatId: Long)
 
-    suspend fun getAnswer(systemRole: String, query: String): Result<MyResponse>
+    suspend fun getAnswer(systemRole: String, query: String): Result<AIResponse>
 }

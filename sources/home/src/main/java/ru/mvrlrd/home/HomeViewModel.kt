@@ -1,25 +1,23 @@
 package ru.mvrlrd.home
 
+import android.database.sqlite.SQLiteException
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.core_api.database.chat.entity.Message
-import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.core_api.network.dto.ServerResponse
 import ru.mvrlrd.home.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.home.domain.api.DeleteMessageUseCase
@@ -30,7 +28,6 @@ import ru.mvrlrd.home.pullrefresh.ColorItemDataSource
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 import ru.mvrlrd.home.pullrefresh.Result
 import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
-import java.util.Date
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -47,12 +44,12 @@ class HomeViewModel @Inject constructor(
     val messages : SnapshotStateList <Message> get() = _messages
 
 init {
-    getAllMessagesForChat(chatId)
+    getAllMessagesForChatFromDatabase(chatId)
 }
 
     fun sendRequest(query: String) {
             viewModelScope.launch {
-                saveMessageToChat(
+                saveMessageToChatInDatabase(
                     Message(
                         holderChatId = chatId,
                         text = query,
@@ -62,41 +59,61 @@ init {
                 launch {
                     getAnswerUseCase(systemRole = "", query =  query)
                         .onSuccess {
-
-                            val text = (it as ServerResponse).result.alternatives[0].message.text
-                            saveMessageToChat(
-                                Message(
-                                    holderChatId = chatId,
-                                    text = text,
-                                    isReceived = true
+                            if (it.answer.isNotBlank()){
+                                saveMessageToChatInDatabase(
+                                    Message(
+                                        holderChatId = chatId,
+                                        text = it.answer,
+                                        isReceived = true,
+                                        date = it.date
+                                    )
                                 )
-                            )
+                            }
                         }.onFailure {
-                            oneShotEventChannel.send(it.message.toString())
+                            oneShotEventChannel.send("сообщение не загружено ${it.message.toString()}")
                         }
                 }
             }
     }
 
-   private fun saveMessageToChat(message: Message){
+   private fun saveMessageToChatInDatabase(message: Message){
         viewModelScope.launch {
             Log.d("TAG","message saved ${message.text}")
             saveMessageToChatUseCase(message)
         }
     }
-    private fun getAllMessagesForChat(chatId: Long){
-        viewModelScope.launch {
-//            _isLoading.postValue(true)
-            getAllMessagesForChatUseCase(chatId).collect{
+    private fun getAllMessagesForChatFromDatabase(chatId: Long) {
+        getAllMessagesForChatUseCase(chatId)
+            .onEach {
                 _messages.clear()
-                _messages.addAll(it)
-//                delay(300)
-//                _isLoading.postValue(false)
+                if(it.isEmpty()){
+                    oneShotEventChannel.send("начните с чистого листа!")
+                }else{
+                    _messages.addAll(it)
+                }
+            }
+            .catch {
+                handleDatabaseError(it)
+            }
+            .launchIn(
+                viewModelScope
+            )
+    }
+
+    private suspend fun handleDatabaseError(exception: Throwable) {
+        when (exception) {
+            is SQLiteException -> {
+                Log.e("ChatViewModel", "SQLiteException: ${exception.message}")
+            }
+            else -> {
+                oneShotEventChannel.send("_error: ${exception.message}")
+                Log.e("ChatViewModel", "An unexpected error occurred: ${exception.message}")
             }
         }
     }
 
-    fun deleteMessage(messageId: Long){
+
+    fun deleteMessageFromDatabase(messageId: Long){
         viewModelScope.launch {
             deleteMessageUseCase(messageId)
         }
