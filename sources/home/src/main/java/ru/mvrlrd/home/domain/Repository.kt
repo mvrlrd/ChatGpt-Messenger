@@ -9,6 +9,5 @@ interface Repository {
     suspend fun saveMessage(message: Message)
     suspend fun deleteMessage(messageId: Long)
     suspend fun clearChat(chatId: Long)
-
     suspend fun getAnswer(systemRole: String, query: String): Result<AIResponse>
 }
