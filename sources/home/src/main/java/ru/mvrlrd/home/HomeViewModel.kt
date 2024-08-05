@@ -30,6 +30,7 @@ import ru.mvrlrd.home.pullrefresh.ColorItemDataSource
 import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 import ru.mvrlrd.home.pullrefresh.Result
 import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
+import java.util.Date
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -41,15 +42,7 @@ class HomeViewModel @Inject constructor(
     private val chatId: Long
 
 ) : ViewModel() {
-    private var _responseAnswer = MutableLiveData<String>()
-    val responseAnswer: LiveData<String> = _responseAnswer
-    private var lastRequest: String = ""
-
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
     val oneShotEventChannel = Channel<String>()
-
     private val _messages = mutableStateListOf<Message>()
     val messages : SnapshotStateList <Message> get() = _messages
 
@@ -58,45 +51,31 @@ init {
 }
 
     fun sendRequest(query: String) {
-        if (query.isNotBlank() && isNotSameRequest(query)) {
             viewModelScope.launch {
-                saveMessageToChatUseCase(Message(0,chatId,query,1L,false))
-            }
-            viewModelScope.launch {
-                _isLoading.postValue(true)
+                saveMessageToChat(
+                    Message(
+                        holderChatId = chatId,
+                        text = query,
+                        isReceived = false
+                    )
+                )
+                launch {
+                    getAnswerUseCase(systemRole = "", query =  query)
+                        .onSuccess {
 
-                getAnswerUseCase("", query).onSuccess {
-                    val text = (it as ServerResponse).result.alternatives[0].message.text
-                    _responseAnswer.postValue(text)
-                    _isLoading.postValue(false)
-                    saveMessageToChat(Message(0,chatId,text,1,true))
+                            val text = (it as ServerResponse).result.alternatives[0].message.text
+                            saveMessageToChat(
+                                Message(
+                                    holderChatId = chatId,
+                                    text = text,
+                                    isReceived = true
+                                )
+                            )
+                        }.onFailure {
+                            oneShotEventChannel.send(it.message.toString())
+                        }
                 }
-
-                getAnswerUseCase("", query).onFailure {
-                    oneShotEventChannel.send(it.message.toString())
-                    Log.e("TAG", "HomeViewModel onFailure   ${it}")
-                }
-
-
             }
-        }else{
-            val message = if (query.isBlank()){
-                "пустой запрос"
-            }else {
-                "введите новый запрос"
-            }
-            viewModelScope.launch {
-                oneShotEventChannel.send(message)
-            }
-        }
-    }
-
-
-
-    private fun isNotSameRequest(query: String): Boolean{
-        if (lastRequest == query) return false
-        lastRequest = query
-        return true
     }
 
    private fun saveMessageToChat(message: Message){

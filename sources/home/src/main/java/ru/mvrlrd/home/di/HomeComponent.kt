@@ -15,8 +15,6 @@ import ru.mvrlrd.home.domain.api.SaveMessageToChatUseCase
 )
 interface HomeComponent {
 
-    fun getRepo(): RemoteRepository
-
     fun provideSaveMessageToChatUseCase(): SaveMessageToChatUseCase
     fun provideGetAllMessagesForChatUseCase(): GetAllMessagesForChatUseCase
     fun provideDeleteMessageUseCase(): DeleteMessageUseCase

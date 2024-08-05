@@ -72,6 +72,7 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
         homeComponent.provideGetAnswerUseCase()
     }
     val deleteMessageUseCase = remember {
+
         homeComponent.provideDeleteMessageUseCase()
     }
     val clearMessagesUseCase = remember {
@@ -92,9 +93,7 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
     val messages = remember {
         viewModel.messages
     }
-    var response by remember { mutableStateOf("") }
-    response = viewModel.responseAnswer.observeAsState("").value
-    val isLoading by viewModel.isLoading.observeAsState(true)
+
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
 
 
@@ -110,7 +109,6 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-
                     MessageList(messages = messages) {
                         viewModel.deleteMessage(it)
                     }
@@ -126,8 +124,6 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
                     ) {
                         viewModel.sendRequest(it)
                     }
-
-
             }
             ShowToast(flow = oneShotEvent)
         }

@@ -32,14 +32,6 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     onSend: (String) -> Unit
 ) {
-    val debounceDuration: Long = 3000
-    var isClickable by remember { mutableStateOf(true) }
-    LaunchedEffect(isClickable) {
-        while (!isClickable) {
-            delay(debounceDuration)
-            isClickable = true
-        }
-    }
     val userInput = remember { mutableStateOf(TextFieldValue()) }
 
     Row(
@@ -60,13 +52,11 @@ fun CustomTextField(
                 .padding(8.dp)
         )
         IconButton(
+            enabled = userInput.value.text.isNotBlank(),
             onClick = {
-                if (isClickable) {
                     Log.d("TAG", "clicked")
-                    isClickable = false
                     onSend(userInput.value.text)
                     userInput.value = TextFieldValue("")
-                }
             },
             modifier = Modifier
                 .size(36.dp)
