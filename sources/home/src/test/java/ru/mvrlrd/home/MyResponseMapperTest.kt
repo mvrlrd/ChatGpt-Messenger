@@ -16,7 +16,7 @@ class MyResponseMapperTest {
     }
 
     @Test
-    fun `mapping from ServerResponce to AiResponce`(){
+    fun `mapping from ServerResponse to AiResponse`(){
         val serverResponse = HomeTestUnitFactory.getGoodServerResponse()
         val expectedAIResponse = HomeTestUnitFactory.getAIResponse()
 
@@ -25,7 +25,7 @@ class MyResponseMapperTest {
     }
 
     @Test
-    fun `mapping from ServerResponce to AiResponce with wrong fields`() {
+    fun `mapping from ServerResponse to AiResponse with wrong fields`() {
         val serverResponse = HomeTestUnitFactory.getBadServerResponse()
         val expectedAIResponse = HomeTestUnitFactory.getAIResponse().copy(
             answer = "",

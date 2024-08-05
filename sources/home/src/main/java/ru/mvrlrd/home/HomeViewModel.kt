@@ -8,6 +8,9 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.mvrlrd.core_api.database.answer.entity.Answer
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.dto.ServerResponse
@@ -36,6 +40,7 @@ class HomeViewModel @Inject constructor(
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
     private val deleteMessageUseCase: DeleteMessageUseCase,
     private val clearMessagesUseCase: ClearMessagesUseCase,
+    private val ioDispatcher: CoroutineDispatcher,
     private val chatId: Long
 
 ) : ViewModel() {
@@ -43,12 +48,15 @@ class HomeViewModel @Inject constructor(
     private val _messages = mutableStateListOf<Message>()
     val messages : SnapshotStateList <Message> get() = _messages
 
+
+
 init {
     getAllMessagesForChatFromDatabase(chatId)
 }
 
     fun sendRequest(query: String) {
-            viewModelScope.launch {
+
+            viewModelScope.launch (ioDispatcher){
                 saveMessageToChatInDatabase(
                     Message(
                         holderChatId = chatId,
@@ -57,28 +65,33 @@ init {
                     )
                 )
                 launch {
-                    getAnswerUseCase(systemRole = "", query =  query)
-                        .onSuccess {
-                            if (it.answer.isNotBlank()){
-                                saveMessageToChatInDatabase(
-                                    Message(
+                    withContext(ioDispatcher){
+                        getAnswerUseCase(systemRole = "", query =  query)
+                            .onSuccess {
+                                if (it.answer.isNotBlank()){
+                                    val recieved =  Message(
                                         holderChatId = chatId,
                                         text = it.answer,
                                         isReceived = true,
-                                        date = it.date
+
                                     )
-                                )
+                                    //как протестировать что в этом месте получили то что нужно?
+                                    saveMessageToChatInDatabase(
+                                       recieved
+                                    )
+                                }
+                            }.onFailure {
+                                oneShotEventChannel.send("сообщение не загружено ${it.message.toString()}")
                             }
-                        }.onFailure {
-                            oneShotEventChannel.send("сообщение не загружено ${it.message.toString()}")
-                        }
+                    }
+
                 }
             }
     }
 
    private fun saveMessageToChatInDatabase(message: Message){
         viewModelScope.launch {
-            Log.d("TAG","message saved ${message.text}")
+//            Log.d("TAG","message saved ${message.text}")
             saveMessageToChatUseCase(message)
         }
     }
@@ -103,11 +116,11 @@ init {
     private suspend fun handleDatabaseError(exception: Throwable) {
         when (exception) {
             is SQLiteException -> {
-                Log.e("ChatViewModel", "SQLiteException: ${exception.message}")
+//                Log.e("ChatViewModel", "SQLiteException: ${exception.message}")
             }
             else -> {
                 oneShotEventChannel.send("_error: ${exception.message}")
-                Log.e("ChatViewModel", "An unexpected error occurred: ${exception.message}")
+//                Log.e("ChatViewModel", "An unexpected error occurred: ${exception.message}")
             }
         }
     }
@@ -136,6 +149,7 @@ init {
                         getAllMessagesForChatUseCase,
                         deleteMessageUseCase,
                         clearMessagesUseCase,
+                        Dispatchers.IO,
                         chatId
                     ) as T
                 }

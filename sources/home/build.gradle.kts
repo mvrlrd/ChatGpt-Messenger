@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.10"
 }
 apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
@@ -19,5 +20,22 @@ android {
 dependencies {
     implementation(projects.sources.coreApi)
     implementation(projects.sources.uiKit)
+
+
+    // Core Mockito library
+    testImplementation("org.mockito:mockito-core:4.11.0")
+
+    // Mockito Kotlin extension for more idiomatic Kotlin code
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+
+    // Kotlin standard library for testing
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.10")
+
+    // Coroutines test library if you are testing coroutine-based code
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
+allOpen{
+    annotation("ru.mvrlrd.core_api.annotations.Open")
+}
+
 

@@ -1,6 +1,7 @@
 package ru.mvrlrd.home.data
 
 import kotlinx.coroutines.flow.Flow
+import ru.mvrlrd.core_api.annotations.Open
 import ru.mvrlrd.core_api.database.chat.ChatDao
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.RemoteRepository
@@ -10,6 +11,7 @@ import ru.mvrlrd.home.domain.AIResponse
 import ru.mvrlrd.home.domain.Repository
 import javax.inject.Inject
 
+@Open
 class RepositoryImpl @Inject constructor(
     private val dao: ChatDao,
     private val remoteRepository: RemoteRepository,

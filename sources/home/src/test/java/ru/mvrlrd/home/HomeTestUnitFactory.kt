@@ -12,7 +12,7 @@ object HomeTestUnitFactory {
     fun getMapper() = MyResponseMapper()
 
     fun getAIResponse() = AIResponse(
-        "hello",
+        "ai response",
         "assistant",
         100,
         50,
