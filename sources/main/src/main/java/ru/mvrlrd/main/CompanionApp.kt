@@ -36,6 +36,7 @@ fun CompanionApp(
         HomeFeatureImpl(providersFacade)
     }
 
+
     JetHeroesTheme(darkTheme = darkTheme) {
         val navController = rememberNavController()
         NavHost(
