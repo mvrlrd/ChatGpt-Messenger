@@ -1,10 +1,9 @@
-package ru.mvrlrd.main.pullrefresh
+package ru.mvrlrd.home.pullrefresh
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 
 class PullToRefreshLayoutState(
     val onTimeUpdated: (Long) -> String,

@@ -1,4 +1,4 @@
-package ru.mvrlrd.main.pullrefresh
+package ru.mvrlrd.home.pullrefresh
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -8,14 +8,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.mvrlrd.home.pullrefresh.RefreshIndicatorState
 
 
 @OptIn(ExperimentalMaterialApi::class)

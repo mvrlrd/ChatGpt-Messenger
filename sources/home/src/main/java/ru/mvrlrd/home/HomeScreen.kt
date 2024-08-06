@@ -50,8 +50,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.home.di.DaggerHomeComponent
-import ru.mvrlrd.main.pullrefresh.PullToRefreshLayout
-import ru.mvrlrd.main.pullrefresh.PullToRefreshLayoutState
+import ru.mvrlrd.home.pullrefresh.PullToRefreshLayout
+import ru.mvrlrd.home.pullrefresh.PullToRefreshLayoutState
 
 @Composable
 fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
