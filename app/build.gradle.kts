@@ -57,8 +57,8 @@ dependencies {
     implementation(projects.sources.main)
     implementation(projects.sources.coreApi)
     implementation(projects.sources.coreFactory)
-    implementation(projects.sources.home)
-    implementation(projects.sources.favorites)
+    implementation(projects.sources.featureChat)
+    implementation(projects.sources.featureHome)
 
 //    implementation("androidx.core:core-ktx:1.13.1")
 //    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")

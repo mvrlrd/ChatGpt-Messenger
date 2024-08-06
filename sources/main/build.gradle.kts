@@ -20,9 +20,8 @@ android {
 
 dependencies {
     implementation(projects.sources.coreApi)
-    implementation(projects.sources.uiKit)
-    implementation(projects.sources.home)
-    implementation(projects.sources.favorites)
+    implementation(projects.sources.featureChat)
+    implementation(projects.sources.featureHome)
 
 
     implementation("com.google.accompanist:accompanist-navigation-animation:0.35.1-alpha")

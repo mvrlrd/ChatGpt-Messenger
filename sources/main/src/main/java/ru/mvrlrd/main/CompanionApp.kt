@@ -1,25 +1,18 @@
 package ru.mvrlrd.main
 
 import android.content.Context
-import android.content.res.Resources.Theme
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
-import ru.mvrlrd.favorites.FavoritesScreen
-//import ru.mvrlrd.home.HomeScreen
-import ru.mvrlrd.home.HomeScreen
-import ru.mvrlrd.main.theme.AppColors
-import ru.mvrlrd.main.theme.AppTheme
+import ru.mvrlrd.feature_home.FavoritesScreen
+import ru.mvrlrd.feature_chat.HomeScreen
 import ru.mvrlrd.main.theme.JetHeroesTheme
 
 @Composable
