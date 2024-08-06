@@ -19,7 +19,7 @@ android {
 }
 dependencies {
     implementation(projects.sources.coreApi)
-
+    implementation(projects.sources.featureChatApi)
 
     // Core Mockito library
     testImplementation("org.mockito:mockito-core:4.11.0")

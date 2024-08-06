@@ -12,7 +12,7 @@ import ru.mvrlrd.feature_home.domain.api.GetAllChatsUseCase
 import ru.mvrlrd.feature_home.domain.api.RemoveChatUseCase
 import javax.inject.Inject
 
-class ChatRoomsViewModel@Inject constructor(
+class HomeViewModel@Inject constructor(
     private val getAllChatsUseCase: GetAllChatsUseCase,
     private val createChatUseCase: CreateChatUseCase,
     private val removeChatUseCase: RemoveChatUseCase
@@ -55,9 +55,9 @@ class ChatRoomsViewModel@Inject constructor(
         private val removeChatUseCase: RemoveChatUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(ChatRoomsViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return ChatRoomsViewModel(getAllChatsUseCase, createChatUseCase, removeChatUseCase) as T
+                return HomeViewModel(getAllChatsUseCase, createChatUseCase, removeChatUseCase) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

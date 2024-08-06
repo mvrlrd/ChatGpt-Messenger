@@ -26,6 +26,8 @@ android {
 
 dependencies {
     implementation(projects.sources.coreApi)
+    implementation(projects.sources.featureHomeApi)
+    implementation(projects.sources.featureChatApi)
 //    implementation("androidx.core:core-ktx:1.9.0")
 //    implementation("androidx.appcompat:appcompat:1.7.0")
 //    implementation("com.google.android.material:material:1.12.0")

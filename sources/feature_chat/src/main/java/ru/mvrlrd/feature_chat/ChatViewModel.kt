@@ -22,7 +22,7 @@ import ru.mvrlrd.feature_chat.domain.api.GetAnswerUseCase
 import ru.mvrlrd.feature_chat.domain.api.SaveMessageToChatUseCase
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(
+class ChatViewModel @Inject constructor(
     private val getAnswerUseCase: GetAnswerUseCase,
     private val saveMessageToChatUseCase: SaveMessageToChatUseCase,
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
@@ -120,7 +120,7 @@ init {
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return HomeViewModel(
+                    return ChatViewModel(
                         getAnswerUseCase,
                         saveMessageToChatUseCase,
                         getAllMessagesForChatUseCase,

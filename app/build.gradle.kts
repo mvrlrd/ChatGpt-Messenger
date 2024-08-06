@@ -56,6 +56,7 @@ android {
 dependencies {
     implementation(projects.sources.main)
     implementation(projects.sources.coreApi)
+    implementation(projects.sources.featureApi)
     implementation(projects.sources.coreFactory)
     implementation(projects.sources.featureChat)
     implementation(projects.sources.featureHome)

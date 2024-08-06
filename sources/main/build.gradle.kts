@@ -21,6 +21,8 @@ android {
 dependencies {
     implementation(projects.sources.coreApi)
     implementation(projects.sources.featureChat)
+    implementation(projects.sources.featureChatApi)
+    implementation(projects.sources.featureHomeApi)
     implementation(projects.sources.featureHome)
 
 

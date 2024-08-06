@@ -13,7 +13,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import ru.mvrlrd.core_api.database.chat.entity.Message
-import ru.mvrlrd.feature_chat.HomeViewModel
+import ru.mvrlrd.feature_chat.ChatViewModel
 import ru.mvrlrd.feature_chat.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.feature_chat.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.feature_chat.domain.api.GetAllMessagesForChatUseCase
@@ -28,14 +28,14 @@ class HomeViewModelTest {
     private var clearMessagesUseCase: ClearMessagesUseCase = mock()
     private val chatId: Long = 1L
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var viewModel: ChatViewModel
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun before() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = HomeViewModel(
+        viewModel = ChatViewModel(
             getAnswerUseCase,
             saveMessageToChatUseCase,
             getAllMessagesForChatUseCase,

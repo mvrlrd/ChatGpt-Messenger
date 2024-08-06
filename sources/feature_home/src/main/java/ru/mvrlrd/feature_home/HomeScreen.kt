@@ -25,12 +25,12 @@ import ru.mvrlrd.feature_home.domain.ChatEntity
 
 
 @Composable
-fun FavoritesScreen(providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
+fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
     val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
     }
-    val viewModel: ChatRoomsViewModel = viewModel(
-        factory = ChatRoomsViewModel.MyViewModelFactory(
+    val viewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.MyViewModelFactory(
             chatRoomsComponent.getAllChatsUseCase(),
             chatRoomsComponent.createChatUseCase(),
             chatRoomsComponent.removeChatUseCase()
@@ -61,7 +61,7 @@ fun FavoritesScreen(providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
 fun CardList(
     cards: SnapshotStateList<ChatEntity>,
     modifier: Modifier,
-    viewModel: ChatRoomsViewModel,
+    viewModel: HomeViewModel,
     onClick: (id: Long) -> Unit
 ) {
 

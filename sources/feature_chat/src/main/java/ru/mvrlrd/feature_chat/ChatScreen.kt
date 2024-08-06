@@ -54,7 +54,7 @@ import ru.mvrlrd.feature_chat.pullrefresh.PullToRefreshLayout
 import ru.mvrlrd.feature_chat.pullrefresh.PullToRefreshLayoutState
 
 @Composable
-fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
+fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
 
     val homeComponent = remember {
@@ -77,8 +77,8 @@ fun HomeScreen(chatId: Long, onToggleTheme: () -> Unit) {
         homeComponent.provideClearMessagesUseCase()
     }
 
-    val viewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.createHomeViewModelFactory(
+    val viewModel: ChatViewModel = viewModel(
+        factory = ChatViewModel.createHomeViewModelFactory(
             getAnswerUseCase,
             saveMessageToChatUseCase,
             getAllMessagesForChatUseCase,
