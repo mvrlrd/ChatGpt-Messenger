@@ -29,7 +29,6 @@ fun CompanionApp(
     context: Context,
     providersFacade: ProvidersFacade
 ) {
-
     val chatFeatureImpl = remember{
         ChatFeatureImpl(onToggleTheme)
     }
@@ -37,9 +36,7 @@ fun CompanionApp(
         HomeFeatureImpl(providersFacade)
     }
 
-
     JetHeroesTheme(darkTheme = darkTheme) {
-
         val navController = rememberNavController()
         NavHost(
             navController = navController,
@@ -57,7 +54,8 @@ fun CompanionApp(
                 slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             },
         ) {
-            register(navController= navController,
+            register(
+                navController= navController,
                 modifier = Modifier,
                 featureApi = chatFeatureImpl
             )
@@ -66,30 +64,6 @@ fun CompanionApp(
                 modifier = Modifier,
                 featureApi = homeFeatureImpl
             )
-//            composable(chatFeatureImpl.chatRoute) {
-//
-//            }
-//            register(navController= navController,
-//                modifier = Modifier,
-//                featureApi =
-//            )
-//            composable("Home") {
-//                HomeScreen(providersFacade = providersFacade) {
-//                    navController.navigate("Chat/$it")
-//                    //разобраться с навигацией!
-//                    //улучшить анимацию ресайклеров
-//                    //добавить экран создания чата
-//                    // убирать фаб при скроле
-//                    //поменять цвет баббл от ИИ
-//                    //добавить отбивку дат в чат
-//                }
-//            }
-//            composable("Chat/{id}") { backStackEntry ->
-//                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: 0L
-//                ChatScreen(chatId = id) {
-//                    onToggleTheme()
-//                }
-//            }
         }
     }
 }

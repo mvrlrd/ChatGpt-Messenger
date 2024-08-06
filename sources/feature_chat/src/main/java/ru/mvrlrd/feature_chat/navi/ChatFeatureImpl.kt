@@ -17,13 +17,14 @@ class ChatFeatureImpl @Inject constructor(private val onToggleTheme: ()-> Unit):
         navController: NavController,
         modifier: Modifier
     ) {
-        navGraphBuilder.composable(chatRoute) {backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: throw IllegalArgumentException("chat id is null")
-            ChatScreen(modifier = modifier,
-                chatId = id
-                ) {
-                onToggleTheme
-            }
+        navGraphBuilder.composable(chatRoute) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+                ?: throw IllegalArgumentException("chat id is null")
+            ChatScreen(
+                modifier = modifier,
+                chatId = id,
+                onToggleTheme = onToggleTheme
+            )
         }
     }
 
