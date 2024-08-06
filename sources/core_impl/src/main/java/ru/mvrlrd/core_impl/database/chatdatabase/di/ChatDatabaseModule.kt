@@ -22,11 +22,11 @@ class ChatDatabaseModule {
     @Provides
     @Singleton
     fun provideChatDatabase(context: Context): ChatDatabaseContract {
-        return Room.databaseBuilder(
-//        Room.inMemoryDatabaseBuilder(
+        return Room.inMemoryDatabaseBuilder(
+//        Room.databaseBuilder(
             context,
             ChatDatabase::class.java,
-            "chat_gpt_database"
+//            "chat_gpt_database"
         )
             .fallbackToDestructiveMigration()
             .build()

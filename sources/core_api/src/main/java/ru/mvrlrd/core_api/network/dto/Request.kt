@@ -31,12 +31,12 @@ data class Message(
 
 @Serializable
 data class RequestData(
-    val modelUri: String,
+    val modelUri: String="",
     val completionOptions: CompletionOptions,
     val messages: List<Message>
 ) : Request {
     companion object {
-        fun getDefault(@Named("modelUrl") modelUri: String, listOfMessages: List<Message>): RequestData =
+        fun getDefault(@Named("modelUrl") modelUri: String ="ассистент", listOfMessages: List<Message>): RequestData =
             RequestData(
                 modelUri = modelUri,
                 completionOptions = CompletionOptions.getDefault(),
@@ -44,3 +44,4 @@ data class RequestData(
             )
     }
 }
+data object BadRequest: Request

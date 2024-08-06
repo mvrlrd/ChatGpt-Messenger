@@ -10,7 +10,7 @@ import java.util.Date
 
 @Entity(tableName = "messages",
     foreignKeys = [ForeignKey(
-        entity = Chat::class,
+        entity = ChatDto::class,
         parentColumns = arrayOf("chatId"),
         childColumns = arrayOf("holderChatId"),
         onDelete = CASCADE

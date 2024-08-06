@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.feature_home.domain.ChatEntity
+import java.util.Date
 
 
 @Composable
@@ -54,7 +55,15 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.createChat(ChatEntity(0, "hello one", 12))
+                viewModel.createChat(
+                    ChatEntity(
+                        chatId = 0,
+                        title = "no name",
+                        role = "assistant",
+                        modelVer ="",
+                        date = Date().time
+                    )
+                )
                 viewModel.getAllChats()
             }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
@@ -186,7 +195,7 @@ fun CharacterCard(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape( topStart = 16.dp, topEnd = 16.dp))
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                 )
             }
             Box(

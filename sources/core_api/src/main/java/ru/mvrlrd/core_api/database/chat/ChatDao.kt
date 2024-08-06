@@ -1,23 +1,22 @@
 package ru.mvrlrd.core_api.database.chat
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import ru.mvrlrd.core_api.database.chat.entity.Chat
+import ru.mvrlrd.core_api.database.chat.entity.ChatDto
 import ru.mvrlrd.core_api.database.chat.entity.ChatWithMessages
 import ru.mvrlrd.core_api.database.chat.entity.Message
 
 @Dao
 interface ChatDao {
     @Query("SELECT * FROM chat_rooms")
-    fun getAllChats(): Flow<List<Chat>>
+    fun getAllChats(): Flow<List<ChatDto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertChat(chat: Chat): Long
+    suspend fun insertChat(chatDto: ChatDto): Long
 
     @Query("DELETE FROM chat_rooms WHERE chatId = :id")
     suspend fun removeChat(id: Long)

@@ -13,12 +13,12 @@ class ChatRepositoryImpl @Inject constructor(
 ) : ChatRepository {
     override suspend fun getAllChats(): Flow<List<ChatEntity>> {
         return dao.getAllChats().map { chats ->
-            mapper.mapChatsToEntities(chats)
+            mapper.mapDtosToEntities(chats)
         }
     }
 
     override suspend fun createChat(entity: ChatEntity) {
-        dao.insertChat(mapper.mapChatEntityToChat(entity))
+        dao.insertChat(mapper.mapEntityToDto(entity))
     }
 
     override suspend fun removeChat(id: Long) {

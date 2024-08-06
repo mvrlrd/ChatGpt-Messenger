@@ -5,6 +5,7 @@ import ru.mvrlrd.core_api.annotations.Open
 import ru.mvrlrd.core_api.database.chat.ChatDao
 import ru.mvrlrd.core_api.database.chat.entity.Message
 import ru.mvrlrd.core_api.network.RemoteRepository
+import ru.mvrlrd.core_api.network.dto.RequestData
 import ru.mvrlrd.core_api.network.dto.ServerResponse
 import ru.mvrlrd.feature_chat.domain.AIResponse
 import ru.mvrlrd.feature_chat.domain.Repository
@@ -33,7 +34,15 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAnswer(systemRole: String, query: String): Result<AIResponse> {
-        remoteRepository.getAnswer(systemRole, query).onSuccess {
+        val request = RequestData.getDefault(
+          listOfMessages =   listOf(
+                ru.mvrlrd.core_api.network.dto.Message(
+                    role = "system",
+                    text = (systemRole.ifBlank { "ты умный ассистен" })
+                ), ru.mvrlrd.core_api.network.dto.Message("user", query)
+            )
+        )
+        remoteRepository.getAnswer(request).onSuccess {
             val aiResponse = mapper.mapMyResponseToAIResponse(it as ServerResponse)
             return Result.success(aiResponse)
         }.onFailure {

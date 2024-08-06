@@ -9,4 +9,7 @@ interface Repository {
     suspend fun deleteMessage(messageId: Long)
     suspend fun clearChat(chatId: Long)
     suspend fun getAnswer(systemRole: String, query: String): Result<AIResponse>
+    // написать метод для получения чата,
+    //модельку чата надо запихнуть в отдельный модуль и шарить с тем кому он еще нужен
+    // и вообще все модельки так сделать
 }

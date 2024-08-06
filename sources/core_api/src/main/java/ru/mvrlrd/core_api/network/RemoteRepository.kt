@@ -1,8 +1,9 @@
 package ru.mvrlrd.core_api.network
 
 import ru.mvrlrd.core_api.network.dto.MyResponse
+import ru.mvrlrd.core_api.network.dto.Request
 
 
 interface RemoteRepository {
-    suspend fun getAnswer(systemRole: String,query: String): Result<MyResponse>
+    suspend fun getAnswer(request: Request): Result<MyResponse>
 }
