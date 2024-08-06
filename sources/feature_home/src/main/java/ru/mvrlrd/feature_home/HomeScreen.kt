@@ -1,23 +1,34 @@
 package ru.mvrlrd.feature_home
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.DismissDirection.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
@@ -25,7 +36,7 @@ import ru.mvrlrd.feature_home.domain.ChatEntity
 
 
 @Composable
-fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (Long)-> Unit) {
+fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (Long) -> Unit) {
     val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
     }
@@ -50,7 +61,11 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
             }
         },
         content = { paddingValues ->
-            CardList(cards = itemList, modifier = Modifier.padding(paddingValues), viewModel = viewModel) { id ->
+            CardList(
+                cards = itemList,
+                modifier = Modifier.padding(paddingValues),
+                viewModel = viewModel
+            ) { id ->
                 onClick(id)
             }
         }
@@ -75,9 +90,14 @@ fun CardList(
         previousSize = cards.size
     }
 
-    LazyColumn(
-        state = listState,
-    ){
+    LazyVerticalGrid(
+
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+
+    ) {
         itemsIndexed(
 
             items = cards,
@@ -94,7 +114,7 @@ fun CardList(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissCard(item: ChatEntity, onDismiss: ()->Unit, onClick: (id: Long) -> Unit) {
+fun SwipeToDismissCard(item: ChatEntity, onDismiss: () -> Unit, onClick: (id: Long) -> Unit) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {
@@ -117,50 +137,90 @@ fun SwipeToDismissCard(item: ChatEntity, onDismiss: ()->Unit, onClick: (id: Long
                 EndToStart -> Color.Transparent
                 else -> Color.Transparent
             }
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(color)
-                    .padding(16.dp),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-//                Text("Delete", color = Color.Black)
-            }
+//            Box(
+//                Modifier
+//                    .fillMaxSize()
+//                    .background(color)
+//                    .padding(16.dp),
+//                contentAlignment = Alignment.CenterEnd
+//            ) {
+////                Text("Delete", color = Color.Black)
+//            }
         },
         dismissContent = {
-            RoundedCard(title = item.title) {
+            CharacterCard(
+                name = item.title
+            ) {
                 onClick(item.chatId)
             }
         }
     )
 }
 
+
 @Composable
-fun RoundedCard(title: String, onClick: () -> Unit) {
+fun CharacterCard(
+    imagePainter: Painter = painterResource(id = R.drawable.dark_robot),
+    name: String,
+    profession: String = "software engineer",
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+            .width(200.dp)
+            .height(300.dp)
             .clickable { onClick() },
-        shape = MaterialTheme.shapes.small,
-        elevation = 8.dp,
+        shape = RoundedCornerShape(16.dp),
+        elevation = 4.dp,
+        backgroundColor = Color.Transparent,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = title.uppercase(),
-                style = MaterialTheme.typography.button,
-            )
+        Column {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.7f)
+            ) {
+                Image(
+                    painter = imagePainter,
+                    contentDescription = "Character Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape( topStart = 16.dp, topEnd = 16.dp))
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.25f)
+                    .background(Color.White)
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Text(
+                        text = name,
+
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = profession,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewCard() {
-    RoundedCard(title = "Hello", {})
+fun CharacterCardPreview() {
+    CharacterCard(
+        imagePainter = painterResource(id = R.drawable.dark_robot),
+        name = "John Doe",
+        profession = "Software Engineer",
+        {}
+    )
 }
