@@ -28,7 +28,7 @@ class MyResponseMapperTest {
     fun `mapping from ServerResponse to AiResponse with wrong fields`() {
         val serverResponse = HomeTestUnitFactory.getBadServerResponse()
         val expectedAIResponse = HomeTestUnitFactory.getAIResponse().copy(
-            answer = "",
+            text = "",
             inputTextTokens = -1,
             completionTokens = -1,
             totalTokens = -1,

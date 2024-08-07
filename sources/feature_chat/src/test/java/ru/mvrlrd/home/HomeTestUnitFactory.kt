@@ -6,7 +6,7 @@ import ru.mvrlrd.core_api.network.dto.ResultDto
 import ru.mvrlrd.core_api.network.dto.ServerResponseDto
 import ru.mvrlrd.core_api.network.dto.UsageDto
 import ru.mvrlrd.feature_chat.data.MyResponseMapper
-import ru.mvrlrd.feature_chat.domain.AIResponse
+import ru.mvrlrd.feature_chat.domain.model.AIResponse
 
 object HomeTestUnitFactory {
     fun getMapper() = MyResponseMapper()

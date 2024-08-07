@@ -38,6 +38,8 @@ class ChatViewModel @Inject constructor(
     private val _messageEntities = mutableStateListOf<MessageEntity>()
     val messageEntities : SnapshotStateList <MessageEntity> get() = _messageEntities
 
+
+
 init {
     getAllMessagesForChatFromDatabase()
 }
@@ -54,12 +56,12 @@ init {
                 )
                 launch {
                     withContext(ioDispatcher) {
-                        getAnswerUseCase(systemRole = "", query = query)
+                        getAnswerUseCase(chatd = chatId, query = query)
                             .onSuccess {
-                                if (it.answer.isNotBlank()) {
+                                if (it.text.isNotBlank()) {
                                     val received = MessageEntity(
                                         holderChatId = chatId,
-                                        text = it.answer,
+                                        text = it.text,
                                         isReceived = true,
                                         date = it.date
                                     )
@@ -73,6 +75,13 @@ init {
                     }
                 }
             }
+    }
+
+    private fun getChatSettings(){
+        viewModelScope.launch(ioDispatcher) {
+            getChatSettingsUseCase(chatId = chatId)
+        }
+
     }
 
     private fun getAllMessagesForChatFromDatabase() {

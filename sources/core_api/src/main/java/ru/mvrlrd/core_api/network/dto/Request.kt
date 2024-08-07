@@ -46,14 +46,5 @@ data class RequestDataDto(
     val completionOptionsDto: CompletionOptionsDto,
     @SerialName("messages")
     val messageDtos: List<MessageDto>
-) : Request {
-    companion object {
-        fun getDefault(@Named("modelUrl") modelUri: String ="ассистент", listOfMessageDtos: List<MessageDto>): RequestDataDto =
-            RequestDataDto(
-                modelUri = modelUri,
-                completionOptionsDto = CompletionOptionsDto.getDefault(),
-                messageDtos = listOfMessageDtos
-            )
-    }
-}
+) : Request
 data object BadRequest: Request

@@ -1,5 +1,6 @@
 package ru.mvrlrd.feature_chat.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.base_chat_home.model.ChatMapper
@@ -10,8 +11,9 @@ import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.core_api.network.dto.MessageDto
 import ru.mvrlrd.core_api.network.dto.RequestDataDto
 import ru.mvrlrd.core_api.network.dto.ServerResponseDto
-import ru.mvrlrd.feature_chat.domain.AIResponse
+import ru.mvrlrd.feature_chat.domain.model.AIResponse
 import ru.mvrlrd.feature_chat.domain.ChatRepository
+import ru.mvrlrd.feature_chat.domain.model.AiRequest
 import javax.inject.Inject
 
 @Open
@@ -38,16 +40,16 @@ class ChatRepositoryImpl @Inject constructor(
         dao.clearMessages(chatId)
     }
 
-    override suspend fun getAnswer(systemRole: String, query: String): Result<AIResponse> {
-        val request = RequestDataDto.getDefault(
-          listOfMessageDtos =   listOf(
-                MessageDto(
-                    role = "system",
-                    text = (systemRole.ifBlank { "ты умный ассистен" })
-                ), MessageDto("user", query)
-            )
-        )
-        remoteRepository.getAnswer(request).onSuccess {
+    override suspend fun getAnswer(aiRequest: AiRequest): Result<AIResponse> {
+//        val request = RequestDataDto.getDefault(
+//          listOfMessageDtos =   listOf(
+//                MessageDto(role = "system", text = (systemRole.ifBlank { "ты умный ассистент" })),
+//              MessageDto("user", query)
+//            )
+//        )
+        Log.d("TAG", "___ChatRepositoryImpl airequest = ${aiRequest}")
+        val requestData = mapper.mapAiRequestToRequestData(aiRequest)
+        remoteRepository.getAnswer(requestData).onSuccess {
             val aiResponse = mapper.mapMyResponseToAIResponse(it as ServerResponseDto)
             return Result.success(aiResponse)
         }.onFailure {

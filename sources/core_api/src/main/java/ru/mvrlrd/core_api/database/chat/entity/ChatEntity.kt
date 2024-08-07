@@ -10,7 +10,7 @@ data class ChatEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("chatId") val id: Long = 0,
     val title: String,
-    val role: String,
+    val roleText: String,
     @Embedded
     val completionOptions: CompletionOptionsEntity,
     val modelVer: String,

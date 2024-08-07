@@ -14,7 +14,7 @@ class ChatMapper @Inject constructor() {
             ChatEntity(
                 id = chatId,
                 title = title,
-                role = role,
+                roleText= roleText,
                 completionOptions = mapCompletionOptionsToCompletionOptionsEntity(completionOptions = completionOptions),
                 modelVer = modelVer,
                 usage = mapUsageToUsageEntity(usage = usage),
@@ -68,7 +68,7 @@ class ChatMapper @Inject constructor() {
             Chat(
                 chatId = id,
                 title = title,
-                role = role,
+                roleText = roleText,
                 completionOptions = mapCompletionOptionsEntityToCompletionOptions(
                     completionOptionsEntity = completionOptions
                 ),

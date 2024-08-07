@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.base_chat_home.model.Chat
+import ru.mvrlrd.base_chat_home.model.CompletionOptions
 import java.util.Date
 
 
@@ -46,7 +47,28 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
     )
     val itemList = remember { viewModel.items }
 
-
+//data class Chat(
+//    val chatId: Long,
+//    val title: String,
+//    val role: String="system",
+//    val roleText: String= "ты умный ассистент",
+//    val completionOptions: CompletionOptions = CompletionOptions(),
+//    val modelVer: String,
+//    val usage: Usage = Usage(),
+//    val date: Long
+//):Serializable
+//
+//
+//data class Usage(
+//    val inputTokens: Int = 0,
+//    val completionTokens: Int = 0,
+//    val totalTokens: Int = 0,
+//)
+//data class CompletionOptions(
+//    val stream: Boolean = false,
+//    val temperature: Double = 0.6,
+//    val maxTokens: Int = 2000
+//)
 
     Scaffold(
         floatingActionButton = {
@@ -54,9 +76,14 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
                 viewModel.createChat(
                     Chat(
                         chatId = 0,
-                        title = "no name",
-                        role = "assistant",
+                        title = "lalaland",
+                        roleText = "ты пяти летний ребенок",
                         modelVer = "",
+                        completionOptions = CompletionOptions(
+                            stream = false,
+                            temperature = 0.9,
+                            maxTokens = 500
+                        ),
                         date = Date().time
                     )
                 )

@@ -60,7 +60,7 @@ class HomeViewModelTest {
             )
             whenever(getAnswerUseCase.invoke(query = "столица Монголии?")).thenReturn(
                 Result.success(
-                    HomeTestUnitFactory.getAIResponse().copy(answer = "не знаю", date = 1L)
+                    HomeTestUnitFactory.getAIResponse().copy(text = "не знаю", date = 1L)
                 )
             )
             viewModel.sendRequest(query = "столица Монголии?")

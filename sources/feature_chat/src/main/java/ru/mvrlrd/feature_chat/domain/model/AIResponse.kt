@@ -1,10 +1,10 @@
-package ru.mvrlrd.feature_chat.domain
+package ru.mvrlrd.feature_chat.domain.model
 
 import java.util.Date
 
 
 data class AIResponse(
-    val answer: String,
+    val text: String,
     val role: String,
     val inputTextTokens: Int,
     val completionTokens: Int,

@@ -6,7 +6,7 @@ import java.io.Serializable
 data class Chat(
     val chatId: Long,
     val title: String,
-    val role: String,
+    val roleText: String,
     val completionOptions: CompletionOptions = CompletionOptions(),
     val modelVer: String,
     val usage: Usage = Usage(),
@@ -21,8 +21,8 @@ data class Usage(
 )
 data class CompletionOptions(
     val stream: Boolean = false,
-    val temperature: Double = 0.3,
-    val maxTokens: Int = 1000
+    val temperature: Double = 0.6,
+    val maxTokens: Int = 2000
 )
 
 
