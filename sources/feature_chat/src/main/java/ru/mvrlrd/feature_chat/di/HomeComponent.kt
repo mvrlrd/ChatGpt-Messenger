@@ -6,6 +6,7 @@ import ru.mvrlrd.feature_chat.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.feature_chat.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.feature_chat.domain.api.GetAllMessagesForChatUseCase
 import ru.mvrlrd.feature_chat.domain.api.GetAnswerUseCase
+import ru.mvrlrd.feature_chat.domain.api.GetChatSettingsUseCase
 import ru.mvrlrd.feature_chat.domain.api.SaveMessageToChatUseCase
 
 @Component(
@@ -19,6 +20,7 @@ interface HomeComponent {
     fun provideDeleteMessageUseCase(): DeleteMessageUseCase
     fun provideClearMessagesUseCase(): ClearMessagesUseCase
     fun provideGetAnswerUseCase(): GetAnswerUseCase
+    fun provideGetChatUseCase(): GetChatSettingsUseCase
 
 
     companion object {

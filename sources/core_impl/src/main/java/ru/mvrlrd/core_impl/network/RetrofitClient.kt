@@ -7,8 +7,8 @@ import retrofit2.Response
 import ru.mvrlrd.core_api.network.NetworkClient
 import ru.mvrlrd.core_api.network.dto.MyResponse
 import ru.mvrlrd.core_api.network.dto.Request
-import ru.mvrlrd.core_api.network.dto.RequestData
-import ru.mvrlrd.core_api.network.dto.ServerResponse
+import ru.mvrlrd.core_api.network.dto.RequestDataDto
+import ru.mvrlrd.core_api.network.dto.ServerResponseDto
 import javax.inject.Inject
 
 class RetrofitClient @Inject constructor(private val apiService: ApiService, private val internetController: InternetController): NetworkClient {
@@ -16,14 +16,14 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService, pri
 
     override suspend fun doRequest(request: Request): Result<MyResponse> {
         return when (request) {
-            is RequestData -> getAnswer(request)
+            is RequestDataDto -> getAnswer(request)
             else -> Result.failure(MyException.BadRequest)
         }
     }
 
-    private suspend fun getAnswer(requestData: RequestData): Result<MyResponse> {
-        return requestWithResponseHandling(ServerResponse.getDefault()) {
-            val jsonString = Json.encodeToString(requestData)
+    private suspend fun getAnswer(requestDataDto: RequestDataDto): Result<MyResponse> {
+        return requestWithResponseHandling(ServerResponseDto.getDefault()) {
+            val jsonString = Json.encodeToString(requestDataDto)
             val requestBody = jsonString.toRequestBody()
             apiService.getCompletion(requestBody)
         }

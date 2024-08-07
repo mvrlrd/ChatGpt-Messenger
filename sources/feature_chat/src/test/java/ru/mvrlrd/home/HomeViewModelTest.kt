@@ -12,7 +12,7 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
-import ru.mvrlrd.core_api.database.chat.entity.Message
+import ru.mvrlrd.core_api.database.chat.entity.MessageEntity
 import ru.mvrlrd.feature_chat.ChatViewModel
 import ru.mvrlrd.feature_chat.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.feature_chat.domain.api.DeleteMessageUseCase
@@ -52,7 +52,7 @@ class HomeViewModelTest {
     @Test
     fun `test onSuccess when getAnswerUseCase succeed`() {
         runTest(testDispatcher) {
-            val expectedMessage = Message(
+            val expectedMessageEntity = MessageEntity(
                 holderChatId = chatId,
                 text = "не знаю",
                 isReceived = true,
@@ -65,7 +65,7 @@ class HomeViewModelTest {
             )
             viewModel.sendRequest(query = "столица Монголии?")
             testDispatcher.scheduler.advanceUntilIdle()
-            verify(saveMessageToChatUseCase).invoke(expectedMessage)
+            verify(saveMessageToChatUseCase).invoke(expectedMessageEntity)
         }
     }
     @Test

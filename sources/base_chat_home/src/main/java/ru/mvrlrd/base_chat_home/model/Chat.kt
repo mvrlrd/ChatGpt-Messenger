@@ -1,25 +1,25 @@
-package ru.mvrlrd.feature_home.domain
+package ru.mvrlrd.base_chat_home.model
 
 import java.io.Serializable
 
 
-data class ChatEntity(
+data class Chat(
     val chatId: Long,
     val title: String,
     val role: String,
-    val completionOptions: CompletionOptionsEntity = CompletionOptionsEntity(),
+    val completionOptions: CompletionOptions = CompletionOptions(),
     val modelVer: String,
-    val usageEntity: UsageEntity = UsageEntity(),
+    val usage: Usage = Usage(),
     val date: Long
 ):Serializable
 
 
-data class UsageEntity(
+data class Usage(
     val inputTokens: Int = 0,
     val completionTokens: Int = 0,
     val totalTokens: Int = 0,
 )
-data class CompletionOptionsEntity(
+data class CompletionOptions(
     val stream: Boolean = false,
     val temperature: Double = 0.3,
     val maxTokens: Int = 1000

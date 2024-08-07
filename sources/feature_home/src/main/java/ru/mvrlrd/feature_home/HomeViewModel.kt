@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.mvrlrd.feature_home.domain.ChatEntity
+import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.feature_home.domain.api.CreateChatUseCase
 import ru.mvrlrd.feature_home.domain.api.GetAllChatsUseCase
 import ru.mvrlrd.feature_home.domain.api.RemoveChatUseCase
@@ -20,8 +20,8 @@ class HomeViewModel@Inject constructor(
 
 //    private var _chats = MutableStateFlow<List<ChatEntity>>(emptyList())
 //    val chats : StateFlow<List<ChatEntity>> get() = _chats.asStateFlow()
-    private val _items = mutableStateListOf<ChatEntity>()
-    val items : SnapshotStateList<ChatEntity> get()=_items
+    private val _items = mutableStateListOf<Chat>()
+    val items : SnapshotStateList<Chat> get()=_items
 
 
 
@@ -30,9 +30,9 @@ class HomeViewModel@Inject constructor(
             getAllChats()
         }
     }
-    fun createChat(chatEntity: ChatEntity){
+    fun createChat(chat: Chat){
         viewModelScope.launch {
-            createChatUseCase(chatEntity)
+            createChatUseCase(chat)
         }
     }
      fun getAllChats(){

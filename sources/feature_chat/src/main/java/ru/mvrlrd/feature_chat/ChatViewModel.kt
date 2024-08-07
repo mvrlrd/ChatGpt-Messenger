@@ -14,11 +14,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.mvrlrd.core_api.database.chat.entity.Message
+import ru.mvrlrd.core_api.database.chat.entity.MessageEntity
 import ru.mvrlrd.feature_chat.domain.api.ClearMessagesUseCase
 import ru.mvrlrd.feature_chat.domain.api.DeleteMessageUseCase
 import ru.mvrlrd.feature_chat.domain.api.GetAllMessagesForChatUseCase
 import ru.mvrlrd.feature_chat.domain.api.GetAnswerUseCase
+import ru.mvrlrd.feature_chat.domain.api.GetChatSettingsUseCase
 import ru.mvrlrd.feature_chat.domain.api.SaveMessageToChatUseCase
 import javax.inject.Inject
 
@@ -29,12 +30,13 @@ class ChatViewModel @Inject constructor(
     private val deleteMessageUseCase: DeleteMessageUseCase,
     private val clearMessagesUseCase: ClearMessagesUseCase,
     private val ioDispatcher: CoroutineDispatcher,
+    private val getChatSettingsUseCase: GetChatSettingsUseCase,
     private val chatId: Long
 
 ) : ViewModel() {
     var oneShotEventChannel = Channel<String>()
-    private val _messages = mutableStateListOf<Message>()
-    val messages : SnapshotStateList <Message> get() = _messages
+    private val _messageEntities = mutableStateListOf<MessageEntity>()
+    val messageEntities : SnapshotStateList <MessageEntity> get() = _messageEntities
 
 init {
     getAllMessagesForChatFromDatabase()
@@ -43,7 +45,7 @@ init {
     fun sendRequest(query: String) {
             viewModelScope.launch (ioDispatcher){
                 saveMessageToChatUseCase(
-                    Message(
+                    MessageEntity(
                         holderChatId = chatId,
                         text = query,
                         isReceived = false,
@@ -55,7 +57,7 @@ init {
                         getAnswerUseCase(systemRole = "", query = query)
                             .onSuccess {
                                 if (it.answer.isNotBlank()) {
-                                    val received = Message(
+                                    val received = MessageEntity(
                                         holderChatId = chatId,
                                         text = it.answer,
                                         isReceived = true,
@@ -76,11 +78,11 @@ init {
     private fun getAllMessagesForChatFromDatabase() {
         getAllMessagesForChatUseCase(chatId)
             .onEach {
-                _messages.clear()
+                _messageEntities.clear()
                 if(it.isEmpty()){
                     oneShotEventChannel.send("начните с чистого листа!")
                 }else{
-                    _messages.addAll(it)
+                    _messageEntities.addAll(it)
                 }
             }
             .catch {
@@ -116,6 +118,7 @@ init {
             getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase,
             deleteMessageUseCase: DeleteMessageUseCase,
             clearMessagesUseCase: ClearMessagesUseCase,
+            getChatSettingsUseCase: GetChatSettingsUseCase,
             chatId: Long
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
@@ -127,6 +130,7 @@ init {
                         deleteMessageUseCase,
                         clearMessagesUseCase,
                         Dispatchers.IO,
+                        getChatSettingsUseCase,
                         chatId
                     ) as T
                 }

@@ -1,5 +1,6 @@
 package ru.mvrlrd.core_api.network.dto
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import javax.inject.Named
 
@@ -9,13 +10,17 @@ sealed interface Request{
 }
 
 @Serializable
-data class CompletionOptions(
+@SerialName("CompletionOptions")
+data class CompletionOptionsDto(
+    @SerialName("stream")
     val stream: Boolean,
+    @SerialName("temperature")
     val temperature: Double,
+    @SerialName("maxTokens")
     val maxTokens: String
 ) {
     companion object {
-        fun getDefault() = CompletionOptions(
+        fun getDefault() = CompletionOptionsDto(
             false,
             0.6,
             "2000"
@@ -24,23 +29,30 @@ data class CompletionOptions(
 }
 
 @Serializable
-data class Message(
+@SerialName("Message")
+data class MessageDto(
+    @SerialName("role")
     val role: String,
+    @SerialName("text")
     val text: String
 )
 
 @Serializable
-data class RequestData(
+@SerialName("RequestData")
+data class RequestDataDto(
+    @SerialName("modelUri")
     val modelUri: String="",
-    val completionOptions: CompletionOptions,
-    val messages: List<Message>
+    @SerialName("completionOptions")
+    val completionOptionsDto: CompletionOptionsDto,
+    @SerialName("messages")
+    val messageDtos: List<MessageDto>
 ) : Request {
     companion object {
-        fun getDefault(@Named("modelUrl") modelUri: String ="ассистент", listOfMessages: List<Message>): RequestData =
-            RequestData(
+        fun getDefault(@Named("modelUrl") modelUri: String ="ассистент", listOfMessageDtos: List<MessageDto>): RequestDataDto =
+            RequestDataDto(
                 modelUri = modelUri,
-                completionOptions = CompletionOptions.getDefault(),
-                messages = listOfMessages
+                completionOptionsDto = CompletionOptionsDto.getDefault(),
+                messageDtos = listOfMessageDtos
             )
     }
 }

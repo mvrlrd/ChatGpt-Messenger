@@ -1,7 +1,5 @@
 package ru.mvrlrd.feature_chat
 
-import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -38,11 +36,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -51,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.receiveAsFlow
-import ru.mvrlrd.core_api.database.chat.entity.Message
+import ru.mvrlrd.core_api.database.chat.entity.MessageEntity
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.feature_chat.di.DaggerHomeComponent
 import ru.mvrlrd.feature_chat.pullrefresh.PullToRefreshLayout
@@ -74,11 +70,13 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
         homeComponent.provideGetAnswerUseCase()
     }
     val deleteMessageUseCase = remember {
-
         homeComponent.provideDeleteMessageUseCase()
     }
     val clearMessagesUseCase = remember {
         homeComponent.provideClearMessagesUseCase()
+    }
+    val getChatSettingsUseCase = remember {
+        homeComponent.provideGetChatUseCase()
     }
 
     val viewModel: ChatViewModel = viewModel(
@@ -88,12 +86,13 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
             getAllMessagesForChatUseCase,
             deleteMessageUseCase,
             clearMessagesUseCase,
+            getChatSettingsUseCase,
             chatId
         )
     )
 
     val messages = remember {
-        viewModel.messages
+        viewModel.messageEntities
     }
 
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
@@ -111,7 +110,7 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                    MessageList(messages = messages) {
+                    MessageList(messageEntities = messages) {
                         viewModel.deleteMessageFromDatabase(it)
                     }
                     CustomTextField(
@@ -133,14 +132,14 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
 }
 
 @Composable
-fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit) {
+fun MessageList(messageEntities: SnapshotStateList<MessageEntity>, onDismiss: (Long) -> Unit) {
     val listState = rememberLazyListState()
-    var previousSize by remember { mutableStateOf(messages.size) }
-    LaunchedEffect(messages.size) {
-        if (messages.size > previousSize) {
-            listState.animateScrollToItem(messages.size - 1)
+    var previousSize by remember { mutableStateOf(messageEntities.size) }
+    LaunchedEffect(messageEntities.size) {
+        if (messageEntities.size > previousSize) {
+            listState.animateScrollToItem(messageEntities.size - 1)
         }
-        previousSize = messages.size
+        previousSize = messageEntities.size
     }
     LazyColumn(
         state = listState,
@@ -154,13 +153,13 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
             )
     ) {
         itemsIndexed(
-            items = messages,
+            items = messageEntities,
             key = { _, item ->
                 item
             }
         ) { i, item ->
-            val prev = if (i > 0) messages[i - 1].isReceived else !item.isReceived
-            val next = if (i < messages.lastIndex) messages[i + 1].isReceived else !item.isReceived
+            val prev = if (i > 0) messageEntities[i - 1].isReceived else !item.isReceived
+            val next = if (i < messageEntities.lastIndex) messageEntities[i + 1].isReceived else !item.isReceived
             SwipeToDismissCloudMessage(item = item, prev = prev, next = next) {
                 onDismiss(it)
             }
@@ -175,7 +174,7 @@ fun MessageList(messages: SnapshotStateList<Message>, onDismiss: (Long) -> Unit)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeToDismissCloudMessage(
-    item: Message,
+    item: MessageEntity,
     prev: Boolean,
     next: Boolean,
     onDismiss: (Long) -> Unit
@@ -215,30 +214,30 @@ fun SwipeToDismissCloudMessage(
             }
         },
         dismissContent = {
-            CloudMessage(message = item, prev = prev, next = next)
+            CloudMessage(messageEntity = item, prev = prev, next = next)
         }
     )
 }
 
 
 @Composable
-fun CloudMessage(message: Message, prev: Boolean, next: Boolean) {
+fun CloudMessage(messageEntity: MessageEntity, prev: Boolean, next: Boolean) {
     val cloudColor =
-        if (message.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
-    val alignment = if (message.isReceived) Alignment.CenterStart else Alignment.CenterEnd
+        if (messageEntity.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
+    val alignment = if (messageEntity.isReceived) Alignment.CenterStart else Alignment.CenterEnd
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = if (message.isReceived && !prev) 2.dp else if (message.isReceived != prev) 8.dp else 2.dp,
-                bottom = if (!message.isReceived && next) 2.dp else if (message.isReceived != next) 8.dp else 2.dp
+                top = if (messageEntity.isReceived && !prev) 2.dp else if (messageEntity.isReceived != prev) 8.dp else 2.dp,
+                bottom = if (!messageEntity.isReceived && next) 2.dp else if (messageEntity.isReceived != next) 8.dp else 2.dp
             ),
         contentAlignment = alignment
     ) {
         CloudCard(
             color = cloudColor,
-            text = message.text,
-            isReceived = message.isReceived,
+            text = messageEntity.text,
+            isReceived = messageEntity.isReceived,
             prev = prev,
             next = next
         )

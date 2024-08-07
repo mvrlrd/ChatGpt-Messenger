@@ -5,10 +5,10 @@ import androidx.room.Relation
 
 data class ChatWithMessages (
     @Embedded
-    val chatDto: ChatDto,
+    val chatEntity: ChatEntity,
     @Relation(
         parentColumn = "chatId",
         entityColumn = "holderChatId"
     )
-    val messages: List<Message>
+    val messageEntities: List<MessageEntity>
 )

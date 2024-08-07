@@ -5,21 +5,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.DismissDirection.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
-import ru.mvrlrd.feature_home.domain.ChatEntity
+import ru.mvrlrd.base_chat_home.model.Chat
 import java.util.Date
 
 
@@ -56,11 +52,11 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 viewModel.createChat(
-                    ChatEntity(
+                    Chat(
                         chatId = 0,
                         title = "no name",
                         role = "assistant",
-                        modelVer ="",
+                        modelVer = "",
                         date = Date().time
                     )
                 )
@@ -83,7 +79,7 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
 
 @Composable
 fun CardList(
-    cards: SnapshotStateList<ChatEntity>,
+    cards: SnapshotStateList<Chat>,
     modifier: Modifier,
     viewModel: HomeViewModel,
     onClick: (id: Long) -> Unit
@@ -123,7 +119,7 @@ fun CardList(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissCard(item: ChatEntity, onDismiss: () -> Unit, onClick: (id: Long) -> Unit) {
+fun SwipeToDismissCard(item: Chat, onDismiss: () -> Unit, onClick: (id: Long) -> Unit) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {

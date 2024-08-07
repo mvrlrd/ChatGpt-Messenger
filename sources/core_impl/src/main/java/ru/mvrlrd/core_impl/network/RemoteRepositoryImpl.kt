@@ -1,14 +1,12 @@
 package ru.mvrlrd.core_impl.network
 
 
-import io.ktor.client.request.request
 import ru.mvrlrd.core_api.network.NetworkClient
 import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.core_api.network.dto.BadRequest
-import ru.mvrlrd.core_api.network.dto.Message
 import ru.mvrlrd.core_api.network.dto.MyResponse
 import ru.mvrlrd.core_api.network.dto.Request
-import ru.mvrlrd.core_api.network.dto.RequestData
+import ru.mvrlrd.core_api.network.dto.RequestDataDto
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -19,7 +17,7 @@ class RemoteRepositoryImp @Inject constructor(private val client: NetworkClient,
     ): Result<MyResponse> {
 
        val _request = when (request){
-            is RequestData -> {
+            is RequestDataDto -> {
                 request.copy(modelUri = modelUrl)
             }
            else -> {

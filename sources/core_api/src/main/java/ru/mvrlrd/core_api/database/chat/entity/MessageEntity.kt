@@ -10,12 +10,12 @@ import java.util.Date
 
 @Entity(tableName = "messages",
     foreignKeys = [ForeignKey(
-        entity = ChatDto::class,
+        entity = ChatEntity::class,
         parentColumns = arrayOf("chatId"),
         childColumns = arrayOf("holderChatId"),
         onDelete = CASCADE
     )])
-data class Message(
+data class MessageEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("messageId")val id: Long = 0,
     @ColumnInfo(index = true)

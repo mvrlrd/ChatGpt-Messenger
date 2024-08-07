@@ -7,21 +7,27 @@ import kotlinx.serialization.Serializable
 interface MyResponse
 
 @Serializable
-data class Alternative(
-    val message: Message,
+@SerialName("Alternative")
+data class AlternativeDto(
+    @SerialName("message")
+    val messageDto: MessageDto,
+    @SerialName("status")
     val status: String
 )
 
 @Serializable
-data class Result(
-    val alternatives: List<Alternative>,
-    val usage: Usage,
+@SerialName("Result")
+data class ResultDto(
+    @SerialName("alternatives")
+    val alternativeDtos: List<AlternativeDto>,
+    @SerialName("usage")
+    val usageDto: UsageDto,
     @SerialName("modelVersion")
     val modelVersion: String
 )
 
 @Serializable
-data class Usage(
+data class UsageDto(
     @SerialName("inputTextTokens")
     val inputTextTokens: String,
     @SerialName("completionTokens")
@@ -31,13 +37,15 @@ data class Usage(
 )
 
 @Serializable
-data class ServerResponse(
-    val result: Result
+@SerialName("ServerResponse")
+data class ServerResponseDto(
+    @SerialName("result")
+    val resultDto: ResultDto
 ): MyResponse {
     companion object{
         fun getDefault(text: String="") =
-            ServerResponse(
-                Result(listOf(Alternative(Message("",text), "")), Usage("","",""), "")
+            ServerResponseDto(
+                ResultDto(listOf(AlternativeDto(MessageDto("",text), "")), UsageDto("","",""), "")
             )
     }
 }

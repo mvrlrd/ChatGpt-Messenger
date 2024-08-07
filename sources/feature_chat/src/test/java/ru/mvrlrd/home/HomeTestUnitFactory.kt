@@ -1,10 +1,10 @@
 package ru.mvrlrd.home
 
-import ru.mvrlrd.core_api.network.dto.Alternative
-import ru.mvrlrd.core_api.network.dto.Message
-import ru.mvrlrd.core_api.network.dto.Result
-import ru.mvrlrd.core_api.network.dto.ServerResponse
-import ru.mvrlrd.core_api.network.dto.Usage
+import ru.mvrlrd.core_api.network.dto.AlternativeDto
+import ru.mvrlrd.core_api.network.dto.MessageDto
+import ru.mvrlrd.core_api.network.dto.ResultDto
+import ru.mvrlrd.core_api.network.dto.ServerResponseDto
+import ru.mvrlrd.core_api.network.dto.UsageDto
 import ru.mvrlrd.feature_chat.data.MyResponseMapper
 import ru.mvrlrd.feature_chat.domain.AIResponse
 
@@ -23,12 +23,12 @@ object HomeTestUnitFactory {
 
     private var serverResponseFactory: ServerResponseFactory = GoodResponseFactory()
 
-    fun getBadServerResponse(): ServerResponse {
+    fun getBadServerResponse(): ServerResponseDto {
         serverResponseFactory = BadResponseFactory()
         return serverResponseFactory.createResponse()
     }
 
-    fun getGoodServerResponse(): ServerResponse {
+    fun getGoodServerResponse(): ServerResponseDto {
         serverResponseFactory = GoodResponseFactory()
         return serverResponseFactory.createResponse()
     }
@@ -37,64 +37,64 @@ object HomeTestUnitFactory {
 
 }
 abstract class ServerResponseFactory(){
-    abstract fun createResponse(): ServerResponse
-    abstract fun createResult(): Result
-    abstract fun createUsage():Usage
-    abstract fun createAlternatives(): Alternative
-    abstract fun createMessage(): Message
+    abstract fun createResponse(): ServerResponseDto
+    abstract fun createResult(): ResultDto
+    abstract fun createUsage():UsageDto
+    abstract fun createAlternatives(): AlternativeDto
+    abstract fun createMessage(): MessageDto
 }
 class BadResponseFactory(): ServerResponseFactory(){
-    override fun createResponse()=ServerResponse(
+    override fun createResponse()=ServerResponseDto(
         createResult()
     )
 
-    override fun createResult()= Result(
-        alternatives = listOf(createAlternatives()),
-        usage = createUsage(),
+    override fun createResult()= ResultDto(
+        alternativeDtos = listOf(createAlternatives()),
+        usageDto = createUsage(),
         modelVersion = "ver. 100"
     )
 
-    override fun createUsage()= Usage(
+    override fun createUsage()= UsageDto(
         inputTextTokens = "one",
         completionTokens = "one",
         totalTokens = "two"
     )
 
     override fun createAlternatives() =
-        Alternative(
-            message = createMessage(),
+        AlternativeDto(
+            messageDto = createMessage(),
             status = "10",
         )
 
-    override fun createMessage() = Message(
+    override fun createMessage() = MessageDto(
         role = "assistant",
         text = ""
     )
 }
 class GoodResponseFactory(): ServerResponseFactory(){
-    override fun createResponse()=ServerResponse(
+    override fun createResponse()=ServerResponseDto(
         createResult()
     )
 
-    override fun createResult()= Result(
-        alternatives = listOf(createAlternatives()),
-        usage = createUsage(),
+    override fun createResult()= ResultDto(
+        alternativeDtos = listOf(createAlternatives()),
+        usageDto = createUsage(),
         modelVersion = "1.0"
     )
 
-    override fun createUsage()= Usage(
+    override fun createUsage()= UsageDto(
         inputTextTokens = "100",
         completionTokens = "50",
         totalTokens = "150"
     )
 
     override fun createAlternatives()=
-        Alternative(
-    message = createMessage(),
+        AlternativeDto(
+    messageDto = createMessage(),
     status = "ALTERNATIVE_STATUS_FINAL",
     )
 
-    override fun createMessage() = Message(
+    override fun createMessage() = MessageDto(
     role = "assistant",
     text = "ai response"
     )
