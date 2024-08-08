@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.base_chat_home.model.CompletionOptions

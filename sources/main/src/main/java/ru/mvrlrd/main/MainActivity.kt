@@ -23,8 +23,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainComponent.inject(this)
-        val chatApi = featureAPIes["chat"] as FeatureChatApi
-        val homeApi = featureAPIes["home"] as FeatureHomeApi
 
         setContent {
             var isLightTheme by remember { mutableStateOf(true) }
@@ -34,8 +32,6 @@ class MainActivity : ComponentActivity() {
                 },
                 darkTheme = !isLightTheme,
                 context = this,
-                homeApi = homeApi,
-                chatApi = chatApi
             )
         }
     }

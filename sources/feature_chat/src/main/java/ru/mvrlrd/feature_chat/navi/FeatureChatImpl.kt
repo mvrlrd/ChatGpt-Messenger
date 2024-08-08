@@ -11,10 +11,12 @@ import javax.inject.Inject
 class FeatureChatImpl @Inject constructor(): FeatureChatApi {
     override val chatRoute: String
         get() = "chat"
+
     override fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
         navController: NavController,
-        modifier: Modifier
+        modifier: Modifier,
+        action: () -> Unit
     ) {
         navGraphBuilder.composable("$chatRoute/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
@@ -22,7 +24,7 @@ class FeatureChatImpl @Inject constructor(): FeatureChatApi {
             ChatScreen(
                 modifier = modifier,
                 chatId = id,
-                onToggleTheme = {}
+                onToggleTheme = action
             )
         }
     }

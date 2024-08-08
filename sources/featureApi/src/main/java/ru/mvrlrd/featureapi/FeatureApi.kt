@@ -9,6 +9,7 @@ interface FeatureApi {
     fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
         navController: NavController,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        action: () -> Unit
     )
 }

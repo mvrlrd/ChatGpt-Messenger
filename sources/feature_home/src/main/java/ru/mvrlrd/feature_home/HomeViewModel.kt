@@ -18,12 +18,8 @@ class HomeViewModel@Inject constructor(
     private val removeChatUseCase: RemoveChatUseCase
 ): ViewModel() {
 
-//    private var _chats = MutableStateFlow<List<ChatEntity>>(emptyList())
-//    val chats : StateFlow<List<ChatEntity>> get() = _chats.asStateFlow()
     private val _items = mutableStateListOf<Chat>()
     val items : SnapshotStateList<Chat> get()=_items
-
-
 
     init {
         viewModelScope.launch {

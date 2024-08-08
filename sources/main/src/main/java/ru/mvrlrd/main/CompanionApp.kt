@@ -22,9 +22,10 @@ fun CompanionApp(
     onToggleTheme: () -> Unit,
     darkTheme: Boolean,
     context: Context,
-    homeApi: FeatureHomeApi,
-    chatApi: FeatureChatApi
 ) {
+    val homeApi = (context as MainActivity).featureAPIes["home"] as FeatureHomeApi
+    val chatApi = context.featureAPIes["chat"] as FeatureChatApi
+
     JetHeroesTheme(darkTheme = darkTheme) {
         val navController = rememberNavController()
         NavHost(
@@ -46,12 +47,14 @@ fun CompanionApp(
             register(
                 navController= navController,
                 modifier = Modifier,
-                featureApi = chatApi
+                featureApi = chatApi,
+                action = onToggleTheme
             )
             register(
                 navController=navController,
                 modifier = Modifier,
-                featureApi = homeApi
+                featureApi = homeApi,
+                action = {}
             )
         }
     }
@@ -60,11 +63,13 @@ fun CompanionApp(
 fun NavGraphBuilder.register(
     featureApi: FeatureApi,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    action: ()->Unit
 ) {
     featureApi.registerGraph(
         navGraphBuilder = this,
         navController = navController,
-        modifier = modifier
+        modifier = modifier,
+        action=action
     )
 }
