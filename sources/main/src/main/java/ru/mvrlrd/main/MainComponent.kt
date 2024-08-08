@@ -1,16 +1,14 @@
 package ru.mvrlrd.main
 
-import dagger.Component
-
-//@Component(dependencies = [ru.mvrlrd.core_api.mediators.ProvidersFacade::class])
-//interface MainComponent {
 //
+//@Component(dependencies = [FeatureApiFacade::class])
+//interface MainComponent {
 //    fun inject(mainActivity: MainActivity)
 //
 //    companion object{
-//        fun create(providersFacade: ru.mvrlrd.core_api.mediators.ProvidersFacade): MainComponent =
+//        fun create(featureApiFacade: FeatureApiFacade): MainComponent =
 //            DaggerMainComponent.builder()
-//                .providersFacade(providersFacade)
+//                .featureApiFacade(featureApiFacade)
 //                .build()
 //    }
 //}

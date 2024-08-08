@@ -12,14 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
-import ru.mvrlrd.feature_home.HomeScreen
-import ru.mvrlrd.feature_chat.ChatScreen
-import ru.mvrlrd.feature_chat.navi.ChatFeatureImpl
-import ru.mvrlrd.feature_home.navi.HomeFeatureImpl
+import ru.mvrlrd.feature_chat.navi.FeatureChatImpl
+import ru.mvrlrd.feature_home.navi.FeatureHomeImpl
 import ru.mvrlrd.featureapi.FeatureApi
+import ru.mvrlrd.featureapi.FeatureApiProvider
 import ru.mvrlrd.main.theme.JetHeroesTheme
 
 @Composable
@@ -29,11 +27,12 @@ fun CompanionApp(
     context: Context,
     providersFacade: ProvidersFacade
 ) {
+
     val chatFeatureImpl = remember{
-        ChatFeatureImpl(onToggleTheme)
+        (providersFacade as FeatureApiProvider).provideMediatorsMap()["chat"] as FeatureChatImpl
     }
     val homeFeatureImpl = remember{
-        HomeFeatureImpl(providersFacade)
+        (providersFacade as FeatureApiProvider).provideMediatorsMap()["home"] as FeatureHomeImpl
     }
 
 

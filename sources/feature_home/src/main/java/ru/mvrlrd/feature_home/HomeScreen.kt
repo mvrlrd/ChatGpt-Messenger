@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,11 +31,14 @@ import ru.mvrlrd.core_api.mediators.ProvidersFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.base_chat_home.model.CompletionOptions
+import ru.mvrlrd.core_api.mediators.AppWithFacade
 import java.util.Date
 
 
 @Composable
-fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (Long) -> Unit) {
+fun HomeScreen(modifier: Modifier, onClick: (Long) -> Unit) {
+
+    val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
     }
@@ -46,29 +50,6 @@ fun HomeScreen(modifier: Modifier, providersFacade: ProvidersFacade, onClick: (L
         )
     )
     val itemList = remember { viewModel.items }
-
-//data class Chat(
-//    val chatId: Long,
-//    val title: String,
-//    val role: String="system",
-//    val roleText: String= "ты умный ассистент",
-//    val completionOptions: CompletionOptions = CompletionOptions(),
-//    val modelVer: String,
-//    val usage: Usage = Usage(),
-//    val date: Long
-//):Serializable
-//
-//
-//data class Usage(
-//    val inputTokens: Int = 0,
-//    val completionTokens: Int = 0,
-//    val totalTokens: Int = 0,
-//)
-//data class CompletionOptions(
-//    val stream: Boolean = false,
-//    val temperature: Double = 0.6,
-//    val maxTokens: Int = 2000
-//)
 
     Scaffold(
         floatingActionButton = {
