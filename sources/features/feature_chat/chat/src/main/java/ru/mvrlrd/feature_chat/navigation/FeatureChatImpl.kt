@@ -1,4 +1,4 @@
-package ru.mvrlrd.feature_chat.navi
+package ru.mvrlrd.feature_chat.navigation
 
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController

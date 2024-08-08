@@ -19,13 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.base_chat_home.model.Chat
-import ru.mvrlrd.base_chat_home.model.CompletionOptions
 import ru.mvrlrd.core_api.mediators.AppWithFacade
-import java.util.Date
 
 
 @Composable
-fun HomeScreen(modifier: Modifier, openSettings: (Long)->Unit, onClick: (Long) -> Unit) {
+fun HomeScreen(modifier: Modifier, onClickEdit: (Long)-> Unit, onClickCard: (Long) -> Unit) {
+
 
     val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val chatRoomsComponent = remember {
@@ -34,7 +33,6 @@ fun HomeScreen(modifier: Modifier, openSettings: (Long)->Unit, onClick: (Long) -
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.MyViewModelFactory(
             chatRoomsComponent.getAllChatsUseCase(),
-            chatRoomsComponent.createChatUseCase(),
             chatRoomsComponent.removeChatUseCase()
         )
     )
@@ -42,25 +40,7 @@ fun HomeScreen(modifier: Modifier, openSettings: (Long)->Unit, onClick: (Long) -
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { openSettings(0L) }
-//            {
-
-//                viewModel.createChat(
-//                    Chat(
-//                        chatId = 0,
-//                        title = "lalaland",
-//                        roleText = "ты пяти летний ребенок",
-//                        modelVer = "",
-//                        completionOptions = CompletionOptions(
-//                            stream = false,
-//                            temperature = 0.9,
-//                            maxTokens = 500
-//                        ),
-//                        date = Date().time
-//                    )
-//                )
-//                viewModel.getAllChats()
-//            }
+            FloatingActionButton(onClick = { onClickEdit(0L) }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
             }
@@ -69,9 +49,10 @@ fun HomeScreen(modifier: Modifier, openSettings: (Long)->Unit, onClick: (Long) -
             CardList(
                 cards = itemList,
                 modifier = Modifier.padding(paddingValues),
-                viewModel = viewModel
+                viewModel = viewModel,
+                onClickEditButton = onClickEdit
             ) { id ->
-                onClick(id)
+                onClickCard(id)
             }
         }
     )
@@ -82,7 +63,8 @@ fun CardList(
     cards: SnapshotStateList<Chat>,
     modifier: Modifier,
     viewModel: HomeViewModel,
-    onClick: (id: Long) -> Unit
+    onClickEditButton: (Long) -> Unit,
+    onClickCard: (id: Long) -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -110,8 +92,11 @@ fun CardList(
                 item
             }
         ) { index, item ->
-            SwipeToDismissCard(item = item, onDismiss = { viewModel.removeChat(item.chatId) }) {
-                onClick(item.chatId)
+            SwipeToDismissCard(
+                item = item,
+                onClickEditButton = onClickEditButton,
+                onDismiss = { viewModel.removeChat(item.chatId) }) {
+                onClickCard(item.chatId)
             }
         }
     }
@@ -119,7 +104,12 @@ fun CardList(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwipeToDismissCard(item: Chat, onDismiss: () -> Unit, onClick: (id: Long) -> Unit) {
+fun SwipeToDismissCard(
+    item: Chat,
+    onDismiss: () -> Unit,
+    onClickEditButton: (Long) -> Unit,
+    onClickCard: (id: Long) -> Unit
+) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToStart) {
@@ -154,9 +144,10 @@ fun SwipeToDismissCard(item: Chat, onDismiss: () -> Unit, onClick: (id: Long) ->
         },
         dismissContent = {
             CharacterCard(
-                name = item.title
+                chat = item,
+                onClickEditButton =  onClickEditButton
             ) {
-                onClick(item.chatId)
+                onClickCard(item.chatId)
             }
         }
     )

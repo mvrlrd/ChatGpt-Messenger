@@ -1,5 +1,6 @@
 package ru.mvrlrd.chat_settings
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,15 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.receiveAsFlow
+import ru.mvrlrd.base_chat_home.model.composables.ShowToast
 import ru.mvrlrd.chat_settings.di.SettingsComponent
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 
 
 @Composable
-fun SettingsScreen(action: ()-> Unit) {
+fun SettingsScreen(chatId: Long, action: ()-> Unit) {
+
 
     val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val settingsComponent = remember {
@@ -44,15 +47,25 @@ fun SettingsScreen(action: ()-> Unit) {
     val saveSettingsUseCase = remember {
         settingsComponent.provideSaveSettingsUseCase()
     }
+    val getChatSettingsUseCase = remember {
+        settingsComponent.provideGetChatSettingsUseCase()
+    }
 
     val viewModel : SettingsViewModel = viewModel(
         factory = SettingsViewModel.SettingsViewModelFactory(
-            saveSettingsUseCase = saveSettingsUseCase
+            getChatSettingsUseCase= getChatSettingsUseCase,
+            saveSettingsUseCase = saveSettingsUseCase,
+            chatId = chatId
         )
 
     )
 
+
+
     val state = viewModel.state.collectAsState()
+    val oneShotEvent = remember {
+        viewModel.channel.receiveAsFlow()
+    }
 
     Column(
         modifier = Modifier
@@ -93,18 +106,19 @@ fun SettingsScreen(action: ()-> Unit) {
        TemperatureSettingItem(temperature = state.value.temperature,){
            viewModel.updateTemperature(it)
        }
-        // Setting Option 2: Privacy
-
-
         Divider()
-        Box(modifier = Modifier
-            .fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Blue)
+        ) {
+            Button(
+                onClick = {
+                    viewModel.saveChatSettings(chatId= chatId){
+                        action()
+                    }
 
-            .background(Color.Blue)){
-            Button(onClick = {
-                             viewModel.saveChatSettings()
-                            action.invoke()
-            },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
@@ -117,6 +131,7 @@ fun SettingsScreen(action: ()-> Unit) {
 
 
     }
+    ShowToast(flow = oneShotEvent)
 }
 
 @Composable
@@ -239,8 +254,8 @@ fun EditableSettingItem(icon: Int, title: String, field: String, placeholder: St
 //                viewModel.getAllChats()
 //            }
 
-@Preview
-@Composable
-fun chatSettingsScreenPreview(){
-    SettingsScreen({})
-}
+//@Preview
+//@Composable
+//fun chatSettingsScreenPreview(){
+//    SettingsScreen({})
+//}

@@ -16,9 +16,11 @@ class FeatureSettingsImpl @Inject constructor(): FeatureSettingsApi {
         action: () -> Unit
     ) {
 
-        navGraphBuilder.composable(settingsRoute) {
+        navGraphBuilder.composable("${settingsRoute}/{id}") { backStackEntry ->
+            val chatId = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+                ?: throw IllegalArgumentException("chat id is null")
             SettingsScreen(
-
+                chatId= chatId
             ) {
                 navController.navigate("home") {
                     popUpTo("home") { inclusive = true } //????

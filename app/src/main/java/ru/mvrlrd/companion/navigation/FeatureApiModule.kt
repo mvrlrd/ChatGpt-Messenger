@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import ru.mvrlrd.chat_settings.navigation.FeatureSettingsImpl
-import ru.mvrlrd.feature_chat.navi.FeatureChatImpl
+import ru.mvrlrd.feature_chat.navigation.FeatureChatImpl
 import ru.mvrlrd.feature_home.navigation.FeatureHomeImpl
 import ru.mvrlrd.featureapi.FeatureApi
 

@@ -18,10 +18,6 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createChat(entity: Chat) {
-        dao.insertChat(mapper.mapChatToChatEntity(entity))
-    }
-
     override suspend fun removeChat(id: Long) {
         dao.removeChat(id)
     }

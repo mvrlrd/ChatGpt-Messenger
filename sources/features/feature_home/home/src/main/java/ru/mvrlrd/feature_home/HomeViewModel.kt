@@ -7,14 +7,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.mvrlrd.base_chat_home.model.Chat
-import ru.mvrlrd.feature_home.domain.api.CreateChatUseCase
 import ru.mvrlrd.feature_home.domain.api.GetAllChatsUseCase
 import ru.mvrlrd.feature_home.domain.api.RemoveChatUseCase
 import javax.inject.Inject
 
 class HomeViewModel@Inject constructor(
     private val getAllChatsUseCase: GetAllChatsUseCase,
-    private val createChatUseCase: CreateChatUseCase,
     private val removeChatUseCase: RemoveChatUseCase
 ): ViewModel() {
 
@@ -26,11 +24,7 @@ class HomeViewModel@Inject constructor(
             getAllChats()
         }
     }
-    fun createChat(chat: Chat){
-        viewModelScope.launch {
-            createChatUseCase(chat)
-        }
-    }
+
      fun getAllChats(){
          viewModelScope.launch {
              getAllChatsUseCase().collect{
@@ -47,13 +41,12 @@ class HomeViewModel@Inject constructor(
 
     class MyViewModelFactory(
         private val getAllChatsUseCase: GetAllChatsUseCase,
-        private val createChatUseCase: CreateChatUseCase,
         private val removeChatUseCase: RemoveChatUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return HomeViewModel(getAllChatsUseCase, createChatUseCase, removeChatUseCase) as T
+                return HomeViewModel(getAllChatsUseCase, removeChatUseCase) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

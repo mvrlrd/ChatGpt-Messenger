@@ -1,8 +1,7 @@
 package ru.mvrlrd.chat_settings.data
 
-import ru.mvrlrd.base_chat_home.model.Chat
-import ru.mvrlrd.base_chat_home.model.CompletionOptions
-import ru.mvrlrd.base_chat_home.model.Usage
+import ru.mvrlrd.chat_settings.MaxTokens
+import ru.mvrlrd.chat_settings.Temperature
 import ru.mvrlrd.chat_settings.domain.ChatSettings
 import ru.mvrlrd.core_api.database.chat.entity.ChatEntity
 import ru.mvrlrd.core_api.database.chat.entity.CompletionOptionsEntity
@@ -11,10 +10,10 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class SettingsMapper@Inject constructor() {
-    fun mapSettingsToChat(chatSettings: ChatSettings): ChatEntity{
+    fun mapSettingsToChatEntity(chatSettings: ChatSettings): ChatEntity{
         return with(chatSettings) {
             ChatEntity(
-                id = 0L, //
+                id = chatId,
                 title = name,
                 roleText = systemRole,
                 completionOptions = CompletionOptionsEntity(
@@ -24,7 +23,19 @@ class SettingsMapper@Inject constructor() {
                 ),
                 modelVer = "", //
                 usage = UsageEntity(0,0,0),//
-                date = 1L //
+                date = 1L//
+            )
+        }
+    }
+    fun mapChatEntityToSettings(chat: ChatEntity): ChatSettings{
+        return with(chat){
+            ChatSettings(
+                chatId = 0L, //
+                name = title,
+                systemRole = roleText,
+                stream=completionOptions.stream,
+                temperature= Temperature(completionOptions.temperature.toFloat()),
+                maxTokens= MaxTokens(completionOptions.maxTokens.toString())
             )
         }
     }

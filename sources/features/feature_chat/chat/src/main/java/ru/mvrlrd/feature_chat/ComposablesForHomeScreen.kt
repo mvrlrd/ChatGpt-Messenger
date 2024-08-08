@@ -47,16 +47,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Composable
-fun ShowToast( flow: Flow<String>) {
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    coroutineScope.launch {
-        flow.collectLatest {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-    }
-}
+
 
 @Composable
 fun TypingAnimation(text: String, isLoading: Boolean) {

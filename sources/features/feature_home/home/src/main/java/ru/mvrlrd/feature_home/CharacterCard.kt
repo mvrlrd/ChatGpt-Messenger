@@ -1,6 +1,5 @@
 package ru.mvrlrd.feature_home
 
-import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,19 +24,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.mvrlrd.base_chat_home.model.Chat
 
 @Composable
 fun CharacterCard(
     imagePainter: Painter = painterResource(id = R.drawable.dark_robot),
-    name: String,
-    profession: String = "software engineer",
-    onClick: () -> Unit
+    chat: Chat,
+    onClickEditButton: (Long)->Unit,
+    onClickCard: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .width(200.dp)
             .height(300.dp)
-            .clickable { onClick() },
+            .clickable { onClickCard() },
         shape = RoundedCornerShape(16.dp),
         elevation = 4.dp,
         backgroundColor = Color.Transparent,
@@ -67,12 +66,12 @@ fun CharacterCard(
             ) {
                 Column {
                     Text(
-                        text = name,
+                        text = chat.title,
                         fontSize = 16.sp,
                         color = Color.Black,
                     )
                     Text(
-                        text = profession,
+                        text = chat.roleText,
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
@@ -81,7 +80,7 @@ fun CharacterCard(
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.TopEnd)
                         .clickable {
-
+                            onClickEditButton.invoke(chat.chatId)
                         },
 
                 )
@@ -90,13 +89,13 @@ fun CharacterCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CharacterCardPreview() {
-    CharacterCard(
-        imagePainter = painterResource(id = R.drawable.dark_robot),
-        name = "John Doe",
-        profession = "Software Engineer",
-        {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CharacterCardPreview() {
+//    CharacterCard(
+//        imagePainter = painterResource(id = R.drawable.dark_robot),
+//        name = "John Doe",
+//        profession = "Software Engineer",
+//        {}
+//    )
+//}

@@ -2,8 +2,8 @@ package ru.mvrlrd.chat_settings
 
 data class SettingsState(
     val name: String="",
-    val systemRole: String="",
-    val maxTokens: MaxTokens= MaxTokens(""),//устанавливает ограничение на выход модели в токенах.
+    val systemRole: String="умный ассистент",
+    val maxTokens: MaxTokens= MaxTokens("1000"),//устанавливает ограничение на выход модели в токенах.
     val stream: Boolean=false,// включает потоковую передачу частично сгенерированного текста.
     val temperature: Temperature= Temperature(0.3f)//чем выше значение этого параметра, тем более креативными и случайными будут ответы модели.
 

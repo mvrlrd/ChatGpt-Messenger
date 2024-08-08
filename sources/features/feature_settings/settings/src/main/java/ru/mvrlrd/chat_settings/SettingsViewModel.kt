@@ -3,29 +3,62 @@ package ru.mvrlrd.chat_settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.mvrlrd.chat_settings.domain.ChatSettings
+import ru.mvrlrd.chat_settings.domain.api.GetChatSettingsUseCase
 import ru.mvrlrd.chat_settings.domain.api.SaveSettingsUseCase
 import java.lang.NumberFormatException
 import javax.inject.Inject
 
-class SettingsViewModel@Inject constructor(private val saveSettingsUseCase: SaveSettingsUseCase): ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val saveSettingsUseCase: SaveSettingsUseCase,
+    private val getChatSettingsUseCase: GetChatSettingsUseCase,
+    private val chatId:Long
+) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
-    val state: StateFlow<SettingsState> get()= _state.asStateFlow()
+    val state: StateFlow<SettingsState> get() = _state.asStateFlow()
+    val channel = Channel<String>()
 
-    fun saveChatSettings(){
-        val chatSettings = ChatSettings(
-            name = _state.value.name,
-            systemRole = _state.value.systemRole,
-            maxTokens = _state.value.maxTokens,
-            stream = _state.value.stream,
-            temperature = _state.value.temperature
-        )
+    init {
+        if (chatId!=0L){
+            getChatSettings(chatId)
+        }
+
+    }
+
+    fun saveChatSettings(chatId: Long, popUp: ()->Unit){
+        with(_state.value){
+            viewModelScope.launch {
+            if (name.isBlank()){
+                    channel.send("Введите имя")
+            }else{
+                val chatSettings = ChatSettings(
+                    chatId = chatId,
+                    name = name,
+                    systemRole = systemRole,
+                    maxTokens = maxTokens,
+                    stream = stream,
+                    temperature = temperature
+                )
+                    saveSettingsUseCase(chatSettings)
+                    popUp()
+                }
+            }
+        }
+    }
+    private fun getChatSettings(chatId: Long){
+
         viewModelScope.launch {
-            saveSettingsUseCase(chatSettings)
+            val chatSettings = getChatSettingsUseCase(chatId)
+            with(chatSettings){
+                _state.value = _state.value.copy(
+                    name, systemRole, maxTokens, stream, temperature
+                )
+            }
         }
     }
     fun updateName(newName: String){
@@ -72,11 +105,15 @@ class SettingsViewModel@Inject constructor(private val saveSettingsUseCase: Save
 
     class SettingsViewModelFactory(
         private val saveSettingsUseCase: SaveSettingsUseCase,
+        private val getChatSettingsUseCase: GetChatSettingsUseCase,
+        private val chatId: Long
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return SettingsViewModel(saveSettingsUseCase) as T
+                return SettingsViewModel(saveSettingsUseCase,
+                    getChatSettingsUseCase,
+                    chatId) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
