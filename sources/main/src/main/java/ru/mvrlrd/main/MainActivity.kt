@@ -8,8 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import ru.mvrlrd.core_api.mediators.AppWithFacade
-import ru.mvrlrd.feature_chat_api.FeatureChatApi
-import ru.mvrlrd.feature_home_api.FeatureHomeApi
 import ru.mvrlrd.featureapi.FeatureApi
 import javax.inject.Inject
 

@@ -9,7 +9,7 @@ apply<ModuleConfigPlugin>()
 apply<CommonDependenciesPlugin>()
 
 android {
-    namespace = "ru.mvrlrd.main"
+    namespace = "ru.mvrlrd.feature_chat_api"
     buildFeatures {
         compose = true
     }
@@ -19,12 +19,5 @@ android {
 }
 
 dependencies {
-    implementation(projects.sources.core.coreApi)
-    implementation(projects.sources.features.featureChat.chatApi)
-    implementation(projects.sources.features.featureHome.homeApi)
-
-
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.35.1-alpha")
-
-
+    api(projects.sources.features.featureApi)
 }

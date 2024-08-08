@@ -19,13 +19,19 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Companion"
 include(":app")
-include(":sources:feature_chat")
-include(":sources:core_api")
-include(":sources:core_impl")
-include(":sources:core_factory")
-include(":sources:feature_home")
+include(":sources:features:feature_chat:chat")
+include(":sources:features:feature_chat:chat_api")
+include(":sources:features:feature_home:home")
+include(":sources:features:feature_home:home_api")
+include(":sources:features:featureApi")
+include(":sources:features:base_models")
+
+include(":sources:core:core_api")
+include(":sources:core:core_impl")
+include(":sources:core:core_factory")
+
 include(":sources:main")
-include(":sources:feature_chat_api")
-include(":sources:featureApi")
-include(":sources:feature_home_api")
-include(":sources:base_chat_home")
+
+
+
+
