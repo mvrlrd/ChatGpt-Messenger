@@ -25,7 +25,7 @@ import java.util.Date
 
 
 @Composable
-fun HomeScreen(modifier: Modifier, onClick: (Long) -> Unit) {
+fun HomeScreen(modifier: Modifier, openSettings: (Long)->Unit, onClick: (Long) -> Unit) {
 
     val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val chatRoomsComponent = remember {
@@ -42,23 +42,26 @@ fun HomeScreen(modifier: Modifier, onClick: (Long) -> Unit) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.createChat(
-                    Chat(
-                        chatId = 0,
-                        title = "lalaland",
-                        roleText = "ты пяти летний ребенок",
-                        modelVer = "",
-                        completionOptions = CompletionOptions(
-                            stream = false,
-                            temperature = 0.9,
-                            maxTokens = 500
-                        ),
-                        date = Date().time
-                    )
-                )
-                viewModel.getAllChats()
-            }) {
+            FloatingActionButton(onClick = { openSettings(0L) }
+//            {
+
+//                viewModel.createChat(
+//                    Chat(
+//                        chatId = 0,
+//                        title = "lalaland",
+//                        roleText = "ты пяти летний ребенок",
+//                        modelVer = "",
+//                        completionOptions = CompletionOptions(
+//                            stream = false,
+//                            temperature = 0.9,
+//                            maxTokens = 500
+//                        ),
+//                        date = Date().time
+//                    )
+//                )
+//                viewModel.getAllChats()
+//            }
+            ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
             }
         },

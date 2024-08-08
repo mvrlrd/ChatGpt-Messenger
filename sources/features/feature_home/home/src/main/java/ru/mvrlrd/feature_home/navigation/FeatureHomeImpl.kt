@@ -1,4 +1,4 @@
-package ru.mvrlrd.feature_home.navi
+package ru.mvrlrd.feature_home.navigation
 
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -20,7 +20,8 @@ class FeatureHomeImpl @Inject constructor() : FeatureHomeApi {
     ) {
         navGraphBuilder.composable(homeRoute) {
             HomeScreen(
-                modifier = modifier
+                modifier = modifier,
+                openSettings = {navController.navigate("settings")}
             ) {
                 navController.navigate("chat/$it") {
 //                    popUpTo(homeRoute) { inclusive = true } //????

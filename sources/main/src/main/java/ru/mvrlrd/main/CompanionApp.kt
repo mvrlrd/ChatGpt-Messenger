@@ -16,6 +16,7 @@ import ru.mvrlrd.feature_chat_api.FeatureChatApi
 import ru.mvrlrd.feature_home_api.FeatureHomeApi
 import ru.mvrlrd.featureapi.FeatureApi
 import ru.mvrlrd.main.theme.JetHeroesTheme
+import ru.mvrlrd.settings_api.FeatureSettingsApi
 
 @Composable
 fun CompanionApp(
@@ -25,7 +26,7 @@ fun CompanionApp(
 ) {
     val homeApi = (context as MainActivity).featureAPIes["home"] as FeatureHomeApi
     val chatApi = context.featureAPIes["chat"] as FeatureChatApi
-
+    val settingsApi = context.featureAPIes["settings"] as FeatureSettingsApi
     JetHeroesTheme(darkTheme = darkTheme) {
         val navController = rememberNavController()
         NavHost(
@@ -54,6 +55,12 @@ fun CompanionApp(
                 navController=navController,
                 modifier = Modifier,
                 featureApi = homeApi,
+                action = {}
+            )
+            register(
+                navController=navController,
+                modifier = Modifier,
+                featureApi = settingsApi,
                 action = {}
             )
         }

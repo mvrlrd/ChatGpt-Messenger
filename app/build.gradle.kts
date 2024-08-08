@@ -56,11 +56,16 @@ android {
 dependencies {
     implementation(projects.sources.main)
     implementation(projects.sources.core.coreApi)
-    implementation(projects.sources.features.featureChat.chatApi)
-    implementation(projects.sources.features.featureHome.homeApi)
     implementation(projects.sources.core.coreFactory)
     implementation(projects.sources.features.featureChat.chat)
     implementation(projects.sources.features.featureHome.home)
+    implementation(projects.sources.features.featureSettings.settings)
+
+    implementation(projects.sources.features.featureChat.chatApi)
+    implementation(projects.sources.features.featureHome.homeApi)
+    implementation(projects.sources.features.featureSettings.settingsApi)
+
+
 
 //    implementation("androidx.core:core-ktx:1.13.1")
 //    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")

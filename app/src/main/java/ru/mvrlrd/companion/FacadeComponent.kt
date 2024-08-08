@@ -2,8 +2,8 @@ package ru.mvrlrd.companion
 
 import android.app.Application
 import dagger.Component
-import ru.mvrlrd.companion.navi.DaggerFeatureApiComponent
-import ru.mvrlrd.companion.navi.FeatureApiComponent
+import ru.mvrlrd.companion.navigation.DaggerFeatureApiComponent
+import ru.mvrlrd.companion.navigation.FeatureApiComponent
 import ru.mvrlrd.core_api.database.chat.ChatDatabaseProvider
 import ru.mvrlrd.core_api.mediators.AppProvider
 import ru.mvrlrd.core_api.mediators.ProvidersFacade

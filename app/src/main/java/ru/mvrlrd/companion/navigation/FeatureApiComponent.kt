@@ -1,9 +1,7 @@
-package ru.mvrlrd.companion.navi
+package ru.mvrlrd.companion.navigation
 
 import dagger.Component
 import ru.mvrlrd.featureapi.FeatureApiProvider
 
 @Component(modules = [FeatureApiModule::class])
-interface FeatureApiComponent: FeatureApiProvider {
-
-}
+interface FeatureApiComponent: FeatureApiProvider

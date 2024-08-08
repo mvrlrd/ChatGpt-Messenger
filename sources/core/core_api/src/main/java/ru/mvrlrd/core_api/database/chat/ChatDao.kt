@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import ru.mvrlrd.core_api.database.chat.entity.ChatEntity
 import ru.mvrlrd.core_api.database.chat.entity.ChatWithMessages
@@ -39,4 +40,7 @@ interface ChatDao {
 
     @Query("DELETE FROM messages WHERE holderChatId = :chatId")
     suspend fun clearMessages(chatId: Long)
+
+    @Upsert
+    suspend fun upsertChat(chatEntity: ChatEntity)
 }

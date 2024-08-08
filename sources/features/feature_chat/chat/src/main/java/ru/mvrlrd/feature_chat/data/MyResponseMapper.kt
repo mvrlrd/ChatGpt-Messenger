@@ -1,13 +1,13 @@
 package ru.mvrlrd.feature_chat.data
 
 import ru.mvrlrd.base_chat_home.model.CompletionOptions
+import ru.mvrlrd.base_chat_home.model.Message
 import ru.mvrlrd.core_api.network.dto.CompletionOptionsDto
 import ru.mvrlrd.core_api.network.dto.MessageDto
 import ru.mvrlrd.core_api.network.dto.RequestDataDto
 import ru.mvrlrd.core_api.network.dto.ServerResponseDto
 import ru.mvrlrd.feature_chat.domain.model.AIResponse
 import ru.mvrlrd.feature_chat.domain.model.AiRequest
-import ru.mvrlrd.feature_chat.domain.model.Message
 
 import javax.inject.Inject
 

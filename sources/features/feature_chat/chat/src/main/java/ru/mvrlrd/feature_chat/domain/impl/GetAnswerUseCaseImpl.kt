@@ -1,12 +1,12 @@
 package ru.mvrlrd.feature_chat.domain.impl
 
 import android.util.Log
+import ru.mvrlrd.base_chat_home.model.Message
 import ru.mvrlrd.core_api.annotations.Open
 import ru.mvrlrd.feature_chat.domain.model.AIResponse
 import ru.mvrlrd.feature_chat.domain.ChatRepository
 import ru.mvrlrd.feature_chat.domain.api.GetAnswerUseCase
 import ru.mvrlrd.feature_chat.domain.model.AiRequest
-import ru.mvrlrd.feature_chat.domain.model.Message
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 

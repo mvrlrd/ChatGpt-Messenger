@@ -1,11 +1,7 @@
 package ru.mvrlrd.feature_chat.domain.model
 
 import ru.mvrlrd.base_chat_home.model.CompletionOptions
-
-data class Message(
-    val role: String,
-    val text: String
-)
+import ru.mvrlrd.base_chat_home.model.Message
 
 data class AiRequest(
     val completionOptions: CompletionOptions,
