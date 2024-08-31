@@ -1,4 +1,4 @@
-package ru.mvrlrd.home
+package ru.mvrlrd.feature_chat
 
 import ru.mvrlrd.base_chat_home.model.CompletionOptions
 import ru.mvrlrd.base_chat_home.model.Message

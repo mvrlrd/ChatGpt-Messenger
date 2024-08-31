@@ -56,7 +56,7 @@ init {
                 )
                 launch {
                     withContext(ioDispatcher) {
-                        getAnswerUseCase(chatd = chatId, query = query)
+                        getAnswerUseCase(chatId = chatId, query = query)
                             .onSuccess {
                                 if (it.text.isNotBlank()) {
                                     val received = MessageEntity(
@@ -81,16 +81,13 @@ init {
         viewModelScope.launch(ioDispatcher) {
             getChatSettingsUseCase(chatId = chatId)
         }
-
     }
 
-    private fun getAllMessagesForChatFromDatabase() {
+   private fun getAllMessagesForChatFromDatabase() {
         getAllMessagesForChatUseCase(chatId)
             .onEach {
                 _messageEntities.clear()
-                if(it.isEmpty()){
-                    oneShotEventChannel.send("начните с чистого листа!")
-                }else{
+                if (it.isNotEmpty()) {
                     _messageEntities.addAll(it)
                 }
             }

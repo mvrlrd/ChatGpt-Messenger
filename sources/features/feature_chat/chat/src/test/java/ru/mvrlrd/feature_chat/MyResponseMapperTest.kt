@@ -1,4 +1,4 @@
-package ru.mvrlrd.home
+package ru.mvrlrd.feature_chat
 
 import org.junit.Test
 import org.junit.Assert.*
