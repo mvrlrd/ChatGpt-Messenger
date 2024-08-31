@@ -6,21 +6,9 @@ import ru.mvrlrd.core_api.database.chat.entity.UsageEntity
 import javax.inject.Inject
 
 class ChatMapper @Inject constructor() {
-    fun mapChatToChatEntity(entity: Chat): ChatEntity {
-        return with(entity) {
-            ChatEntity(
-                id = chatId,
-                title = title,
-                roleText= roleText,
-                completionOptions = mapCompletionOptionsToCompletionOptionsEntity(completionOptions = completionOptions),
-                modelVer = modelVer,
-                usage = mapUsageToUsageEntity(usage = usage),
-                date = date,
-            )
-        }
-    }
 
-    private fun mapCompletionOptionsToCompletionOptionsEntity(completionOptions: CompletionOptions): CompletionOptionsEntity {
+
+     fun mapCompletionOptionsToCompletionOptionsEntity(completionOptions: CompletionOptions): CompletionOptionsEntity {
         return with(completionOptions) {
             CompletionOptionsEntity(
                 stream = stream,
@@ -30,17 +18,9 @@ class ChatMapper @Inject constructor() {
         }
     }
 
-    private fun mapUsageToUsageEntity(usage: Usage): UsageEntity {
-        return with(usage) {
-            UsageEntity(
-                inputTokens = inputTokens,
-                completionTokens = completionTokens,
-                totalTokens = totalTokens
-            )
-        }
-    }
 
-    private fun mapCompletionOptionsEntityToCompletionOptions(completionOptionsEntity: CompletionOptionsEntity): CompletionOptions {
+
+     fun mapCompletionOptionsEntityToCompletionOptions(completionOptionsEntity: CompletionOptionsEntity): CompletionOptions {
         return with(completionOptionsEntity) {
             CompletionOptions(
                 stream = stream,
@@ -50,9 +30,19 @@ class ChatMapper @Inject constructor() {
         }
     }
 
-    private fun mapUsageEntityToUsage(usageEntity: UsageEntity): Usage {
+     fun mapUsageEntityToUsage(usageEntity: UsageEntity): Usage {
         return with(usageEntity) {
             Usage(
+                inputTokens = inputTokens,
+                completionTokens = completionTokens,
+                totalTokens = totalTokens
+            )
+        }
+    }
+
+    fun mapUsageToUsageEntity(usage: Usage): UsageEntity {
+        return with(usage) {
+            UsageEntity(
                 inputTokens = inputTokens,
                 completionTokens = completionTokens,
                 totalTokens = totalTokens
@@ -75,6 +65,21 @@ class ChatMapper @Inject constructor() {
             )
         }
     }
+
+    fun mapChatToChatEntity(entity: Chat): ChatEntity {
+        return with(entity) {
+            ChatEntity(
+                id = chatId,
+                title = title,
+                roleText= roleText,
+                completionOptions = mapCompletionOptionsToCompletionOptionsEntity(completionOptions = completionOptions),
+                modelVer = modelVer,
+                usage = mapUsageToUsageEntity(usage = usage),
+                date = date,
+            )
+        }
+    }
+
     fun mapChatEntitiesToChats(chatEntities: List<ChatEntity>):List<Chat>{
         return chatEntities.map { chat-> mapChatEntityToChat(chat) }
     }

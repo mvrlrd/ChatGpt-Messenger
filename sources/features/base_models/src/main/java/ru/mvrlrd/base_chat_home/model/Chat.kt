@@ -1,6 +1,7 @@
 package ru.mvrlrd.base_chat_home.model
 
 import java.io.Serializable
+import java.util.Date
 
 
 data class Chat(
@@ -10,7 +11,7 @@ data class Chat(
     val completionOptions: CompletionOptions = CompletionOptions(),
     val modelVer: String,
     val usage: Usage = Usage(),
-    val date: Long
+    val date: Long = Date().time
 ):Serializable
 
 

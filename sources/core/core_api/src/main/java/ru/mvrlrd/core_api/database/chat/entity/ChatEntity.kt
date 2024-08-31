@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(tableName = "chat_rooms")
 data class ChatEntity(
@@ -16,7 +17,7 @@ data class ChatEntity(
     val modelVer: String,
     @Embedded
     val usage: UsageEntity,
-    val date: Long
+    val date: Long = Date().time
 )
 
 
