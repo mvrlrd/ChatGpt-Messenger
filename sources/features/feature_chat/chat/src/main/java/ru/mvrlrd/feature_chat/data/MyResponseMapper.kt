@@ -12,7 +12,7 @@ import ru.mvrlrd.feature_chat.domain.model.AiRequest
 import javax.inject.Inject
 
 class MyResponseMapper @Inject constructor() {
-    fun mapMyResponseToAIResponse(serverResponseDto: ServerResponseDto): AIResponse {
+    fun mapServerResponseToAIResponse(serverResponseDto: ServerResponseDto): AIResponse {
         return with(serverResponseDto){
             AIResponse(
                 text = serverResponseDto.resultDto.alternativeDtos.firstOrNull()?.messageDto?.text?:"no ideas...",
@@ -24,7 +24,7 @@ class MyResponseMapper @Inject constructor() {
             )
         }
     }
-    fun mapAiRequestToRequestData(aiRequest: AiRequest): RequestDataDto{
+    fun mapAiRequestToRequestDataDto(aiRequest: AiRequest): RequestDataDto{
        return with(aiRequest){
             RequestDataDto(
                 completionOptionsDto = mapCompletionOptionsToCompletionOptionsDto(completionOptions),
@@ -32,7 +32,8 @@ class MyResponseMapper @Inject constructor() {
             )
         }
     }
-    private fun mapMessageToMessageDto(message: Message): MessageDto{
+
+    fun mapMessageToMessageDto(message: Message): MessageDto{
        return with(message){
             MessageDto(
                 role=role,
@@ -41,8 +42,7 @@ class MyResponseMapper @Inject constructor() {
         }
     }
 
-
-    private fun mapCompletionOptionsToCompletionOptionsDto(completionOptions: CompletionOptions): CompletionOptionsDto{
+    fun mapCompletionOptionsToCompletionOptionsDto(completionOptions: CompletionOptions): CompletionOptionsDto{
         return with(completionOptions){
             CompletionOptionsDto(
                 stream = stream,

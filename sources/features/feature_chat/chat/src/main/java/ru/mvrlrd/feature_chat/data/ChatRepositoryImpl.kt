@@ -46,9 +46,9 @@ class ChatRepositoryImpl @Inject constructor(
 //            )
 //        )
         Log.d("TAG", "___ChatRepositoryImpl airequest = ${aiRequest}")
-        val requestData = mapper.mapAiRequestToRequestData(aiRequest)
+        val requestData = mapper.mapAiRequestToRequestDataDto(aiRequest)
         remoteRepository.getAnswer(requestData).onSuccess {
-            val aiResponse = mapper.mapMyResponseToAIResponse(it as ServerResponseDto)
+            val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
             return Result.success(aiResponse)
         }.onFailure {
             return Result.failure(it)

@@ -1,12 +1,17 @@
 package ru.mvrlrd.home
 
+import ru.mvrlrd.base_chat_home.model.CompletionOptions
+import ru.mvrlrd.base_chat_home.model.Message
 import ru.mvrlrd.core_api.network.dto.AlternativeDto
+import ru.mvrlrd.core_api.network.dto.CompletionOptionsDto
 import ru.mvrlrd.core_api.network.dto.MessageDto
+import ru.mvrlrd.core_api.network.dto.RequestDataDto
 import ru.mvrlrd.core_api.network.dto.ResultDto
 import ru.mvrlrd.core_api.network.dto.ServerResponseDto
 import ru.mvrlrd.core_api.network.dto.UsageDto
 import ru.mvrlrd.feature_chat.data.MyResponseMapper
 import ru.mvrlrd.feature_chat.domain.model.AIResponse
+import ru.mvrlrd.feature_chat.domain.model.AiRequest
 
 object HomeTestUnitFactory {
     fun getMapper() = MyResponseMapper()
@@ -18,7 +23,39 @@ object HomeTestUnitFactory {
         50,
         150,
         "1.0",
-        1000L
+    )
+
+    fun getCompletionOptionsDto() = CompletionOptionsDto(
+        stream = true,
+        temperature = 770.0,
+        maxTokens = "1010"
+    )
+
+    fun getCompletionOptions() = CompletionOptions(
+        stream = true,
+        temperature = 770.0,
+        maxTokens = 1010
+    )
+
+    fun getMessageDto() = MessageDto(
+        role = "assistant",
+        text = "ai response"
+    )
+
+    fun getMessage() = Message(
+        role = "assistant",
+        text = "ai response"
+    )
+
+    fun getRequestDataDto() = RequestDataDto(
+        modelUri = "",
+        completionOptionsDto = getCompletionOptionsDto(),
+        messageDtos = listOf(getMessageDto())
+    )
+
+    fun getAiRequest() = AiRequest(
+        completionOptions = getCompletionOptions(),
+        messages = listOf(getMessage())
     )
 
     private var serverResponseFactory: ServerResponseFactory = GoodResponseFactory()
