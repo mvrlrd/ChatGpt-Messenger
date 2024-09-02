@@ -5,7 +5,6 @@ plugins {
 }
 
 apply<ModuleConfigPlugin>()
-apply<ComposePlugin>()
 
 android {
     namespace = "ru.mvrlrd.base_chat_home"
@@ -18,6 +17,13 @@ android {
 }
 dependencies{
     implementation(projects.sources.core.coreApi)
+
+    implementation(libs.composeUi)
+    implementation(libs.runtime)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)

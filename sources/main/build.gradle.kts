@@ -4,7 +4,6 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
 
 android {
@@ -23,8 +22,10 @@ dependencies {
     implementation(projects.sources.features.featureHome.homeApi)
     implementation(projects.sources.features.featureSettings.settingsApi)
 
-
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.bundles.composeMaterialBundle)
     implementation(libs.accompanistNavigationAnimation)
+
 
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)

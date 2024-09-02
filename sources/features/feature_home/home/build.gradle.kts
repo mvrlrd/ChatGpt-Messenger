@@ -8,7 +8,6 @@ plugins {
 }
 
 apply<ModuleConfigPlugin>()
-apply<ComposePlugin>()
 
 android {
     namespace = "ru.mvrlrd.feature_home"
@@ -29,7 +28,14 @@ dependencies {
     implementation(projects.sources.features.featureChat.chatApi)
     implementation(projects.sources.features.baseModels)
 
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.bundles.composeLifecycleBundle)
+    implementation(libs.bundles.composeRuntimeBundle)
+    implementation(libs.material3)
+    implementation(libs.bundles.composeIntegrationBundle)
+    implementation(libs.navigationCompose)
 
+    debugImplementation(libs.bundles.debugComposeBudle)
 
     implementation(libs.bundles.roomDeps)
     ksp(libs.androidxRoomCompiler)

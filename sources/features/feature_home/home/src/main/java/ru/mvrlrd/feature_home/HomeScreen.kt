@@ -1,25 +1,36 @@
 package ru.mvrlrd.feature_home
 
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.material.DismissDirection.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.core_api.mediators.AppWithFacade
+import ru.mvrlrd.feature_home.di.ChatRoomsComponent
 
 
 @Composable
@@ -102,7 +113,7 @@ fun CardList(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToDismissCard(
     item: Chat,
@@ -110,48 +121,27 @@ fun SwipeToDismissCard(
     onClickEditButton: (Long) -> Unit,
     onClickCard: (id: Long) -> Unit
 ) {
-    val dismissState = rememberDismissState(
-        confirmStateChange = {
-            if (it == DismissValue.DismissedToStart) {
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            if (it == SwipeToDismissBoxValue.EndToStart) {
                 onDismiss()
             }
             true
         }
     )
-    SwipeToDismiss(
+    SwipeToDismissBox(
         state = dismissState,
-        directions = setOf(
-            DismissDirection.EndToStart
-        ),
-        dismissThresholds = { direction ->
-            FractionalThreshold(if (direction == EndToStart) 0.1f else 0.05f)
-        },
-        background = {
-            val color = when (dismissState.dismissDirection) {
-                StartToEnd -> Color.Transparent
-                EndToStart -> Color.Transparent
-                else -> Color.Transparent
-            }
-//            Box(
-//                Modifier
-//                    .fillMaxSize()
-//                    .background(color)
-//                    .padding(16.dp),
-//                contentAlignment = Alignment.CenterEnd
-//            ) {
-////                Text("Delete", color = Color.Black)
-//            }
-        },
-        dismissContent = {
-            CharacterCard(
-                chat = item,
-                onClickEditButton =  onClickEditButton
-            ) {
-                onClickCard(item.chatId)
-            }
+        backgroundContent = {}
+    ) {
+        CharacterCard(
+            chat = item,
+            onClickEditButton = onClickEditButton
+        ) {
+            onClickCard(item.chatId)
         }
-    )
+    }
 }
+
 
 
 

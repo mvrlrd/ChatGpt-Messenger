@@ -1,6 +1,5 @@
 package ru.mvrlrd.feature_chat
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.GenericShape
-import androidx.compose.material.Card
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -105,7 +102,7 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background,
+            color = MaterialTheme.colorScheme.background,
         ) {
             Box(
                 modifier = Modifier
@@ -172,7 +169,7 @@ fun MessageList(messageEntities: SnapshotStateList<MessageEntity>, onDismiss: (L
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToDismissCloudMessage(
     item: MessageEntity,
@@ -180,51 +177,29 @@ fun SwipeToDismissCloudMessage(
     next: Boolean,
     onDismiss: (Long) -> Unit
 ) {
-    val dismissState = rememberDismissState(
-        confirmStateChange = {
-            if (it == DismissValue.DismissedToStart) {
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { newValue ->
+            if (newValue == SwipeToDismissBoxValue.EndToStart) {
                 onDismiss(item.id)
             }
             true
         }
     )
-    SwipeToDismiss(
+
+    SwipeToDismissBox(
         state = dismissState,
-        directions = setOf(
-            DismissDirection.EndToStart
-        ),
-        dismissThresholds = { direction ->
-            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
-        },
-        background = {
-            val color = when (dismissState.dismissDirection) {
-                DismissDirection.EndToStart -> Color.Transparent
-                else -> Color.Transparent
-            }
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(color)
-                    .padding(dimensionResource(id = R.dimen.padding_big)),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                when (dismissState.dismissDirection) {
-                    DismissDirection.EndToStart -> {}
-                    else -> {}
-                }
-            }
-        },
-        dismissContent = {
-            CloudMessage(messageEntity = item, prev = prev, next = next)
-        }
-    )
+        backgroundContent = {}
+    ) {
+        CloudMessage(messageEntity = item, prev = prev, next = next)
+    }
 }
+
 
 
 @Composable
 fun CloudMessage(messageEntity: MessageEntity, prev: Boolean, next: Boolean) {
     val cloudColor =
-        if (messageEntity.isReceived) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.secondary
+        if (messageEntity.isReceived) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
     val alignment = if (messageEntity.isReceived) Alignment.CenterStart else Alignment.CenterEnd
     Box(
         modifier = Modifier
@@ -414,8 +389,6 @@ fun CloudCard(
             next = next
         ),
         modifier = modifier,
-        backgroundColor = color,
-        elevation = 8.dp
     ) {
         Box(
             modifier = Modifier

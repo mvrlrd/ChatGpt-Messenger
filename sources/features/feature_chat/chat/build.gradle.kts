@@ -4,9 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.10"
 }
-apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-
 
 android {
     namespace = "ru.mvrlrd.feature_chat"
@@ -25,6 +23,19 @@ dependencies {
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)
 
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.bundles.composeLifecycleBundle)
+    implementation(libs.bundles.composeRuntimeBundle)
+    implementation(libs.material3)
+
+    implementation(libs.bundles.composeIntegrationBundle)
+    implementation(libs.navigationCompose)
+    implementation(libs.lifecycleRuntime)
+
+    debugImplementation(libs.bundles.debugComposeBudle)
+
+    implementation(libs.accompanistNavigationAnimation)
+
     // Core Mockito library
     testImplementation("org.mockito:mockito-core:4.11.0")
 
@@ -36,6 +47,10 @@ dependencies {
 
     // Coroutines test library if you are testing coroutine-based code
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 }
 allOpen{
     annotation("ru.mvrlrd.core_api.annotations.Open")

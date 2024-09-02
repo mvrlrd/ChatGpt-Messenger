@@ -1,6 +1,5 @@
 package ru.mvrlrd.chat_settings
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,13 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Slider
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -38,8 +37,6 @@ import ru.mvrlrd.core_api.mediators.AppWithFacade
 
 @Composable
 fun SettingsScreen(chatId: Long, action: ()-> Unit) {
-
-
     val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val settingsComponent = remember {
         SettingsComponent.create(providersFacade)
@@ -59,10 +56,8 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
         )
 
     )
-
-
-
     val state = viewModel.state.collectAsState()
+
     val oneShotEvent = remember {
         viewModel.channel.receiveAsFlow()
     }
@@ -79,7 +74,7 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
         ) {
             viewModel.updateName(it)
         }
-        Divider()
+        HorizontalDivider()
         EditableSettingItem(
             icon = R.drawable.baseline_medication_24,
             title = "role",
@@ -88,7 +83,7 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
         ) {
             viewModel.updateRole(it)
         }
-        Divider()
+        HorizontalDivider()
         EditableSettingItem(
             icon = R.drawable.baseline_medication_24,
             title = "maxTokens",
@@ -97,16 +92,16 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
         ) {
             viewModel.updateMaxTokens(it)
         }
-        Divider()
+        HorizontalDivider()
         StreamSwitch(state.value.stream){
             viewModel.updateStreamSwitch(it)
         }
 
-        Divider()
+        HorizontalDivider()
        TemperatureSettingItem(temperature = state.value.temperature,){
            viewModel.updateTemperature(it)
        }
-        Divider()
+        HorizontalDivider()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -128,8 +123,6 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
             }
 
         }
-
-
     }
     ShowToast(flow = oneShotEvent)
 }
@@ -154,7 +147,7 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float)-
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = "temperature",
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -185,7 +178,7 @@ fun StreamSwitch(isChecked: Boolean, updateStream: (Boolean)-> Unit) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = "stream", style = MaterialTheme.typography.h6)
+                Text(text = "stream", style = MaterialTheme.typography.titleSmall)
             }
         }
         Switch(
@@ -195,23 +188,8 @@ fun StreamSwitch(isChecked: Boolean, updateStream: (Boolean)-> Unit) {
     }
 }
 
-
-
-//    val completionOptions: CompletionOptions = CompletionOptions(),
-
-
-
-
-//data class CompletionOptions(
-//    val stream: Boolean = false,
-//    val temperature: Double = 0.6,
-//    val maxTokens: Int = 2000
-//)
-
 @Composable
 fun EditableSettingItem(icon: Int, title: String, field: String, placeholder: String, updateText: (String) -> Unit) {
-//    var text by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,33 +207,8 @@ fun EditableSettingItem(icon: Int, title: String, field: String, placeholder: St
                 placeholder = { Text(placeholder) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colorScheme.surface)
             )
         }
     }
 }
-
-//            {
-
-//                viewModel.createChat(
-//                    Chat(
-//                        chatId = 0,
-//                        title = "lalaland",
-//                        roleText = "ты пяти летний ребенок",
-//                        modelVer = "",
-//                        completionOptions = CompletionOptions(
-//                            stream = false,
-//                            temperature = 0.9,
-//                            maxTokens = 500
-//                        ),
-//                        date = Date().time
-//                    )
-//                )
-//                viewModel.getAllChats()
-//            }
-
-//@Preview
-//@Composable
-//fun chatSettingsScreenPreview(){
-//    SettingsScreen({})
-//}

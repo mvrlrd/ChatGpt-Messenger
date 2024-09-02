@@ -4,19 +4,16 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
 
 android {
     namespace = "ru.mvrlrd.feature_settings_api"
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
-    }
 }
 
 dependencies {
     api(projects.sources.features.featureApi)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 }

@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
-apply<ComposePlugin>()
+
 apply<ModuleConfigPlugin>()
 
 android {
@@ -22,6 +22,15 @@ dependencies {
 
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)
+
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.bundles.composeLifecycleBundle)
+    implementation(libs.bundles.composeRuntimeBundle)
+    implementation(libs.material3)
+    implementation(libs.bundles.composeIntegrationBundle)
+    implementation(libs.navigationCompose)
+
+    debugImplementation(libs.bundles.debugComposeBudle)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)

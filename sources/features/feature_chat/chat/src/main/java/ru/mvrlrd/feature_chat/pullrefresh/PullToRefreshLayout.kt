@@ -4,17 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PullToRefreshLayout(
     modifier: Modifier = Modifier,
@@ -25,14 +23,27 @@ fun PullToRefreshLayout(
     val refreshIndicatorState by pullRefreshLayoutState.refreshIndicatorState
     val timeElapsedSinceLastRefresh by pullRefreshLayoutState.lastRefreshText
 
-    val pullToRefreshState = rememberPullRefreshState(
-        refreshing = refreshIndicatorState == RefreshIndicatorState.Refreshing,
-        refreshThreshold = 120.dp,
-        onRefresh = {
-            onRefresh()
-            pullRefreshLayoutState.refresh()
-        },
-    )
+
+
+    ///
+    val pullToRefreshState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState(
+        positionalThreshold = 120.dp,
+    ) {
+        onRefresh()
+        pullRefreshLayoutState.refresh()
+        true
+    }
+
+
+
+//    val pullToRefreshState = rememberPullRefreshState(
+//        refreshing = refreshIndicatorState == RefreshIndicatorState.Refreshing,
+//        refreshThreshold = 120.dp,
+//        onRefresh = {
+//            onRefresh()
+//            pullRefreshLayoutState.refresh()
+//        },
+//    )
 
     LaunchedEffect(key1 = pullToRefreshState.progress) {
         when {
@@ -48,8 +59,8 @@ fun PullToRefreshLayout(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .pullRefresh(pullToRefreshState)
-            .background(MaterialTheme.colors.onPrimary),
+//            .pullRefresh(pullToRefreshState)
+            .background(MaterialTheme.colorScheme.onPrimary),
     ) {
         PullToRefreshIndicator(
             indicatorState = refreshIndicatorState,

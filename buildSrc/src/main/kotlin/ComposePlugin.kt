@@ -4,8 +4,9 @@ import org.gradle.api.Project
 class ComposePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.dependencies.apply {
-            add("implementation", "androidx.core:core-ktx:$coreKtx")
-            add("implementation", "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntime")
+//            add("implementation", "androidx.core:core-ktx:$coreKtx")
+//            add("implementation", "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntime")
+
             add("implementation", "androidx.activity:activity-compose:$activityCompose")
             add("implementation", "androidx.compose:compose-bom:$composeBom")
             add("implementation", "androidx.compose.ui:ui:$composeVersion")
@@ -15,10 +16,7 @@ class ComposePlugin : Plugin<Project> {
             add("implementation", "androidx.compose.foundation:foundation:$composeVersion")
             add("implementation", "androidx.compose.runtime:runtime:$composeVersion")
             add("implementation", "androidx.compose.material:material")
-            add("testImplementation", "junit:junit:$junitVersion")
-            add("androidTestImplementation", "androidx.test.ext:junit:$uiTestJUnit4Version")
-            add("androidTestImplementation", "androidx.test.espresso:espresso-core:$espressoCoreVersion")
-            add("androidTestImplementation", "androidx.compose.ui:ui-test-junit4:$uiTestJUnit4Version")
+
             add("debugImplementation", "androidx.compose.ui:ui-tooling")
             add("debugImplementation", "androidx.compose.ui:ui-test-manifest")
             add("implementation", "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewmodelCompose")

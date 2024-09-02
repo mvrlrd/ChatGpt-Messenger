@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mvrlrd.base_chat_home.model.Chat
+import ru.mvrlrd.base_chat_home.model.CompletionOptions
+import ru.mvrlrd.base_chat_home.model.Usage
 
 @Composable
 fun CharacterCard(
@@ -39,8 +42,6 @@ fun CharacterCard(
             .height(300.dp)
             .clickable { onClickCard() },
         shape = RoundedCornerShape(16.dp),
-        elevation = 4.dp,
-        backgroundColor = Color.Transparent,
     ) {
         Column {
             Box(
@@ -78,24 +79,40 @@ fun CharacterCard(
                 }
                 Image(painter = painterResource(id = R.drawable.baseline_mode_edit_24),
                     contentDescription = null,
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
                         .clickable {
                             onClickEditButton.invoke(chat.chatId)
                         },
-
                 )
             }
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun CharacterCardPreview() {
-//    CharacterCard(
-//        imagePainter = painterResource(id = R.drawable.dark_robot),
-//        name = "John Doe",
-//        profession = "Software Engineer",
-//        {}
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun CharacterCardPreview() {
+    CharacterCard(
+        imagePainter = painterResource(id = R.drawable.dark_robot),
+        chat = Chat(
+            chatId = 1L,
+            title = "title",
+            roleText = "role",
+            completionOptions = CompletionOptions(
+                stream = true,
+                temperature = 0.6,
+                maxTokens = 1000
+            ),
+            modelVer = "1.0",
+            usage = Usage(
+                inputTokens = 1000,
+                completionTokens = 300,
+                totalTokens = 1300
+            )
+        ),
+        onClickEditButton = {}
+    ) {
+
+    }
+}

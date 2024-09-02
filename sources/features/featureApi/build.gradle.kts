@@ -3,18 +3,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
-apply<ComposePlugin>()
+
 apply<ModuleConfigPlugin>()
 android {
     namespace = "ru.mvrlrd.featureapi"
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
-    }
 }
 
 dependencies {
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 
+    implementation(libs.composeUi)
+    implementation(libs.navigationCompose)
 }

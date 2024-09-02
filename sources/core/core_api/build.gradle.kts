@@ -8,7 +8,6 @@ plugins {
 }
 
 apply<ModuleConfigPlugin>()
-//apply<RoomDependenciesPlugin>()
 
 android {
     namespace = "ru.mvrlrd.core_api"

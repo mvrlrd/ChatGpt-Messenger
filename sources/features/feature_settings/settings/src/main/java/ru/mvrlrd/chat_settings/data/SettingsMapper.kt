@@ -9,8 +9,8 @@ import ru.mvrlrd.core_api.database.chat.entity.UsageEntity
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class SettingsMapper@Inject constructor() {
-    fun mapSettingsToChatEntity(chatSettings: ChatSettings): ChatEntity{
+class SettingsMapper @Inject constructor() {
+    fun mapSettingsToChatEntity(chatSettings: ChatSettings): ChatEntity {
         return with(chatSettings) {
             ChatEntity(
                 id = chatId,
@@ -18,7 +18,7 @@ class SettingsMapper@Inject constructor() {
                 roleText = systemRole,
                 completionOptions = CompletionOptionsEntity(
                     stream,
-                    (temperature.value.toDouble() * 10).roundToInt() / 10.0,
+                    (temperature.value.toDouble()),
                     maxTokens.value.toInt()
                 ),
                 modelVer = "", //
