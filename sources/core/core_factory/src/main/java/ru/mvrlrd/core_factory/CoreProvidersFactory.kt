@@ -15,5 +15,4 @@ object CoreProvidersFactory {
     fun createChatDatabaseComponent(appProvider: AppProvider): ChatDatabaseProvider {
         return DaggerChatDatabaseComponent.builder().appProvider(appProvider).build()
     }
-
 }

@@ -30,20 +30,20 @@ class SettingsViewModel @Inject constructor(
 
     }
 
-    fun saveChatSettings(chatId: Long, popUp: ()->Unit){
-        with(_state.value){
+    fun saveChatSettings(chatId: Long, popUp: () -> Unit) {
+        with(_state.value) {
             viewModelScope.launch {
-            if (name.isBlank()){
+                if (name.isBlank()) {
                     channel.send("Введите имя")
-            }else{
-                val chatSettings = ChatSettings(
-                    chatId = chatId,
-                    name = name,
-                    systemRole = systemRole,
-                    maxTokens = maxTokens,
-                    stream = stream,
-                    temperature = temperature
-                )
+                } else {
+                    val chatSettings = ChatSettings(
+                        chatId = chatId,
+                        name = name,
+                        systemRole = systemRole,
+                        maxTokens = maxTokens,
+                        stream = stream,
+                        temperature = temperature
+                    )
                     saveSettingsUseCase(chatSettings)
                     popUp()
                 }

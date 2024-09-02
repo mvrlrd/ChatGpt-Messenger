@@ -5,7 +5,6 @@ plugins {
 }
 apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
 android {
     namespace = "ru.mvrlrd.featureapi"
     buildFeatures {

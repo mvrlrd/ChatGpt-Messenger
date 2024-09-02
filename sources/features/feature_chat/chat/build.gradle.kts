@@ -6,7 +6,7 @@ plugins {
 }
 apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
+
 
 android {
     namespace = "ru.mvrlrd.feature_chat"
@@ -21,6 +21,9 @@ dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.baseModels)
     implementation(projects.sources.features.featureChat.chatApi)
+
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
 
     // Core Mockito library
     testImplementation("org.mockito:mockito-core:4.11.0")

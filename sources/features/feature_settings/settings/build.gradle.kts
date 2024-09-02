@@ -5,7 +5,6 @@ plugins {
 }
 apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
 
 android {
     namespace = "ru.mvrlrd.chat_settings"
@@ -20,4 +19,11 @@ dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.featureSettings.settingsApi)
     implementation(projects.sources.features.baseModels)
+
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 }

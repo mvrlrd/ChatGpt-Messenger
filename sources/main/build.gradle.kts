@@ -6,7 +6,6 @@ plugins {
 
 apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
 
 android {
     namespace = "ru.mvrlrd.main"
@@ -25,7 +24,12 @@ dependencies {
     implementation(projects.sources.features.featureSettings.settingsApi)
 
 
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.35.1-alpha")
+    implementation(libs.accompanistNavigationAnimation)
 
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
 
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 }

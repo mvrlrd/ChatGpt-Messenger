@@ -6,7 +6,6 @@ plugins {
 
 apply<ModuleConfigPlugin>()
 apply<ComposePlugin>()
-apply<CommonDependenciesPlugin>()
 
 android {
     namespace = "ru.mvrlrd.base_chat_home"
@@ -19,4 +18,7 @@ android {
 }
 dependencies{
     implementation(projects.sources.core.coreApi)
+
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
 }
