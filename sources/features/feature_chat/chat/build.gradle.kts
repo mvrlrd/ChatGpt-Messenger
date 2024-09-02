@@ -34,6 +34,8 @@ dependencies {
 
     debugImplementation(libs.bundles.debugComposeBudle)
 
+
+
     implementation(libs.accompanistNavigationAnimation)
 
     // Core Mockito library

@@ -1,8 +1,10 @@
 package ru.mvrlrd.main.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+
+
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 object AppColors{
@@ -26,7 +28,7 @@ interface ColorPalette {
     val onBackground: Color // Цвет текста на фоне всего приложения
     val onSurface: Color // Цвет текста на элементах с поверхностным цветом
     val onError: Color // // Цвет текста на элементах с ошибками
-    val materialColors: Colors
+    val materialColors: ColorScheme
 }
 
 fun lightColorPalette(): ColorPalette = object : ColorPalette {
@@ -53,9 +55,8 @@ fun lightColorPalette(): ColorPalette = object : ColorPalette {
     override val onError: Color
         get() = AppColors.dark
 
-    override val materialColors: Colors = lightColors(
+    override val materialColors: ColorScheme = lightColorScheme(
         primary = primary,
-        primaryVariant = primaryVariant,
         secondary = secondary,
         background = background,
         surface = surface,
@@ -92,9 +93,8 @@ fun darkColorPalette(): ColorPalette = object : ColorPalette {
     override val onError: Color
         get() = AppColors.light
 
-    override val materialColors: Colors = darkColors(
+    override val materialColors: ColorScheme = darkColorScheme(
         primary = primary,
-        primaryVariant = primaryVariant,
         secondary = secondary,
         background = background,
         surface = surface,

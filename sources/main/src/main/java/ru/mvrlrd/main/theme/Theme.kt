@@ -28,8 +28,8 @@ fun JetHeroesTheme(
         LocalColor provides colors,
         LocalTypography provides typography,
     ) {
-        androidx.compose.material.MaterialTheme(
-            colors = colors.materialColors,
+        androidx.compose.material3.MaterialTheme(
+            colorScheme = colors.materialColors,
             typography = typography.materialTypography,
         ) {
             content()

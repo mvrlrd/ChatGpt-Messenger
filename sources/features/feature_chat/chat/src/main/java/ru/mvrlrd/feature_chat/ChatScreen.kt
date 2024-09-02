@@ -188,6 +188,7 @@ fun SwipeToDismissCloudMessage(
 
     SwipeToDismissBox(
         state = dismissState,
+        enableDismissFromStartToEnd = false,
         backgroundContent = {}
     ) {
         CloudMessage(messageEntity = item, prev = prev, next = next)

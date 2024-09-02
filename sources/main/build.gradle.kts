@@ -23,9 +23,8 @@ dependencies {
     implementation(projects.sources.features.featureSettings.settingsApi)
 
     implementation(libs.bundles.composeUiBundle)
-    implementation(libs.bundles.composeMaterialBundle)
+    implementation(libs.material3)
     implementation(libs.accompanistNavigationAnimation)
-
 
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)

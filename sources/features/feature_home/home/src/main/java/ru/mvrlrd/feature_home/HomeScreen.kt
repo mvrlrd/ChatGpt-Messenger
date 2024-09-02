@@ -123,7 +123,8 @@ fun SwipeToDismissCard(
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.EndToStart) {
+            if (it == SwipeToDismissBoxValue.EndToStart||
+                it == SwipeToDismissBoxValue.StartToEnd) {
                 onDismiss()
             }
             true

@@ -1,6 +1,6 @@
 package ru.mvrlrd.main.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -35,9 +35,7 @@ data class AppTypography internal constructor(
         letterSpacing = 0.sp,
     ),
     val materialTypography: Typography = Typography(
-        button = button,
-        body1 = body1,
-        h4 = h4
+
     ),////////разобраться здесь
 
 )

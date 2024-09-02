@@ -10,22 +10,23 @@ kotlinStdlib = "1.9.24"
 kotlinTest = "1.9.10"
 kotlinxCoroutinesCore = "1.7.3"
 kotlinxSerializationJson = "1.6.3"
-lifecycleRuntime = "2.8.0"
-activityCompose = "1.9.0"
-composeVersion = "1.6.7"
+lifecycleRuntime = "2.8.4"
+activityCompose = "1.9.1"
+composeVersion = "1.6.8"
 material = "1.12.0"
 material3Version = "1.2.1"
 junitVersion = "4.13.2"
 espressoCoreVersion = "3.6.1"
+materialVersion = "1.12.0"
 mockitoCore = "5.3.1"
 mockitoKotlin = "5.1.0"
 retrofit = "2.9.0"
 roomKtx = "2.6.1"
-uiTestJUnit4Version = "1.2.0"
-composeBom = "2023.03.00"
-lifecycleViewmodelCompose = "1.0.0-alpha07"
-runtimeLivedata = "1.2.0"
-navComposeVersion = "2.6.0-alpha04"
+uiTestJUnit4Version = "1.6.8"
+composeBom = "2024.08.00"
+lifecycleViewmodelCompose = "2.8.4"
+runtimeLivedata = "1.6.8"
+navComposeVersion = "2.7.7"
 dagger = "2.48"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.12"
@@ -52,6 +53,8 @@ appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat"
 coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 googleMaterial = { module = "com.google.android.material:material", version.ref = "material" }
 
+material = { module = "androidx.compose.material:material", version.ref = "materialVersion" }
+
 #junit testing
 junitExt = { module = "androidx.test.ext:junit", version.ref = "junit" }
 junit = { module = "junit:junit", version.ref = "junitVersion" }
@@ -64,7 +67,10 @@ kotlinxSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serializati
 
 lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntime" }
 
+
+
 #retrofit
+
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -90,7 +96,6 @@ composeUiGraphics = { module = "androidx.compose.ui:ui-graphics", version.ref = 
 foundation = { module = "androidx.compose.foundation:foundation", version.ref = "composeVersion" }
 
 # Material Design components
-material = { module = "androidx.compose.material:material", version.ref = "composeVersion" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 material3IconsCore = { module = "androidx.compose.material3:material3-icons-core", version.ref = "mat" }
 material3IconsExtended = { module = "androidx.compose.material3:material3-icons-extended", version.ref = "mat" }
@@ -141,12 +146,6 @@ composeUiBundle = [
     "composeUiGraphics",
     "composeUiToolingPreview",
     "foundation"
-]
-
-# Material Bundle - For Material Design components
-composeMaterialBundle = [
-    "material3",
-    "material"
 ]
 
 # Lifecycle Bundle - For managing UI lifecycle and state
