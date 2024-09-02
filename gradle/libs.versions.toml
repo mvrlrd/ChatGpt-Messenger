@@ -4,7 +4,6 @@ androidxJunit = "1.2.1"
 androidxJunitVersion = "1.1.5"
 appcompat = "1.7.0"
 coreKtx = "1.13.1"
-
 junit = "1.2.1"
 kotlinStdlib = "1.9.24"
 kotlinTest = "1.9.10"
@@ -30,7 +29,7 @@ navComposeVersion = "2.7.7"
 dagger = "2.48"
 kotlin = "1.9.0"
 ksp = "1.9.0-1.0.12"
-kotlinStb = "1.9.22"
+
 
 retrofit2ConverterScalars = "2.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
@@ -123,19 +122,13 @@ navigationCompose = { module = "androidx.navigation:navigation-compose", version
 #ui_testing
 espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 uiTest = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJUnit4Version" }
-uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
-uiTestManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeVersion" }
 
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 daggerCompiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 
 [bundles]
-coreDependencies = ["coreKtx", "lifecycleRuntime", "activityCompose"]
 
 testDependencies = ["junit", "espressoCore", "junitExt", "uiTest"]
-
-debugDependencies = ["uiTooling", "uiTestManifest"]
-viewModelDependencies = ["viewModelCompose", "runtimeLivedata"]
 
 roomDeps = ["roomKtx", "roomRuntime"]
 retrofitDeps = ["retrofit","retrofit2ConverterScalars","retrofit2KotlinxSerializationConverter","okhttp", "okhttpLoggingInterceptor"]

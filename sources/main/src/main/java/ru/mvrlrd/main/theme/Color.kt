@@ -22,12 +22,12 @@ interface ColorPalette {
     val secondary: Color // // Второстепенный цвет, может использоваться для элементов, таких как всплывающие меню
     val background: Color
     val surface: Color// для карточек или диалогов
-    val error: Color     // Цвет для сообщений об ошибках, таких как красные уведомления
-    val onPrimary : Color   // Цвет текста на основном фоне, контрастирует с основным цветом
-    val onSecondary: Color // Цвет текста на второстепенном фоне, контрастирует со второстепенным цветом
-    val onBackground: Color // Цвет текста на фоне всего приложения
-    val onSurface: Color // Цвет текста на элементах с поверхностным цветом
-    val onError: Color // // Цвет текста на элементах с ошибками
+    val error: Color     // для сообщений об ошибках, таких как красные уведомления
+    val onPrimary : Color   //  текста на основном фоне, контрастирует с основным цветом
+    val onSecondary: Color //  текста на второстепенном фоне, контрастирует со второстепенным цветом
+    val onBackground: Color //  текста на фоне всего приложения
+    val onSurface: Color //  текста на элементах с поверхностным цветом
+    val onError: Color //   текста на элементах с ошибками
     val materialColors: ColorScheme
 }
 

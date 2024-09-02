@@ -108,18 +108,19 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
                 .background(Color.Blue)
         ) {
             Button(
+
                 onClick = {
                     viewModel.saveChatSettings(chatId= chatId){
                         action()
                     }
-
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
 
                 ) {
-                Text(text = "submit".uppercase())
+                Text(text = "submit".uppercase(),
+                    style = MaterialTheme.typography.labelMedium)
             }
 
         }

@@ -34,21 +34,12 @@ dependencies {
 
     debugImplementation(libs.bundles.debugComposeBudle)
 
-
-
     implementation(libs.accompanistNavigationAnimation)
 
-    // Core Mockito library
-    testImplementation("org.mockito:mockito-core:4.11.0")
-
-    // Mockito Kotlin extension for more idiomatic Kotlin code
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
-
-    // Kotlin standard library for testing
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.10")
-
-    // Coroutines test library if you are testing coroutine-based code
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.mockitoKotlin)
+    testImplementation(libs.kotlinTest)
+    testImplementation(libs.kotlinxCoroutinesTest)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)
