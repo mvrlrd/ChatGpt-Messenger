@@ -2,11 +2,18 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    `maven-publish`
 }
 
 android {
     namespace = "ru.mvrlrd.companion"
     compileSdk = 34
+
+    publishing{
+        singleVariant("debug") {
+            publishApk()
+        }
+    }
 
     defaultConfig {
         applicationId = "ru.mvrlrd.companion"
@@ -28,6 +35,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            isMinifyEnabled = false
         }
     }
     compileOptions {
@@ -62,4 +72,17 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)
     androidTestImplementation(libs.espressoCore)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("debug") {
+            groupId = "ru.mvrlrd.companion"
+            artifactId = "app"
+            version = "1.0"
+            afterEvaluate {
+                from(components["debug"])
+            }
+        }
+    }
 }
