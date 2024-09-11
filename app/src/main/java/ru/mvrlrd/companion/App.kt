@@ -5,7 +5,6 @@ import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.core_api.mediators.ProvidersFacade
 
 class App : Application(), AppWithFacade {
-
     override fun getFacade(): ProvidersFacade {
         return facadeComponent ?: FacadeComponent.init(this).also {
             facadeComponent = it
@@ -20,4 +19,6 @@ class App : Application(), AppWithFacade {
         super.onCreate()
         getFacade()
     }
+
+
 }

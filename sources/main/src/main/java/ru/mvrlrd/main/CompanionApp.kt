@@ -1,54 +1,84 @@
 package ru.mvrlrd.main
 
 import android.content.Context
-import android.content.res.Resources.Theme
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ru.mvrlrd.core_api.mediators.ProvidersFacade
-import ru.mvrlrd.favorites.FavoritesScreen
-//import ru.mvrlrd.home.HomeScreen
-import ru.mvrlrd.home.HomeScreen
-import ru.mvrlrd.main.theme.AppColors
-import ru.mvrlrd.main.theme.AppTheme
-import ru.mvrlrd.main.theme.JetHeroesTheme
+import ru.mvrlrd.feature_chat_api.FeatureChatApi
+import ru.mvrlrd.feature_home_api.FeatureHomeApi
+import ru.mvrlrd.featureapi.FeatureApi
+import ru.mvrlrd.main.theme.CompanionTheme
+import ru.mvrlrd.settings_api.FeatureSettingsApi
 
 @Composable
 fun CompanionApp(
     onToggleTheme: () -> Unit,
     darkTheme: Boolean,
     context: Context,
-    providersFacade: ProvidersFacade
 ) {
+    val homeApi = (context as MainActivity).featureAPIes["home"] as FeatureHomeApi
+    val chatApi = context.featureAPIes["chat"] as FeatureChatApi
+    val settingsApi = context.featureAPIes["settings"] as FeatureSettingsApi
 
-    JetHeroesTheme(darkTheme = darkTheme) {
-
+    CompanionTheme(darkTheme = darkTheme) {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = "Favs"
+            startDestination = homeApi.homeRoute,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { 1000 }) + expandIn()
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn()
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+            },
         ) {
-            composable("Favs") {
-                FavoritesScreen(providersFacade = providersFacade) {
-                    navController.navigate("Home/$it")
-                    //разобраться с навигацией!
-                    //улучшить анимацию ресайклеров
-                    //добавить экран создания чата
-                    // убирать фаб при скроле
-                    //поменять цвет баббл от ИИ
-                    //добавить отбивку дат в чат
-                }
-            }
-            composable("Home/{id}") { backStackEntry ->
-                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: 0L
-                HomeScreen(chatId = id) {
-                    onToggleTheme()
-                }
-            }
+            register(
+                navController= navController,
+                modifier = Modifier,
+                featureApi = chatApi,
+                action = onToggleTheme
+            )
+            register(
+                navController=navController,
+                modifier = Modifier,
+                featureApi = homeApi,
+                action = {}
+            )
+            register(
+                navController=navController,
+                modifier = Modifier,
+                featureApi = settingsApi,
+                action = {}
+            )
         }
     }
+}
+
+fun NavGraphBuilder.register(
+    featureApi: FeatureApi,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    action: ()->Unit
+) {
+    featureApi.registerGraph(
+        navGraphBuilder = this,
+        navController = navController,
+        modifier = modifier,
+        action=action
+    )
 }

@@ -4,9 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-apply<ComposePlugin>()
 apply<ModuleConfigPlugin>()
-apply<CommonDependenciesPlugin>()
 
 android {
     namespace = "ru.mvrlrd.main"
@@ -19,10 +17,19 @@ android {
 }
 
 dependencies {
-    implementation(projects.sources.coreApi)
-    implementation(projects.sources.uiKit)
-    implementation(projects.sources.home)
-    implementation(projects.sources.favorites)
+    implementation(projects.sources.core.coreApi)
+    implementation(projects.sources.features.featureChat.chatApi)
+    implementation(projects.sources.features.featureHome.homeApi)
+    implementation(projects.sources.features.featureSettings.settingsApi)
 
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.material3)
+    implementation(libs.accompanistNavigationAnimation)
 
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junitExt)
+    androidTestImplementation(libs.espressoCore)
 }

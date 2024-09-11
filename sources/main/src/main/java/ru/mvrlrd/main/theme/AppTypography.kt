@@ -1,6 +1,6 @@
 package ru.mvrlrd.main.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -35,9 +35,20 @@ data class AppTypography internal constructor(
         letterSpacing = 0.sp,
     ),
     val materialTypography: Typography = Typography(
-        button = button,
-        body1 = body1,
-        h4 = h4
-    ),////////разобраться здесь
+        displayLarge = h4, // Вы используете h4 для крупного заголовка
+        displayMedium = body1, // Использование body1 для среднего заголовка
+        displaySmall = paragraph1, // Использование paragraph1 для небольшого заголовка
+        headlineMedium = h4, // Использование h4 для заголовка среднего размера
+        headlineSmall = body1, // Использование body1 для заголовка небольшого размера
+        titleLarge = h4, // Использование h4 для крупного заголовка
+        titleMedium = body1, // Использование body1 для заголовка среднего размера
+        titleSmall = paragraph1, // Использование paragraph1 для небольшого заголовка
+        bodyLarge = body1, // Использование body1 для текста основного размера
+        bodyMedium = paragraph1, // Использование paragraph1 для текста среднего размера
+        bodySmall = paragraph1.copy(fontSize = 13.sp), // Использование paragraph1 для текста меньшего размера
+        labelLarge = button, // Использование button для крупных меток (например, кнопок)
+        labelMedium = button, // Использование button для средних меток
+        labelSmall = button.copy(fontSize = 18.sp) // Использование button для небольших меток
+    )
 
 )
