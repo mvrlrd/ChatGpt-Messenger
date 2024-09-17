@@ -1,6 +1,5 @@
 package ru.mvrlrd.feature_chat.data
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -47,49 +46,30 @@ class ChatRepositoryImpl @Inject constructor(
         chatId: Long,
         prompt: Boolean
     ): Result<AIResponse> {
-//        val request = RequestDataDto.getDefault(
-//          listOfMessageDtos =   listOf(
-//                MessageDto(role = "system", text = (systemRole.ifBlank { "ты умный ассистент" })),
-//              MessageDto("user", query)
-//            )
-//        )
-
-        if (prompt) {
-            Log.d("TAG", "prompt____AiReques = $aiRequest")
-            val requestData = mapper.mapAiRequestToRequestDataDto(aiRequest)
-            remoteRepository.getAnswer(requestData).onSuccess {
-                val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
-                return Result.success(aiResponse)
-            }.onFailure {
-                return Result.failure(it)
-            }
-            return Result.failure(IllegalArgumentException())
+        val request = if (prompt) {
+            aiRequest
         } else {
-            var newAiRequest = aiRequest
-            Log.d("TAG", "++++++____++++     before  join!!!")
             val scope = CoroutineScope(Dispatchers.IO).async {
                 dao.getContextMessages(chatId)
             }
             val contextMessages = scope.await().map {
                 Message(
-                    role = if (it.isReceived) "assistant" else "user",
+                    role = if (it.isReceived) ASSISTANT else USER,
                     text = it.text
                 )
             }
-            val requestWithContext = mutableListOf<Message>()
-            requestWithContext.add(aiRequest.messages[0])
-            requestWithContext.addAll(contextMessages)
-            newAiRequest = aiRequest.copy(messages = requestWithContext)
-            Log.d("TAG", "chat____newAiReques = $newAiRequest")
-            val requestData = mapper.mapAiRequestToRequestDataDto(newAiRequest)
-            remoteRepository.getAnswer(requestData).onSuccess {
-                val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
-                return Result.success(aiResponse)
-            }.onFailure {
-                return Result.failure(it)
-            }
-            return Result.failure(IllegalArgumentException())
+            val chatContext = mutableListOf(aiRequest.messages[0])
+            chatContext.addAll(contextMessages)
+            aiRequest.copy(messages = chatContext)
         }
+        val requestDataDto = mapper.mapAiRequestToRequestDataDto(request)
+        remoteRepository.getAnswer(requestDataDto).onSuccess {
+            val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
+            return Result.success(aiResponse)
+        }.onFailure {
+            return Result.failure(it)
+        }
+        return Result.failure(IllegalArgumentException())
     }
 
 
@@ -97,5 +77,9 @@ class ChatRepositoryImpl @Inject constructor(
         val chatEntity = dao.getChat(chatId)
         val chat = chatMapper.mapChatEntityToChat(chatEntity)
         return Result.success(chat)
+    }
+    companion object{
+        private const val ASSISTANT = "assistant"
+        private const val USER = "user"
     }
 }
