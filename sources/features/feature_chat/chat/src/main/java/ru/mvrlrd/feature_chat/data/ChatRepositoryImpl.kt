@@ -1,9 +1,13 @@
 package ru.mvrlrd.feature_chat.data
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.base_chat_home.model.ChatMapper
+import ru.mvrlrd.base_chat_home.model.Message
 import ru.mvrlrd.core_api.annotations.Open
 import ru.mvrlrd.core_api.database.chat.ChatDao
 import ru.mvrlrd.core_api.database.chat.entity.MessageEntity
@@ -38,23 +42,56 @@ class ChatRepositoryImpl @Inject constructor(
         dao.clearMessages(chatId)
     }
 
-    override suspend fun getAnswer(aiRequest: AiRequest): Result<AIResponse> {
+    override suspend fun getAnswer(
+        aiRequest: AiRequest,
+        chatId: Long,
+        prompt: Boolean
+    ): Result<AIResponse> {
 //        val request = RequestDataDto.getDefault(
 //          listOfMessageDtos =   listOf(
 //                MessageDto(role = "system", text = (systemRole.ifBlank { "ты умный ассистент" })),
 //              MessageDto("user", query)
 //            )
 //        )
-        Log.d("TAG", "___ChatRepositoryImpl airequest = ${aiRequest}")
-        val requestData = mapper.mapAiRequestToRequestDataDto(aiRequest)
-        remoteRepository.getAnswer(requestData).onSuccess {
-            val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
-            return Result.success(aiResponse)
-        }.onFailure {
-            return Result.failure(it)
+
+        if (prompt) {
+            Log.d("TAG", "prompt____AiReques = $aiRequest")
+            val requestData = mapper.mapAiRequestToRequestDataDto(aiRequest)
+            remoteRepository.getAnswer(requestData).onSuccess {
+                val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
+                return Result.success(aiResponse)
+            }.onFailure {
+                return Result.failure(it)
+            }
+            return Result.failure(IllegalArgumentException())
+        } else {
+            var newAiRequest = aiRequest
+            Log.d("TAG", "++++++____++++     before  join!!!")
+            val scope = CoroutineScope(Dispatchers.IO).async {
+                dao.getContextMessages(chatId)
+            }
+            val contextMessages = scope.await().map {
+                Message(
+                    role = if (it.isReceived) "assistant" else "user",
+                    text = it.text
+                )
+            }
+            val requestWithContext = mutableListOf<Message>()
+            requestWithContext.add(aiRequest.messages[0])
+            requestWithContext.addAll(contextMessages)
+            newAiRequest = aiRequest.copy(messages = requestWithContext)
+            Log.d("TAG", "chat____newAiReques = $newAiRequest")
+            val requestData = mapper.mapAiRequestToRequestDataDto(newAiRequest)
+            remoteRepository.getAnswer(requestData).onSuccess {
+                val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
+                return Result.success(aiResponse)
+            }.onFailure {
+                return Result.failure(it)
+            }
+            return Result.failure(IllegalArgumentException())
         }
-        return Result.failure(IllegalArgumentException())
     }
+
 
     override suspend fun getChatSettings(chatId: Long): Result<Chat> {
         val chatEntity = dao.getChat(chatId)

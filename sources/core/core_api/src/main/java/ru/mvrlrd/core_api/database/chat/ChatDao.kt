@@ -35,6 +35,9 @@ interface ChatDao {
     @Query("SELECT * FROM messages WHERE holderChatId = :chatId")
     fun getMessagesForChat(chatId: Long): Flow<List<MessageEntity>>
 
+    @Query("SELECT * FROM messages WHERE holderChatId = :chatId")
+    suspend fun getContextMessages(chatId: Long): List<MessageEntity>
+
     @Query("DELETE FROM messages WHERE messageId = :messageId")
     suspend fun deleteMessage(messageId: Long)
 

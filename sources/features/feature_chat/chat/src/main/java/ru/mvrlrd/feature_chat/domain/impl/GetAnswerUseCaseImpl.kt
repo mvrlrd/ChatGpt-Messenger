@@ -31,7 +31,7 @@ class GetAnswerUseCaseImpl @Inject constructor(private val chatRepository: ChatR
                 messages = messages
             )
             Log.d("TAG","___GetAnswerUseCaseImpl ${aiRequest}")
-            return chatRepository.getAnswer(aiRequest)
+            return chatRepository.getAnswer(aiRequest, it.chatId, it.prompt)
         }.onFailure {
             return Result.failure(IllegalArgumentException("bad request"))
         }

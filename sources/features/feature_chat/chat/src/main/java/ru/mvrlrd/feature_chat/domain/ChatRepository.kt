@@ -11,10 +11,6 @@ interface ChatRepository {
     suspend fun saveMessage(messageEntity: MessageEntity)
     suspend fun deleteMessage(messageId: Long)
     suspend fun clearChat(chatId: Long)
-    suspend fun getAnswer(aiRequest: AiRequest): Result<AIResponse>
-
+    suspend fun getAnswer(aiRequest: AiRequest,chatId: Long, prompt: Boolean): Result<AIResponse>
     suspend fun getChatSettings(chatId: Long): Result<Chat>
-    // написать метод для получения чата,
-    //модельку чата надо запихнуть в отдельный модуль и шарить с тем кому он еще нужен
-    // и вообще все модельки так сделать
 }
