@@ -4,6 +4,7 @@ data class SettingsState(
     val name: String="",
     val systemRole: String="умный ассистент",
     val maxTokens: MaxTokens= MaxTokens("1000"),//устанавливает ограничение на выход модели в токенах.
+    val prompt: Boolean = true, // если вкл то GPT не учитывает контекст общения
     val stream: Boolean=false,// включает потоковую передачу частично сгенерированного текста.
     val temperature: Temperature= Temperature(0.3f)//чем выше значение этого параметра, тем более креативными и случайными будут ответы модели.
 

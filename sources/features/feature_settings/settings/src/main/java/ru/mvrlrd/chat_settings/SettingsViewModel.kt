@@ -41,6 +41,7 @@ class SettingsViewModel @Inject constructor(
                         name = name,
                         systemRole = systemRole,
                         maxTokens = maxTokens,
+                        prompt= prompt,
                         stream = stream,
                         temperature = temperature
                     )
@@ -56,7 +57,12 @@ class SettingsViewModel @Inject constructor(
             val chatSettings = getChatSettingsUseCase(chatId)
             with(chatSettings){
                 _state.value = _state.value.copy(
-                    name, systemRole, maxTokens, stream, temperature
+                    name=name,
+                    systemRole=systemRole,
+                    maxTokens=maxTokens,
+                    prompt = prompt,
+                    stream= stream,
+                    temperature=temperature
                 )
             }
         }
@@ -101,6 +107,10 @@ class SettingsViewModel @Inject constructor(
 
     fun updateStreamSwitch(isChecked: Boolean){
         _state.value = _state.value.copy(stream = isChecked)
+    }
+
+    fun updatePromptSwitch(isChecked: Boolean){
+        _state.value = _state.value.copy(prompt = isChecked)
     }
 
     class SettingsViewModelFactory(

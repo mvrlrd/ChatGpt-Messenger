@@ -93,6 +93,10 @@ fun SettingsScreen(chatId: Long, action: ()-> Unit) {
             viewModel.updateMaxTokens(it)
         }
         HorizontalDivider()
+        PromptSwitch (state.value.prompt){
+            viewModel.updatePromptSwitch(it)
+        }
+        HorizontalDivider()
         StreamSwitch(state.value.stream){
             viewModel.updateStreamSwitch(it)
         }
@@ -157,6 +161,34 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float)-
             onValueChange = { updateTemperature(it) },
             valueRange = 0.0f..1.0f,
             modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun PromptSwitch(isChecked: Boolean, updatePrompt: (Boolean)-> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier.weight(1f)
+        ) {
+            Image(
+                painter = painterResource(id =  R.drawable.baseline_medication_24),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(text = "prompt", style = MaterialTheme.typography.titleSmall)
+            }
+        }
+        Switch(
+            checked = isChecked,
+            onCheckedChange = { updatePrompt(it) }
         )
     }
 }

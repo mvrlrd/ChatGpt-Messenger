@@ -8,6 +8,7 @@ data class Chat(
     val chatId: Long,
     val title: String,
     val roleText: String,
+    val prompt: Boolean,
     val completionOptions: CompletionOptions = CompletionOptions(),
     val modelVer: String,
     val usage: Usage = Usage(),

@@ -16,6 +16,7 @@ class SettingsMapper @Inject constructor() {
                 id = chatId,
                 title = name,
                 roleText = systemRole,
+                prompt = prompt,
                 completionOptions = CompletionOptionsEntity(
                     stream,
                     (temperature.value.toDouble()),
@@ -33,6 +34,7 @@ class SettingsMapper @Inject constructor() {
                 chatId = 0L, //
                 name = title,
                 systemRole = roleText,
+                prompt = prompt,
                 stream=completionOptions.stream,
                 temperature= Temperature(completionOptions.temperature.toFloat()),
                 maxTokens= MaxTokens(completionOptions.maxTokens.toString())

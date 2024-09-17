@@ -8,6 +8,7 @@ data class ChatSettings(
     val name: String,
     val systemRole: String,
     val maxTokens: MaxTokens = MaxTokens(""),
+    val prompt: Boolean = true,
     val stream: Boolean=false,
     val temperature: Temperature = Temperature(0.3f)
 )

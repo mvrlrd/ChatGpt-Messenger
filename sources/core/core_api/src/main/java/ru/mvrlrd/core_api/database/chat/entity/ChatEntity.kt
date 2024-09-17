@@ -12,6 +12,7 @@ data class ChatEntity(
     @ColumnInfo("chatId") val id: Long = 0,
     val title: String,
     val roleText: String,
+    val prompt: Boolean,
     @Embedded
     val completionOptions: CompletionOptionsEntity,
     val modelVer: String,

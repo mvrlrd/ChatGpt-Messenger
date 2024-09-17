@@ -105,6 +105,7 @@ fun CharacterCardPreview() {
                 maxTokens = 1000
             ),
             modelVer = "1.0",
+            prompt = true,
             usage = Usage(
                 inputTokens = 1000,
                 completionTokens = 300,
