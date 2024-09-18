@@ -25,7 +25,7 @@ android {
 dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.featureHome.homeApi)
-    implementation(projects.sources.features.featureChat.chatApi)
+//    implementation(projects.sources.features.featureChat.chatApi)
     implementation(projects.sources.features.baseModels)
 
     implementation(libs.bundles.composeUiBundle)
