@@ -122,6 +122,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+
         ) {
             Button(
                 onClick = {
@@ -168,7 +169,7 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
                 painter = painterResource(id = R.drawable.baseline_device_thermostat_24),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(

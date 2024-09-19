@@ -56,12 +56,12 @@ fun CustomTextField(
             modifier = Modifier
                 .size(36.dp)
                 .clip(RoundedCornerShape(50))
-                .background(MaterialTheme.colorScheme.onSurface)
+                .background(MaterialTheme.colorScheme.secondary)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_menu_send),
                 contentDescription = "Send",
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.surface
             )
         }
     }

@@ -27,7 +27,6 @@ data class AppTypography internal constructor(
         fontSize = 20.sp,
         letterSpacing = 0.sp,
         lineHeight = 20.sp,
-        color = AppColors.light
     ),
     val textInCloud: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.marvel_regular)),
