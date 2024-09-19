@@ -2,11 +2,12 @@ package ru.mvrlrd.feature_home
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.mvrlrd.base_chat_home.model.Chat
+import ru.mvrlrd.feature_home.domain.ChatForHome
 import ru.mvrlrd.feature_home.domain.api.GetAllChatsUseCase
 import ru.mvrlrd.feature_home.domain.api.RemoveChatUseCase
 import javax.inject.Inject
@@ -16,8 +17,8 @@ class HomeViewModel@Inject constructor(
     private val removeChatUseCase: RemoveChatUseCase
 ): ViewModel() {
 
-    private val _items = mutableStateListOf<Chat>()
-    val items : SnapshotStateList<Chat> get()=_items
+    private val _items = mutableStateListOf<ChatForHome>()
+    val items : SnapshotStateList<ChatForHome> get()=_items
 
     init {
         viewModelScope.launch {
@@ -25,7 +26,7 @@ class HomeViewModel@Inject constructor(
         }
     }
 
-     fun getAllChats(){
+     private fun getAllChats(){
          viewModelScope.launch {
              getAllChatsUseCase().collect{
                  _items.clear()
@@ -39,6 +40,7 @@ class HomeViewModel@Inject constructor(
         }
     }
 
+
     class MyViewModelFactory(
         private val getAllChatsUseCase: GetAllChatsUseCase,
         private val removeChatUseCase: RemoveChatUseCase
@@ -51,7 +53,4 @@ class HomeViewModel@Inject constructor(
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
-
-
-
 }

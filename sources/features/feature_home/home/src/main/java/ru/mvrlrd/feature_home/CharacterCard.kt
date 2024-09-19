@@ -7,14 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,23 +24,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.base_chat_home.model.CompletionOptions
 import ru.mvrlrd.base_chat_home.model.Usage
+import ru.mvrlrd.feature_home.domain.ChatForHome
 
 @Composable
 fun CharacterCard(
-    imagePainter: Painter = painterResource(id = R.drawable.dark_robot),
-    chat: Chat,
+    chat: ChatForHome,
     onClickEditButton: (Long)->Unit,
     onClickCard: () -> Unit
 ) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,15 +58,14 @@ fun CharacterCard(
                     .padding(start = 5.dp)
 
             ) {
-                Image(
-                    painter = imagePainter,
-                    contentDescription = "Character Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                        .align(Alignment.CenterStart)
+                TextIcon(modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.CenterStart),
+                    text = getInitialsFromName(chat.title),
+                    color = colorResource(chat.color)
                 )
+
 
             }
 
@@ -99,7 +99,7 @@ fun CharacterCard(
                 }
 
                 Text(
-                    text = chat.roleText,
+                    text = chat.role,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -125,27 +125,61 @@ fun CharacterCard(
     }
 }
 
+private fun getInitialsFromName(s: String): String{
+    if (s.isBlank()) return "?"
+    if (s.length==1){
+        return s.uppercase()
+    }else{
+        val arr = s.trim().split(" ")
+        val str = StringBuilder()
+        arr.take(2).forEach{
+            if (it.isNotBlank()){
+                str.append(it.first().uppercase())
+            }
+        }
+        if (str.length == 1){
+            str.append(s[1])
+        }
+        return str.toString()
+    }
+}
+
+
+
+@Composable
+fun TextIcon(modifier: Modifier, text: String, color: Color){
+    Box(
+        modifier = modifier// Размер иконки
+            .background(color, CircleShape), // Цвет фона и форма
+        contentAlignment = Alignment.Center // Центрируем текст
+    ) {
+        BasicText(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = Color.White, // Цвет текста
+                fontSize = 24.sp, // Размер шрифта
+                textAlign = TextAlign.Center // Выравнивание текста
+            )
+        )
+    }
+}
+
+@Composable
+@Preview
+fun TextIconPreview(){
+    TextIcon(Modifier,"IB", Color.Green)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CharacterCardPreview() {
     CharacterCard(
-        imagePainter = painterResource(id = R.drawable.dark_robot),
-        chat = Chat(
+        chat = ChatForHome(
             chatId = 1L,
             title = "title",
-            roleText = "role",
-            completionOptions = CompletionOptions(
-                stream = true,
-                temperature = 0.6,
-                maxTokens = 1000
-            ),
-            modelVer = "1.0",
+            role = "role",
+            color = R.color.one,
             prompt = true,
-            usage = Usage(
-                inputTokens = 1000,
-                completionTokens = 300,
-                totalTokens = 1300
-            )
         ),
         onClickEditButton = {}
     ) {

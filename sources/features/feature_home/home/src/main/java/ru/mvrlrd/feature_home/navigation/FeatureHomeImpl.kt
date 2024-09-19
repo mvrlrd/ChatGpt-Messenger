@@ -1,6 +1,5 @@
 package ru.mvrlrd.feature_home.navigation
 
-import android.util.Log
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

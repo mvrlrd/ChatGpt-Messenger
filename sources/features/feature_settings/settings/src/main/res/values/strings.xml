@@ -4,7 +4,7 @@
     <string name="prompt">prompt</string>
 
     <string name="temperature">temperature</string>
-    <string name="submit">submit</string>
+    <string name="submit">done</string>
 
     <string name="ed_name_title">name</string>
     <string name="ed_name_placeholder">name</string>

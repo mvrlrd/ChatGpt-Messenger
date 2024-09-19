@@ -29,9 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.mvrlrd.base_chat_home.model.Chat
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.feature_home.di.ChatRoomsComponent
+import ru.mvrlrd.feature_home.domain.ChatForHome
 
 
 @Composable
@@ -76,7 +76,7 @@ fun HomeScreen(modifier: Modifier, onClickEdit: (Long)-> Unit, onClickCard: (Lon
 
 @Composable
 fun CardList(
-    cards: SnapshotStateList<Chat>,
+    cards: SnapshotStateList<ChatForHome>,
     modifier: Modifier,
     viewModel: HomeViewModel,
     onClickEditButton: (Long) -> Unit,
@@ -107,7 +107,7 @@ fun CardList(
             key = { _, item ->
                 item
             }
-        ) { index, item ->
+        ) { _, item ->
             SwipeToDismissCard(
                 item = item,
                 onClickEditButton = onClickEditButton,
@@ -121,7 +121,7 @@ fun CardList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToDismissCard(
-    item: Chat,
+    item: ChatForHome,
     onDismiss: () -> Unit,
     onClickEditButton: (Long) -> Unit,
     onClickCard: (id: Long) -> Unit
@@ -141,7 +141,7 @@ fun SwipeToDismissCard(
     ) {
         CharacterCard(
             chat = item,
-            onClickEditButton = onClickEditButton
+            onClickEditButton = onClickEditButton,
         ) {
             onClickCard(item.chatId)
         }

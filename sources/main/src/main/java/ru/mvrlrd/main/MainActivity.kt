@@ -3,6 +3,7 @@ package ru.mvrlrd.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,8 @@ class MainActivity : ComponentActivity() {
         mainComponent.inject(this)
 
         setContent {
-            var isLightTheme by remember { mutableStateOf(false) }
+            val flag = isSystemInDarkTheme()
+            var isLightTheme by remember { mutableStateOf(!flag) }
             CompanionApp(
                 onToggleTheme = {
                     isLightTheme = !isLightTheme
