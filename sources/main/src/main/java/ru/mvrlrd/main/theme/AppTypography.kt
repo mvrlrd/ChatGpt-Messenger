@@ -23,7 +23,7 @@ data class AppTypography internal constructor(
     ),
     val body1: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.marvel_regular)),
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         letterSpacing = 0.sp,
         lineHeight = 20.sp,

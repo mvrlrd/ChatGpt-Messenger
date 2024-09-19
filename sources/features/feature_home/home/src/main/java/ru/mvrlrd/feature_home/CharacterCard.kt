@@ -5,13 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
@@ -19,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -38,54 +44,86 @@ fun CharacterCard(
 ) {
     Card(
         modifier = Modifier
-            .width(200.dp)
-            .height(300.dp)
+            .fillMaxWidth()
+            .height(60.dp)
             .clickable { onClickCard() },
         shape = RoundedCornerShape(16.dp),
     ) {
-        Column {
+        Row(modifier = Modifier
+            .fillMaxWidth()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.7f)
+                    .fillMaxHeight()
+                    .padding(start = 5.dp)
+
             ) {
                 Image(
                     painter = imagePainter,
                     contentDescription = "Character Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .align(Alignment.CenterStart)
                 )
+
             }
-            Box(
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(0.25f)
-                    .background(Color.White)
-                    .padding(8.dp)
+                    .padding(
+                        start = 15.dp,
+                        top = 10.dp
+                    )
+                    .weight(1f)
             ) {
-                Column {
+                Row {
                     Text(
                         text = chat.title,
-                        fontSize = 16.sp,
-                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(
-                        text = chat.roleText,
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
+                    val image = if (chat.prompt) {
+                            painterResource(id = R.drawable.icons8_flash_96)
+                        } else {
+                            painterResource(id = R.drawable.icons8_connection_50)
+                        }
+                    Box(modifier = Modifier
+                        .padding(start = 10.dp)){
+                        Image(
+                            painter = image,
+                            contentDescription = "Character Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(24.dp)
+                        )
+                    }
+
                 }
-                Image(painter = painterResource(id = R.drawable.baseline_mode_edit_24),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .clickable {
-                            onClickEditButton.invoke(chat.chatId)
-                        },
+
+                Text(
+                    text = chat.roleText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            Box(modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(end = 10.dp)) {
+                Image(
+                    painter = painterResource(id = R.drawable.baseline_mode_edit_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clickable {
+                            onClickEditButton.invoke(chat.chatId)
+                        }
+                        ,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+                    ,
+                )
+            }
+
+
         }
     }
 }

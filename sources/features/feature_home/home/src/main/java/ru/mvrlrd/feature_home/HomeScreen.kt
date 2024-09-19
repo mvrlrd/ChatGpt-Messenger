@@ -95,7 +95,7 @@ fun CardList(
 
     LazyVerticalGrid(
 
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(1),
         contentPadding = PaddingValues(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -128,8 +128,7 @@ fun SwipeToDismissCard(
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
-            if (it == SwipeToDismissBoxValue.EndToStart||
-                it == SwipeToDismissBoxValue.StartToEnd) {
+            if (it == SwipeToDismissBoxValue.EndToStart) {
                 onDismiss()
             }
             true
@@ -137,6 +136,7 @@ fun SwipeToDismissCard(
     )
     SwipeToDismissBox(
         state = dismissState,
+        enableDismissFromStartToEnd = false,
         backgroundContent = {}
     ) {
         CharacterCard(

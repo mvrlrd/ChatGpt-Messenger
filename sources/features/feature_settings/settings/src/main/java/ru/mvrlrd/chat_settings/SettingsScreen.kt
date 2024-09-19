@@ -86,21 +86,21 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         ) {
             viewModel.updateName(it)
         }
-        HorizontalDivider()
+//        HorizontalDivider()
         EditableSettingItem(
             field = state.value.systemRole,
             placeholder = stringResource(R.string.ed_role_placeholder)
         ) {
             viewModel.updateRole(it)
         }
-        HorizontalDivider()
+//        HorizontalDivider()
         EditableSettingItem(
             field = state.value.maxTokens.value,
             placeholder = stringResource(R.string.ed_max_tokens_placeholder)
         ) {
             viewModel.updateMaxTokens(it)
         }
-        HorizontalDivider()
+//        HorizontalDivider()
         SwitchItem(icon = R.drawable.baseline_quickreply_24,
             text = stringResource(R.string.prompt),
             isChecked = state.value.prompt) {
@@ -169,13 +169,13 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
                 painter = painterResource(id = R.drawable.baseline_device_thermostat_24),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = stringResource(R.string.temperature),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -212,16 +212,18 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
         Switch(
             colors = SwitchDefaults.colors().copy(
-                checkedTrackColor = MaterialTheme.colorScheme.secondary
+                checkedTrackColor = MaterialTheme.colorScheme.secondary,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surface
             ),
             checked = isChecked,
             onCheckedChange = { updateStream(it) }
@@ -244,20 +246,22 @@ fun EditableSettingItem(
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             TextField(
-colors = TextFieldDefaults.colors().copy(
-    unfocusedContainerColor = Color.Transparent,
-    cursorColor = MaterialTheme.colorScheme.secondary,
-
-    )
-        ,
+                colors = TextFieldDefaults.colors().copy(
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.secondary,
+                    ),
                 value = field,
                 onValueChange = {
                     updateText(it)
                 },
                 textStyle = MaterialTheme.typography.bodyMedium,
-                placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.surface
-                ) },
+                placeholder = {
+                    Text(
+                        text = placeholder,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
