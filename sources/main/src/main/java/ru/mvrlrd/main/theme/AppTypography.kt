@@ -19,9 +19,17 @@ data class AppTypography internal constructor(
         fontFamily = FontFamily(Font(R.font.marvel_regular)),
         fontWeight = FontWeight.SemiBold,
         fontSize = 36.sp,
-        letterSpacing = 1.25.sp
+        letterSpacing = 1.25.sp,
     ),
     val body1: TextStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.marvel_regular)),
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+        letterSpacing = 0.sp,
+        lineHeight = 20.sp,
+        color = AppColors.light
+    ),
+    val textInCloud: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.marvel_regular)),
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
@@ -44,7 +52,7 @@ data class AppTypography internal constructor(
         titleMedium = body1, // Использование body1 для заголовка среднего размера
         titleSmall = paragraph1, // Использование paragraph1 для небольшого заголовка
         bodyLarge = body1, // Использование body1 для текста основного размера
-        bodyMedium = paragraph1, // Использование paragraph1 для текста среднего размера
+        bodyMedium = textInCloud, // Использование paragraph1 для текста среднего размера
         bodySmall = paragraph1.copy(fontSize = 13.sp), // Использование paragraph1 для текста меньшего размера
         labelLarge = button, // Использование button для крупных меток (например, кнопок)
         labelMedium = button, // Использование button для средних меток

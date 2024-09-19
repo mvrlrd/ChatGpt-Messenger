@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -102,7 +102,7 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.primary,
         ) {
             Box(
                 modifier = Modifier
@@ -200,7 +200,7 @@ fun SwipeToDismissCloudMessage(
 @Composable
 fun CloudMessage(messageEntity: MessageEntity, prev: Boolean, next: Boolean) {
     val cloudColor =
-        if (messageEntity.isReceived) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+        if (messageEntity.isReceived) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.secondary
     val alignment = if (messageEntity.isReceived) Alignment.CenterStart else Alignment.CenterEnd
     Box(
         modifier = Modifier
@@ -389,6 +389,7 @@ fun CloudCard(
             prev = prev,
             next = next
         ),
+        colors = CardColors(containerColor = color, color,color,color),
         modifier = modifier,
     ) {
         Box(
@@ -408,8 +409,8 @@ fun CloudCard(
         ) {
             Text(
                 text = text,
-                fontSize = 16.sp,
-                color = Color.Black,
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

@@ -8,6 +8,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 object AppColors{
+    val darkBlue = Color(0xFF171925)
+    val gray = Color(0xFF333541)
+    val purple = Color(0xFF7908AA)
+
     val dark = Color(0xFF2C3531)
     val green_dark = Color(0xFF116466)
     val peach = Color(0xFFD9B08C)
@@ -71,15 +75,15 @@ fun lightColorPalette(): ColorPalette = object : ColorPalette {
 
 fun darkColorPalette(): ColorPalette = object : ColorPalette {
     override val primary: Color
-        get() = AppColors.green_dark
+        get() = AppColors.darkBlue //
     override val primaryVariant: Color
         get() = AppColors.peach
     override val secondary: Color
-        get() = AppColors.sand
+        get() = AppColors.purple //
     override val background: Color
         get() = AppColors.dark
     override val surface: Color
-        get() =  Color.Gray
+        get() =  AppColors.gray //
     override val error: Color
         get() = AppColors.red
     override val onPrimary: Color

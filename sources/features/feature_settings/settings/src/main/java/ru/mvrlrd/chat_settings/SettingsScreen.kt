@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -68,11 +71,10 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp)
     ) {
         EditableSettingItem(
-            icon = R.drawable.baseline_medication_24,
-            title = stringResource(R.string.ed_name_title),
             field = state.value.name,
             placeholder = stringResource(R.string.ed_name_placeholder)
         ) {
@@ -80,8 +82,6 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         }
         HorizontalDivider()
         EditableSettingItem(
-            icon = R.drawable.baseline_medication_24,
-            title = stringResource(R.string.ed_role_title),
             field = state.value.systemRole,
             placeholder = stringResource(R.string.ed_role_placeholder)
         ) {
@@ -89,8 +89,6 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         }
         HorizontalDivider()
         EditableSettingItem(
-            icon = R.drawable.baseline_medication_24,
-            title = stringResource(R.string.ed_max_tokens_title),
             field = state.value.maxTokens.value,
             placeholder = stringResource(R.string.ed_max_tokens_placeholder)
         ) {
@@ -114,7 +112,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         TemperatureSettingItem(temperature = state.value.temperature) {
             viewModel.updateTemperature(it)
         }
-        HorizontalDivider()
+//        HorizontalDivider()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -125,6 +123,12 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
                         action()
                     }
                 },
+                colors = ButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = if (state.value.name.isBlank()) Color.Red else MaterialTheme.colorScheme.secondary,
+                    disabledContentColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
+                    ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
@@ -132,7 +136,8 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
                 ) {
                 Text(
                     text = stringResource(R.string.submit).uppercase(),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -157,12 +162,13 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
                 painter = painterResource(id = R.drawable.baseline_device_thermostat_24),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(Color.Red)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = stringResource(R.string.temperature),
                 style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -174,9 +180,9 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
             colors = SliderDefaults.colors(
                 activeTickColor = Color.Transparent,
                 inactiveTickColor = Color.Transparent,
-                inactiveTrackColor = Color.LightGray,
-                activeTrackColor = Color.Black,
-                thumbColor = Color.Black
+                inactiveTrackColor = MaterialTheme.colorScheme.onSurface,
+                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                thumbColor = MaterialTheme.colorScheme.onSurface
             )
         )
     }
@@ -200,7 +206,7 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = text, style = MaterialTheme.typography.titleSmall)
+                Text(text = text, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
             }
         }
         Switch(
@@ -212,8 +218,6 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
 
 @Composable
 fun EditableSettingItem(
-    icon: Int,
-    title: String,
     field: String,
     placeholder: String,
     updateText: (String) -> Unit

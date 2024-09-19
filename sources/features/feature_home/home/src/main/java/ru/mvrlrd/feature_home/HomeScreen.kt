@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -50,8 +51,12 @@ fun HomeScreen(modifier: Modifier, onClickEdit: (Long)-> Unit, onClickCard: (Lon
     val itemList = remember { viewModel.items }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.primary,
         floatingActionButton = {
-            FloatingActionButton(onClick = { onClickEdit(0L) }
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                onClick = { onClickEdit(0L) }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
             }

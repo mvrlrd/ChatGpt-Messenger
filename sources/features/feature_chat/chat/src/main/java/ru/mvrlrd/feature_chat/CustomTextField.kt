@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +33,7 @@ fun CustomTextField(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         BasicTextField(
@@ -62,7 +61,7 @@ fun CustomTextField(
             Icon(
                 painter = painterResource(id = R.drawable.ic_menu_send),
                 contentDescription = "Send",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
