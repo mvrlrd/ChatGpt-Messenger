@@ -67,12 +67,13 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
     val oneShotEvent = remember {
         viewModel.channel.receiveAsFlow()
     }
-
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
         EditableSettingItem(
             field = state.value.name,
