@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    api(projects.sources.features.featureApi)
+    api(projects.sources.features.common.featureApi)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)

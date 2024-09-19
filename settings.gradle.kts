@@ -26,8 +26,8 @@ include(":sources:features:feature_home:home_api")
 include(":sources:features:feature_settings:settings")
 include(":sources:features:feature_settings:settings_api")
 
-include(":sources:features:featureApi")
-include(":sources:features:base_models")
+include(":sources:features:common:featureApi")
+include(":sources:features:common:base_models")
 
 include(":sources:core:core_api")
 include(":sources:core:core_impl")

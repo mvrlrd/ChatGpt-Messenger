@@ -26,7 +26,7 @@ dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.featureHome.homeApi)
 //    implementation(projects.sources.features.featureChat.chatApi)
-    implementation(projects.sources.features.baseModels)
+    implementation(projects.sources.features.common.baseModels)
 
     implementation(libs.bundles.composeUiBundle)
     implementation(libs.bundles.composeLifecycleBundle)

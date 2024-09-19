@@ -83,11 +83,7 @@ fun CharacterCard(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    val image = if (chat.prompt) {
-                            painterResource(id = R.drawable.icons8_flash_96)
-                        } else {
-                            painterResource(id = R.drawable.icons8_connection_50)
-                        }
+                    val image = if (chat.prompt) painterResource(id = ru.mvrlrd.base_chat_home.R.drawable.icons8_flash_96) else painterResource(id = ru.mvrlrd.base_chat_home.R.drawable.icons8_connection_50)
                     Box(modifier = Modifier
                         .padding(start = 10.dp)){
                         Image(
@@ -95,7 +91,8 @@ fun CharacterCard(
                             contentDescription = "Character Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(24.dp),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
                         )
                     }
 

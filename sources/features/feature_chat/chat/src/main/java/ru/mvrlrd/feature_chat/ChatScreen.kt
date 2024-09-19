@@ -409,7 +409,7 @@ fun CloudCard(
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

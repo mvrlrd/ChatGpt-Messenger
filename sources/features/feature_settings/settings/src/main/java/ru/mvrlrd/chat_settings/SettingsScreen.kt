@@ -101,7 +101,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
             viewModel.updateMaxTokens(it)
         }
 //        HorizontalDivider()
-        val icon = if (state.value.prompt) R.drawable.icons8_flash_96  else R.drawable.icons8_connection_50
+        val icon = if (state.value.prompt) ru.mvrlrd.base_chat_home.R.drawable.icons8_flash_96  else ru.mvrlrd.base_chat_home.R.drawable.icons8_connection_50
         val text = if (state.value.prompt) stringResource(R.string.prompt) else "chat"
         SwitchItem(
             icon = icon,

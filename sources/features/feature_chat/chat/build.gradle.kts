@@ -17,7 +17,7 @@ android {
 }
 dependencies {
     implementation(projects.sources.core.coreApi)
-    implementation(projects.sources.features.baseModels)
+    implementation(projects.sources.features.common.baseModels)
     implementation(projects.sources.features.featureChat.chatApi)
 
     implementation(libs.dagger)

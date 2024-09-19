@@ -18,7 +18,7 @@ android {
 dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.featureSettings.settingsApi)
-    implementation(projects.sources.features.baseModels)
+    implementation(projects.sources.features.common.baseModels)
 
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)
