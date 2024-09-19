@@ -12,6 +12,11 @@ object AppColors{
     val gray = Color(0xFF333541)
     val purple = Color(0xFF7908AA)
 
+    val gree = Color(0xFF3AAFA9)
+    val white1 = Color(0xFFDEF2F1)
+    val white2 = Color(0xFFFEFFFF)
+
+
     val dark = Color(0xFF2C3531)
     val green_dark = Color(0xFF116466)
     val peach = Color(0xFFD9B08C)
@@ -37,15 +42,15 @@ interface ColorPalette {
 
 fun lightColorPalette(): ColorPalette = object : ColorPalette {
     override val primary: Color
-        get() = AppColors.green_dark
+        get() = AppColors.white1
     override val primaryVariant: Color
         get() = AppColors.peach
     override val secondary: Color
-        get() = AppColors.sand
+        get() = AppColors.gree
     override val background: Color
         get() = AppColors.light
     override val surface: Color
-        get() =  Color.Gray
+        get() =  AppColors.white2
     override val error: Color
         get() = AppColors.red
     override val onPrimary: Color
@@ -69,7 +74,7 @@ fun lightColorPalette(): ColorPalette = object : ColorPalette {
         onSecondary = onSecondary,
         onBackground = onBackground,
         onSurface = onSurface,
-        onError = onError
+        onError = onError,
     )
 }
 

@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         mainComponent.inject(this)
 
         setContent {
-            var isLightTheme by remember { mutableStateOf(false) }
+            var isLightTheme by remember { mutableStateOf(true) }
             CompanionApp(
                 onToggleTheme = {
                     isLightTheme = !isLightTheme

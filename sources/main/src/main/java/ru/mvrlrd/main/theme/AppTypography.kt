@@ -36,6 +36,12 @@ data class AppTypography internal constructor(
         letterSpacing = 0.sp,
         lineHeight = 20.sp,
     ),
+    val hint: TextStyle = TextStyle(
+        fontFamily = FontFamily(Font(R.font.marvel_regular)),
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+        letterSpacing = 0.1.sp,
+    ),
     val h4: TextStyle = TextStyle(
         fontFamily = FontFamily(Font(R.font.marvel_regular)),
         fontWeight = FontWeight.SemiBold,
@@ -50,7 +56,7 @@ data class AppTypography internal constructor(
         headlineSmall = body1, // Использование body1 для заголовка небольшого размера
         titleLarge = h4, // Использование h4 для крупного заголовка
         titleMedium = body1, // Использование body1 для заголовка среднего размера
-        titleSmall = paragraph1, // Использование paragraph1 для небольшого заголовка
+        titleSmall = hint, // Использование paragraph1 для небольшого заголовка
         bodyLarge = body1, // Использование body1 для текста основного размера
         bodyMedium = textInCloud, // Использование paragraph1 для текста среднего размера
         bodySmall = paragraph1.copy(fontSize = 13.sp), // Использование paragraph1 для текста меньшего размера

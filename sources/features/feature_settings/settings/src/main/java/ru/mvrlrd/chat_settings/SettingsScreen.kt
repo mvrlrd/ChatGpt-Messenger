@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -21,8 +22,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -168,7 +173,7 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = stringResource(R.string.temperature),
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
@@ -198,7 +203,10 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+
         ) {
             Image(
                 painter = painterResource(id = icon),
@@ -207,10 +215,13 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = text, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
             }
         }
         Switch(
+            colors = SwitchDefaults.colors().copy(
+                checkedTrackColor = MaterialTheme.colorScheme.secondary
+            ),
             checked = isChecked,
             onCheckedChange = { updateStream(it) }
         )
@@ -232,11 +243,20 @@ fun EditableSettingItem(
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             TextField(
+colors = TextFieldDefaults.colors().copy(
+    unfocusedContainerColor = Color.Transparent,
+    cursorColor = MaterialTheme.colorScheme.secondary,
+
+    )
+        ,
                 value = field,
                 onValueChange = {
                     updateText(it)
                 },
-                placeholder = { Text(placeholder) },
+                textStyle = MaterialTheme.typography.bodyMedium,
+                placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.surface
+                ) },
                 modifier = Modifier
                     .fillMaxWidth()
             )
