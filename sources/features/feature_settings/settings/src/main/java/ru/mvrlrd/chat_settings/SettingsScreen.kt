@@ -101,8 +101,11 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
             viewModel.updateMaxTokens(it)
         }
 //        HorizontalDivider()
-        SwitchItem(icon = R.drawable.baseline_quickreply_24,
-            text = stringResource(R.string.prompt),
+        val icon = if (state.value.prompt) R.drawable.icons8_flash_96  else R.drawable.icons8_connection_50
+        val text = if (state.value.prompt) stringResource(R.string.prompt) else "chat"
+        SwitchItem(
+            icon = icon,
+            text = text,
             isChecked = state.value.prompt) {
             viewModel.updatePromptSwitch(it)
         }
@@ -155,7 +158,6 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
 
 @Composable
 fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) -> Unit) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
