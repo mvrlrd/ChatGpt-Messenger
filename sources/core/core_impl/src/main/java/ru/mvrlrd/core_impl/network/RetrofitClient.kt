@@ -1,5 +1,6 @@
 package ru.mvrlrd.core_impl.network
 
+import android.util.Log
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -36,15 +37,20 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService, pri
     ): Result<T> {
         return when (response.isSuccessful) {
             true -> {
+                Log.e("TAG","RetrofitClient success: ${response.body()}")
                 Result.success(response.body() ?: default)
             }
             false -> {
                 if (isConnected) {
+                    Log.e("TAG","RetrofitClient fail: ${response.body()}")
                     when (response.code()){
                         400 -> Result.failure(MyException.BadRequest)
                         401 -> Result.failure(MyException.Unauthorized)
                         404 -> Result.failure(MyException.NotFound)
-                        else -> Result.failure(MyException.UnknownException)
+                        else -> {
+
+                            Result.failure(MyException.UnknownException)
+                        }
                     }
 
                 } else {
@@ -58,8 +64,9 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService, pri
         return when (internetController.isInternetAvailable()) {
             true -> {
                 try {
-                    responseHandle(request(), default, true)
+                    responseHandle(request(), default, internetController.isInternetAvailable())
                 } catch (exception: Throwable) {
+                    Log.e("TAG","RetrofitClient requestWithResponseHandling(): exception=$exception,    message=${exception.message}")
                     Result.failure(MyException.UnknownException)
                 }
             }

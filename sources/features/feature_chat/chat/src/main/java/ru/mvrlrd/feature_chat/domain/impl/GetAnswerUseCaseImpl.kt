@@ -15,14 +15,13 @@ class GetAnswerUseCaseImpl @Inject constructor(private val chatRepository: ChatR
     GetAnswerUseCase {
     override suspend operator fun invoke(chatd: Long, query: String): Result<AIResponse> {
         chatRepository.getChatSettings(chatId = chatd).onSuccess {
-            Log.d("TAG","___GetAnswerUseCaseImpl chat = ${it}  roleText = ${it.roleText}")
             val completionOptions = it.completionOptions
             val setupMessage = Message(
-                role = "system",
+                role = SYSTEM,
                 text = it.roleText
             )
             val queryMessage = Message(
-                role = "user",
+                role = USER,
                 text = query
             )
             val messages = listOf(setupMessage, queryMessage)
@@ -30,11 +29,16 @@ class GetAnswerUseCaseImpl @Inject constructor(private val chatRepository: ChatR
                 completionOptions = completionOptions,
                 messages = messages
             )
-            Log.d("TAG","___GetAnswerUseCaseImpl ${aiRequest}")
             return chatRepository.getAnswer(aiRequest, it.chatId, it.prompt)
         }.onFailure {
+            Log.e("TAG", "GetAnswerUseCaseImpl: failure: ${it.message}")
             return Result.failure(IllegalArgumentException("bad request"))
         }
+        Log.e("TAG", "GetAnswerUseCaseImpl: WTF")
         return Result.failure(IllegalArgumentException("bad request"))
+    }
+    companion object{
+        private const val SYSTEM = "system"
+        private const val USER = "user"
     }
 }

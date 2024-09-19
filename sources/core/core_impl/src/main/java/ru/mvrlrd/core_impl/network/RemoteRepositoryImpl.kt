@@ -1,6 +1,7 @@
 package ru.mvrlrd.core_impl.network
 
 
+import android.util.Log
 import ru.mvrlrd.core_api.network.NetworkClient
 import ru.mvrlrd.core_api.network.RemoteRepository
 import ru.mvrlrd.core_api.network.dto.BadRequest
@@ -26,8 +27,10 @@ class RemoteRepositoryImp @Inject constructor(private val client: NetworkClient,
         }
 
         client.doRequest(request = _request).runCatching {
+            Log.e("TAG", "RemoteRepositoryImp: success: ${this}")
             return this
         }.recoverCatching { throwable ->
+            Log.e("TAG", "RemoteRepositoryImp: fail: ${throwable.message}")
             return when (throwable) {
                 is MyException.BadRequest -> {
                     Result.failure(MyException.BadRequest)
@@ -46,6 +49,7 @@ class RemoteRepositoryImp @Inject constructor(private val client: NetworkClient,
                 }
 
                 else -> {
+
                     Result.failure(MyException.UnknownException)
                 }
             }

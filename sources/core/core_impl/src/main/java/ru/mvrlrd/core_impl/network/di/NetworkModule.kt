@@ -16,6 +16,7 @@ import ru.mvrlrd.core_impl.network.ApiService
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.mvrlrd.core_impl.network.RetrofitClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
 @Module
@@ -34,6 +35,7 @@ interface NetworkModule {
         @Provides
         fun provideClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient{
            return OkHttpClient.Builder()
+               .connectTimeout(10,TimeUnit.SECONDS)
                .addInterceptor{
                    chain ->
                    val original = chain.request()

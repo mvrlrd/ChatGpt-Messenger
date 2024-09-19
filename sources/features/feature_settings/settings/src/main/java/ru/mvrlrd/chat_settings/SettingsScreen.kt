@@ -78,7 +78,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp)
-            .verticalScroll(scrollState)
+//            .verticalScroll(scrollState)
     ) {
         EditableSettingItem(
             field = state.value.name,

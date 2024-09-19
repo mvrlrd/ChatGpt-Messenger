@@ -1,5 +1,6 @@
 package ru.mvrlrd.feature_chat.data
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -67,6 +68,7 @@ class ChatRepositoryImpl @Inject constructor(
             val aiResponse = mapper.mapServerResponseToAIResponse(it as ServerResponseDto)
             return Result.success(aiResponse)
         }.onFailure {
+            Log.e("TAG", "ChatRepositoryImpl: failure: ${it.message}")
             return Result.failure(it)
         }
         return Result.failure(IllegalArgumentException())
