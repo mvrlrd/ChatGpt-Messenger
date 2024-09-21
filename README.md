@@ -20,3 +20,5 @@ The application allows you to make conversations with AI,
 - **Coroutines/Flow**
 - **Dagger2**
 - **Compose**
+
+![1726904252233](https://github.com/user-attachments/assets/28b1299a-be87-4e8c-bffa-15036f9a7aea)
