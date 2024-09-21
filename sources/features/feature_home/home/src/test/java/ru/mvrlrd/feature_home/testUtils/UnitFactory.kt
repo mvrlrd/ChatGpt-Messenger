@@ -15,6 +15,7 @@ object UnitFactory {
         roleText = "assistant",
         completionOptions = getCompletionOptionsEntity(),
         modelVer = "1.0",
+        prompt = true,
         usage = getUsageEntity(),
     )
     fun getChat(): Chat = Chat(
@@ -23,6 +24,7 @@ object UnitFactory {
         roleText = "assistant",
         completionOptions = getCompletionOptions(),
         modelVer = "1.0",
+        prompt = true,
         usage = getUsage(),
     )
 
