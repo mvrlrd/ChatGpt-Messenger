@@ -17,15 +17,7 @@ data class CompletionOptionsDto(
     val temperature: Double,
     @SerialName("maxTokens")
     val maxTokens: String
-) {
-    companion object {
-        fun getDefault() = CompletionOptionsDto(
-            false,
-            0.6,
-            "2000"
-        )
-    }
-}
+)
 
 @Serializable
 @SerialName("Message")

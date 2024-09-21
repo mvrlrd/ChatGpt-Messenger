@@ -24,16 +24,7 @@ class FeatureChatImpl @Inject constructor(): FeatureChatApi {
             ChatScreen(
                 modifier = modifier,
                 chatId = id,
-                onToggleTheme = action
             )
         }
     }
-
-    //  composable("Chat/{id}") { backStackEntry ->
-    ////                val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: 0L
-    ////                ChatScreen(chatId = id) {
-    ////                    onToggleTheme()
-    ////                }
-
-
 }

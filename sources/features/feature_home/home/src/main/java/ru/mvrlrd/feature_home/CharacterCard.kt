@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,9 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.mvrlrd.base_chat_home.model.Chat
-import ru.mvrlrd.base_chat_home.model.CompletionOptions
-import ru.mvrlrd.base_chat_home.model.Usage
 import ru.mvrlrd.feature_home.domain.ChatForHome
 
 @Composable
@@ -95,7 +91,6 @@ fun CharacterCard(
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
                         )
                     }
-
                 }
 
                 Text(
@@ -119,8 +114,6 @@ fun CharacterCard(
                     ,
                 )
             }
-
-
         }
     }
 }
@@ -137,9 +130,6 @@ private fun getInitialsFromName(s: String): String{
                 str.append(it.first().uppercase())
             }
         }
-        if (str.length == 1){
-            str.append(s[1])
-        }
         return str.toString()
     }
 }
@@ -149,16 +139,16 @@ private fun getInitialsFromName(s: String): String{
 @Composable
 fun TextIcon(modifier: Modifier, text: String, color: Color){
     Box(
-        modifier = modifier// Размер иконки
-            .background(color, CircleShape), // Цвет фона и форма
-        contentAlignment = Alignment.Center // Центрируем текст
+        modifier = modifier
+            .background(color, CircleShape),
+        contentAlignment = Alignment.Center
     ) {
         BasicText(
             text = text,
             style = MaterialTheme.typography.bodyLarge.copy(
-                color = Color.White, // Цвет текста
-                fontSize = 24.sp, // Размер шрифта
-                textAlign = TextAlign.Center // Выравнивание текста
+                color = Color.White,
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center
             )
         )
     }

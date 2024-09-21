@@ -13,7 +13,6 @@ dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.core.coreImpl)
 
-    // check if it is needed
     implementation(libs.coreKtx)
     implementation(libs.appcompat)
     implementation(libs.googleMaterial)

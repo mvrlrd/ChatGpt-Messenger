@@ -17,11 +17,9 @@ android {
 }
 
 dependencies {
-    // check if it is needed
     implementation(libs.coreKtx)
     implementation(libs.appcompat)
     implementation(libs.googleMaterial)
-
     implementation(libs.kotlinxSerializationJson)
 
     implementation(libs.bundles.roomDeps)

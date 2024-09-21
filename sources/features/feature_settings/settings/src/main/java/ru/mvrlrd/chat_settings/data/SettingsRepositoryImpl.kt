@@ -1,6 +1,5 @@
 package ru.mvrlrd.chat_settings.data
 
-import ru.mvrlrd.base_chat_home.model.ChatMapper
 import ru.mvrlrd.chat_settings.domain.ChatSettings
 import ru.mvrlrd.chat_settings.domain.SettingsRepository
 import ru.mvrlrd.core_api.database.chat.ChatDao

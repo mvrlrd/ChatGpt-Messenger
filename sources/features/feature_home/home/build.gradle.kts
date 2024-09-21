@@ -25,7 +25,6 @@ android {
 dependencies {
     implementation(projects.sources.core.coreApi)
     implementation(projects.sources.features.featureHome.homeApi)
-//    implementation(projects.sources.features.featureChat.chatApi)
     implementation(projects.sources.features.common.baseModels)
 
     implementation(libs.bundles.composeUiBundle)
@@ -40,10 +39,6 @@ dependencies {
     implementation(libs.bundles.roomDeps)
     ksp(libs.androidxRoomCompiler)
 
-//    implementation("androidx.core:core-ktx:1.9.0")
-//    implementation("androidx.appcompat:appcompat:1.7.0")
-//    implementation("com.google.android.material:material:1.12.0")
-
     implementation(libs.dagger)
     ksp(libs.daggerCompiler)
 
@@ -51,6 +46,5 @@ dependencies {
     androidTestImplementation(libs.junitExt)
     androidTestImplementation(libs.espressoCore)
 
-
-    testImplementation ("org.mockito:mockito-core:2.8.47")
+    testImplementation (libs.mockitoCoreV2847)
 }

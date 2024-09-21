@@ -11,6 +11,7 @@ import dagger.Provides
 import dagger.Reusable
 import ru.mvrlrd.core_api.database.chat.ChatDao
 import ru.mvrlrd.core_api.database.chat.ChatDatabaseContract
+import ru.mvrlrd.core_impl.R
 import ru.mvrlrd.core_impl.database.chatdatabase.ChatDatabase
 import javax.inject.Singleton
 
@@ -33,7 +34,7 @@ class ChatDatabaseModule {
                     ContentValues(
                     ).apply {
                         put("chatId", 1L)
-                        put("title", "QA")
+                        put("title", "prompt")
                         put("roleText", "умный ассистент")
                         put("prompt", true)
                         put("modelVer", "1.0")
@@ -49,7 +50,7 @@ class ChatDatabaseModule {
                     ContentValues(
                     ).apply {
                         put("chatId", 2L)
-                        put("title", "SimpleChat")
+                        put("title", "chat")
                         put("roleText", "умный ассистент")
                         put("prompt", false)
                         put("modelVer", "1.0")

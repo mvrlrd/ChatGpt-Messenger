@@ -48,11 +48,9 @@ import ru.mvrlrd.base_chat_home.model.composables.ShowToast
 import ru.mvrlrd.core_api.database.chat.entity.MessageEntity
 import ru.mvrlrd.core_api.mediators.AppWithFacade
 import ru.mvrlrd.feature_chat.di.DaggerHomeComponent
-import ru.mvrlrd.feature_chat.pullrefresh.PullToRefreshLayout
-import ru.mvrlrd.feature_chat.pullrefresh.PullToRefreshLayoutState
 
 @Composable
-fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
+fun ChatScreen(modifier: Modifier, chatId: Long) {
     val facade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
 
     val homeComponent = remember {
@@ -96,10 +94,6 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
 
 
-    PullToRefreshLayout(
-        pullRefreshLayoutState = PullToRefreshLayoutState { "hello" },
-        onRefresh = onToggleTheme
-    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primary,
@@ -127,7 +121,7 @@ fun ChatScreen(modifier: Modifier, chatId: Long, onToggleTheme: () -> Unit) {
             ShowToast(flow = oneShotEvent)
         }
     }
-}
+
 
 @Composable
 fun MessageList(messageEntities: SnapshotStateList<MessageEntity>, onDismiss: (Long) -> Unit) {

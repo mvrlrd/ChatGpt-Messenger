@@ -18,8 +18,6 @@ class ChatMapper @Inject constructor() {
         }
     }
 
-
-
      fun mapCompletionOptionsEntityToCompletionOptions(completionOptionsEntity: CompletionOptionsEntity): CompletionOptions {
         return with(completionOptionsEntity) {
             CompletionOptions(

@@ -18,6 +18,7 @@ junitVersion = "4.13.2"
 espressoCoreVersion = "3.6.1"
 materialVersion = "1.12.0"
 mockitoCore = "5.3.1"
+mockitoCoreVersion = "2.8.47"
 mockitoKotlin = "5.1.0"
 retrofit = "2.9.0"
 roomKtx = "2.6.1"
@@ -71,6 +72,7 @@ lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", versio
 #retrofit
 
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockitoCoreV2847 = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreVersion" }
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2ConverterScalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit2ConverterScalars" }
