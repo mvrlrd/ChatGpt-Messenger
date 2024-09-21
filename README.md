@@ -25,7 +25,7 @@ options:
 
 <3> max tokens
 
-<4> prompt or chat mode
+<4> prompt/chat mode
 
 <5> stream
 
