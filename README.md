@@ -13,9 +13,9 @@
 </div>
 
 ## :pushpin: Features
-It is a messenger with ai, that provides an opportunity to create chats with different settings.
-U can choose ai's role and some other options, then u will get answers for your questions due to those options.
-Besides, it is possible to switch between prompt and relying on context modes of the chat.
+It is a messenger with AI that provides the opportunity to create chats with various settings. 
+You can choose the AI's role and customize other options, and then you will receive answers based on those settings. 
+Additionally, it is possible to switch between prompt-based and context-reliant modes in the chat.
 
 options:
 
