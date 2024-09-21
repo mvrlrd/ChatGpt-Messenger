@@ -94,33 +94,33 @@ fun ChatScreen(modifier: Modifier, chatId: Long) {
     val oneShotEvent = viewModel.oneShotEventChannel.receiveAsFlow()
 
 
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.primary,
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.primary,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                    MessageList(messageEntities = messages) {
-                        viewModel.deleteMessageFromDatabase(it)
-                    }
-                    CustomTextField(
-                        modifier = Modifier
-                            .zIndex(1f)
-                            .wrapContentSize()
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                bottom = 16.dp,
-                                start = 16.dp, end = 16.dp
-                            )
-                    ) {
-                        viewModel.sendRequest(it)
-                    }
+            MessageList(messageEntities = messages) {
+                viewModel.deleteMessageFromDatabase(it)
             }
-            ShowToast(flow = oneShotEvent)
+            CustomTextField(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .wrapContentSize()
+                    .align(Alignment.BottomCenter)
+                    .padding(
+                        bottom = 16.dp,
+                        start = 16.dp, end = 16.dp
+                    )
+            ) {
+                viewModel.sendRequest(it)
+            }
         }
+        ShowToast(flow = oneShotEvent)
     }
+}
 
 
 @Composable
