@@ -9,7 +9,7 @@
 
 <img src="https://github.com/user-attachments/assets/0ea296f3-ce1d-4602-963d-0d6aee49a531" width="70"><a href='https://play.google.com'><img alt='Get it on Google Play soon...' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="200"/></a>
 
-**ChatGpt Messenger is an Android application for managing chats with ai**
+**ChatGpt Messenger is an Android application for chatting with ai**
 </div>
 
 ## :pushpin: Features
