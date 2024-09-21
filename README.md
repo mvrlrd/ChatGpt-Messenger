@@ -19,9 +19,9 @@ Additionally, it is possible to switch between prompt-based and context-reliant 
 
 options:
 
-<1> name of ai
+<1> name
 
-<2> role of ai
+<2> role
 
 <3> max tokens
 
