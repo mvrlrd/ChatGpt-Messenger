@@ -1,4 +1,4 @@
-<h1 align="center">AI Companion</h1>
+<h1 align="center">ChatGpt Messenger</h1>
 
 _an app for managing chats with AI_
 
@@ -8,10 +8,10 @@ The application allows you to make conversations with AI,
 
 - **Single Activity**
 - **Clean Architecture**
-- **MVI/MVVM**
+- **MVVM**
 - **Multimodule**
 
-  used YandexAi Api
+  used YandexGpt Api
 
 # Stack
 
