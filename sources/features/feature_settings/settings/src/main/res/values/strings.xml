@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stream">stream</string>
+    <string name="prompt">prompt</string>
+
+    <string name="temperature">temperature</string>
+    <string name="submit">done</string>
+
+    <string name="ed_name_title">name</string>
+    <string name="ed_name_placeholder">name</string>
+
+    <string name="ed_role_title">role</string>
+    <string name="ed_role_placeholder">role</string>
+
+    <string name="ed_max_tokens_title">1000</string>
+    <string name="ed_max_tokens_placeholder">max tokens 10 .. 2000</string>
+</resources>
