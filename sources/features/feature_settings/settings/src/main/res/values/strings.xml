@@ -14,4 +14,12 @@
 
     <string name="ed_max_tokens_title">1000</string>
     <string name="ed_max_tokens_placeholder">max tokens 10 .. 2000</string>
+
+    <string name="test_tag_et_name">ET_NAME</string>
+    <string name="test_tag_et_role">ET_ROLE</string>
+    <string name="test_tag_et_max_tokens">ET_MAX_TOKENS</string>
+
+    <string name="test_tag_switch_prompt">SWITCH_PROMPT</string>
+    <string name="test_tag_et_switch_stream">SWITCH_STREAM</string>
+
 </resources>

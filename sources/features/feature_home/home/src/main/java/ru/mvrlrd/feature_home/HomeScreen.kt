@@ -4,9 +4,8 @@ package ru.mvrlrd.feature_home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,6 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.mvrlrd.core_api.mediators.AppWithFacade
@@ -36,8 +37,6 @@ import ru.mvrlrd.feature_home.domain.ChatForHome
 
 @Composable
 fun HomeScreen(modifier: Modifier, onClickEdit: (Long)-> Unit, onClickCard: (Long) -> Unit) {
-
-
     val providersFacade = (LocalContext.current.applicationContext as AppWithFacade).getFacade()
     val chatRoomsComponent = remember {
         ChatRoomsComponent.create(providersFacade)
@@ -54,9 +53,12 @@ fun HomeScreen(modifier: Modifier, onClickEdit: (Long)-> Unit, onClickCard: (Lon
         containerColor = MaterialTheme.colorScheme.primary,
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.test_tag_fab)),
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSurface,
-                onClick = { onClickEdit(0L) }
+                onClick = { onClickEdit(0L) },
+
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Card")
             }
@@ -93,21 +95,12 @@ fun CardList(
         previousSize = cards.size
     }
 
-    LazyVerticalGrid(
-
-        columns = GridCells.Fixed(1),
+    LazyColumn (
         contentPadding = PaddingValues(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
 
     ) {
-        itemsIndexed(
-
-            items = cards,
-            key = { _, item ->
-                item
-            }
-        ) { _, item ->
+        items(cards){ item->
             SwipeToDismissCard(
                 item = item,
                 onClickEditButton = onClickEditButton,

@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -77,6 +78,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
 //            .verticalScroll(scrollState)
     ) {
         EditableSettingItem(
+            tag = stringResource(R.string.test_tag_et_name),
             field = state.value.name,
             placeholder = stringResource(R.string.ed_name_placeholder)
         ) {
@@ -84,6 +86,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         }
 //        HorizontalDivider()
         EditableSettingItem(
+            tag = stringResource(R.string.test_tag_et_role),
             field = state.value.systemRole,
             placeholder = stringResource(R.string.ed_role_placeholder)
         ) {
@@ -91,6 +94,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         }
 //        HorizontalDivider()
         EditableSettingItem(
+            tag = stringResource(R.string.test_tag_et_max_tokens),
             field = state.value.maxTokens.value,
             placeholder = stringResource(R.string.ed_max_tokens_placeholder)
         ) {
@@ -100,6 +104,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         val icon = if (state.value.prompt) ru.mvrlrd.base_chat_home.R.drawable.icons8_flash_96  else ru.mvrlrd.base_chat_home.R.drawable.icons8_connection_50
         val text = if (state.value.prompt) stringResource(R.string.prompt) else "chat"
         SwitchItem(
+            tag = stringResource(R.string.test_tag_switch_prompt),
             icon = icon,
             text = text,
             isChecked = state.value.prompt) {
@@ -107,6 +112,7 @@ fun SettingsScreen(chatId: Long, action: () -> Unit) {
         }
         HorizontalDivider()
         SwitchItem(
+            tag = stringResource(R.string.test_tag_et_switch_stream),
             icon = R.drawable.baseline_subject_24,
             text = stringResource(R.string.stream),
             isChecked = state.value.stream) {
@@ -178,10 +184,12 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
             )
         }
         Slider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("SLIDER_TEMPERATURE"),
             value = temperature.value,
             onValueChange = { updateTemperature(it) },
             valueRange = 0.0f..1.0f,
-            modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 activeTickColor = Color.Transparent,
                 inactiveTickColor = Color.Transparent,
@@ -194,7 +202,7 @@ fun TemperatureSettingItem(temperature: Temperature, updateTemperature: (Float) 
 }
 
 @Composable
-fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boolean) -> Unit) {
+fun SwitchItem(icon: Int, text: String, tag: String, isChecked: Boolean, updateStream: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -219,6 +227,8 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
             }
         }
         Switch(
+            modifier = Modifier
+                .testTag(tag),
             colors = SwitchDefaults.colors().copy(
                 checkedTrackColor = MaterialTheme.colorScheme.secondary,
                 uncheckedTrackColor = MaterialTheme.colorScheme.surface
@@ -231,6 +241,7 @@ fun SwitchItem(icon: Int, text: String, isChecked: Boolean, updateStream: (Boole
 
 @Composable
 fun EditableSettingItem(
+    tag:String,
     field: String,
     placeholder: String,
     updateText: (String) -> Unit
@@ -244,6 +255,9 @@ fun EditableSettingItem(
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(tag),
                 colors = TextFieldDefaults.colors().copy(
                     unfocusedContainerColor = Color.Transparent,
                     cursorColor = MaterialTheme.colorScheme.secondary,
@@ -260,8 +274,7 @@ fun EditableSettingItem(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
+
             )
         }
     }

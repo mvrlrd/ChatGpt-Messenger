@@ -22,6 +22,7 @@ mockitoCoreVersion = "2.8.47"
 mockitoKotlin = "5.1.0"
 retrofit = "2.9.0"
 roomKtx = "2.6.1"
+uiTestJunit4 = "1.7.2"
 uiTestJUnit4Version = "1.6.8"
 composeBom = "2024.08.00"
 lifecycleViewmodelCompose = "2.8.4"
@@ -123,7 +124,7 @@ navigationCompose = { module = "androidx.navigation:navigation-compose", version
 
 #ui_testing
 espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
-uiTest = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJUnit4Version" }
+uiTest = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion" }
 
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 daggerCompiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
