@@ -72,6 +72,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)
     androidTestImplementation(libs.espressoCore)
+
+    androidTestImplementation(libs.uiTest)
+    androidTestImplementation(libs.bundles.composeUiBundle)
+
 }
 
 publishing {

@@ -45,6 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)
     androidTestImplementation(libs.espressoCore)
+    androidTestImplementation(libs.uiTest)
 
     testImplementation (libs.mockitoCoreV2847)
 }

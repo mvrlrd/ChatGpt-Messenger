@@ -21,6 +21,7 @@ dependencies {
     implementation(projects.sources.features.common.baseModels)
 
     implementation(libs.dagger)
+
     ksp(libs.daggerCompiler)
 
     implementation(libs.bundles.composeUiBundle)
@@ -35,4 +36,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.junitExt)
     androidTestImplementation(libs.espressoCore)
+
+    androidTestImplementation (libs.uiTest)
 }
